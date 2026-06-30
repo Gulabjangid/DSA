@@ -20,6 +20,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0167-two-sum-ii-input-array-is-sorted](https://github.com/Gulabjangid/DSA/tree/master/0167-two-sum-ii-input-array-is-sorted) |
 | [0169-majority-element](https://github.com/Gulabjangid/DSA/tree/master/0169-majority-element) |
 | [0189-rotate-array](https://github.com/Gulabjangid/DSA/tree/master/0189-rotate-array) |
+| [0238-product-of-array-except-self](https://github.com/Gulabjangid/DSA/tree/master/0238-product-of-array-except-self) |
 | [0303-range-sum-query-immutable](https://github.com/Gulabjangid/DSA/tree/master/0303-range-sum-query-immutable) |
 ## Binary Search
 |  |
@@ -53,5 +54,6 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 ## Prefix Sum
 |  |
 | ------- |
+| [0238-product-of-array-except-self](https://github.com/Gulabjangid/DSA/tree/master/0238-product-of-array-except-self) |
 | [0303-range-sum-query-immutable](https://github.com/Gulabjangid/DSA/tree/master/0303-range-sum-query-immutable) |
 <!---LeetCode Topics End-->
