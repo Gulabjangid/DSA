@@ -2,7 +2,9 @@
 
 ## 📋 Problem Description
 Given two strings, `s` and `t`, determine if `t` is an anagram of `s`.
-An anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
+
+An anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once. This means that two strings are anagrams if they contain the exact same characters with the exact same frequencies.
+
 The function should return `true` if `t` is an anagram of `s`, and `false` otherwise.
 
 ## 🔍 Examples
@@ -10,14 +12,12 @@ The function should return `true` if `t` is an anagram of `s`, and `false` other
 Input:  s = "anagram", t = "nagaram"
 Output: true
 Explanation: "nagaram" is formed by rearranging the letters of "anagram".
+```
 
+```
 Input:  s = "rat", t = "car"
 Output: false
-Explanation: The letters in "rat" and "car" are different.
-
-Input:  s = "listen", t = "silent"
-Output: true
-Explanation: "silent" is a rearrangement of "listen".
+Explanation: The characters are different; 'r' and 't' in "rat" are not the same as 'c' and 'a' in "car".
 ```
 
 ## 📌 Constraints
@@ -25,29 +25,26 @@ Explanation: "silent" is a rearrangement of "listen".
 *   `s` and `t` consist of lowercase English letters.
 
 ## 🤔 Understanding the Problem
-The problem asks us to check if two given strings are anagrams of each other. This means they must contain the exact same characters with the exact same frequencies, just possibly in a different order. A crucial observation is that if the lengths of the strings differ, they cannot be anagrams. Since the strings only contain lowercase English letters, we can leverage this limited character set for an efficient solution.
+The problem asks us to verify if two given strings are anagrams of each other. The core idea of an anagram is that the two strings must contain the exact same characters, and each character must appear the same number of times in both strings. A crucial initial check is that anagrams must always have the same length. If their lengths differ, they cannot be anagrams. The constraints specify that inputs will only contain lowercase English letters, which simplifies character handling.
 
 ## 💡 Core Idea
-The fundamental idea is that two strings are anagrams if and only if they have the same character counts for every character. We can count the occurrences of each character in one string and then verify if the second string matches those counts.
+Two strings are anagrams if and only if they have the same length and the same character counts for every character. We can efficiently track these counts using a frequency map (or an array for fixed character sets).
 
-## 🧠 Approach — Frequency Counting / Array as Frequency Map
-This pattern is ideal because the problem boils down to comparing the *composition* of two strings rather than their exact order. By counting character frequencies, we abstract away the order and focus solely on whether the same set of characters (with the same multiplicities) exists in both strings. An array can serve as an extremely efficient frequency map for a small, fixed character set like lowercase English letters (26 characters).
+## 🧠 Approach — Frequency Counting (using an array as a hash map)
+This problem is a classic application of the **Frequency Counting** pattern. This pattern is ideal when you need to keep track of the occurrences of elements (like characters in a string) within a given range. Since the problem states that `s` and `t` consist only of lowercase English letters, there are only 26 possible characters ('a' through 'z'). This allows us to use a fixed-size array (of size 26) as an efficient frequency map, where each index corresponds to a specific letter (e.g., index 0 for 'a', index 1 for 'b', etc.). We can iterate through the first string to build up character counts, and then iterate through the second string to "consume" those counts, checking for mismatches along the way.
 
 ## 📝 Step-by-Step Algorithm
-1.  **Initial Length Check**: First, compare the lengths of string `s` and string `t`. If they are not equal, return `false` immediately, because anagrams must always have the same number of characters.
-2.  **Initialize Frequency Array**: Create an integer array (or vector in C++) of size 26, initialized with all zeros. This array will store the frequency of each lowercase English letter ('a' through 'z'). `count[0]` will correspond to 'a', `count[1]` to 'b', and so on, up to `count[25]` for 'z'.
-3.  **Count Characters in `s`**: Iterate through each character `c` in the first string `s`. For each character, increment its corresponding count in the frequency array. For example, if `c` is 'a', `count[0]` is incremented; if `c` is 'b', `count[1]` is incremented, using `c - 'a'` as the index.
-4.  **Decrement and Verify Characters in `t`**: Iterate through each character `c` in the second string `t`. For each character:
-    *   Decrement its corresponding count in the frequency array.
-    *   Immediately check if the count for `c` has become negative. If `count[c - 'a'] < 0`, it means `t` contains more occurrences of character `c` than `s` did. In this scenario, `t` cannot be an anagram of `s`, so return `false`.
-5.  **Final Check**: If the loop for `t` completes without any count becoming negative, it implies that `t` used up characters that were present in `s` and didn't introduce any extra characters. Since we already confirmed that `s` and `t` have the same length, all character counts in our frequency array must now be exactly zero. Therefore, `s` and `t` are anagrams, and we can return `true`.
+1.  **Initial Length Check:** First, compare the lengths of string `s` and string `t`. If `s.length()` is not equal to `t.length()`, then `t` cannot be an anagram of `s`. In this case, immediately return `false`.
+2.  **Initialize Frequency Counter:** Create an integer array (or vector in C++) of size 26, initialized with all zeros. This array will store the frequency of each lowercase English letter. `count[0]` will correspond to 'a', `count[1]` to 'b', and so on, up to `count[25]` for 'z'.
+3.  **Process String `s`:** Iterate through each character `c` in string `s`:
+    *   Increment the count for that character in the frequency array. For example, if `c` is 'a', increment `count[0]`. This can be done by `count[c - 'a']++`.
+4.  **Process String `t` and Verify:** Iterate through each character `c` in string `t`:
+    *   Decrement the count for that character in the frequency array. For example, if `c` is 'a', decrement `count[0]`. This can be done by `count[c - 'a']--`.
+    *   After decrementing, immediately check if the count for `c` has become negative. If `count[c - 'a'] < 0`, it means string `t` contains more occurrences of character `c` than string `s` did. Therefore, `t` cannot be an anagram of `s`. In this case, immediately return `false`.
+5.  **Final Result:** If the algorithm completes both loops without returning `false`, it means that all characters in `t` were successfully matched and "consumed" from the counts established by `s`, and no count ever dropped below zero. Since we already confirmed that `s` and `t` have the same length, this implies all character counts must now be exactly zero, confirming that `t` is an anagram of `s`. Return `true`.
 
 ## 💻 Solution
 ```cpp
-#include <string>
-#include <vector>
-#include <numeric> // For std::accumulate if needed, but not in this solution
-
 class Solution {
 public:
     bool isAnagram(string s, string t) {
@@ -59,49 +56,47 @@ public:
 
         // Initialize a frequency array for lowercase English letters.
         // There are 26 possible lowercase letters ('a' through 'z').
-        // Each element is initialized to 0.
-        // count[0] will store frequency of 'a', count[1] for 'b', and so on.
-        std::vector<int> count(26, 0);
+        // Each index will store the count for a specific letter:
+        // count[0] for 'a', count[1] for 'b', ..., count[25] for 'z'.
+        vector<int> count(26, 0);
 
-        // First pass: Iterate through string 's' and increment counts.
-        // For each character 'c' in 's', we map it to an index (0-25)
-        // by subtracting the ASCII value of 'a'.
+        // First pass: Iterate through string 's' to build character frequencies.
+        // For each character 'c' in 's', increment its corresponding count.
         for (char c : s) {
+            // 'c - 'a'' converts a character to its 0-25 index.
+            // e.g., 'a' - 'a' = 0, 'b' - 'a' = 1, etc.
             count[c - 'a']++;
         }
 
-        // Second pass: Iterate through string 't' and decrement counts.
-        // For each character 'c' in 't', we decrement its corresponding count.
+        // Second pass: Iterate through string 't' to check against frequencies.
+        // For each character 'c' in 't', decrement its corresponding count.
         for (char c : t) {
             count[c - 'a']--;
 
-            // Immediate check: If a count becomes negative, it means 't' has
-            // more of this character than 's' did. Thus, they cannot be anagrams.
-            // We can return false early without processing the rest of 't'.
+            // If a count drops below zero, it means 't' has more of this character
+            // than 's' did, or 's' didn't have this character at all.
+            // In either case, they cannot be anagrams.
             if (count[c - 'a'] < 0) {
                 return false;
             }
         }
 
-        // If we reach here, it means:
-        // 1. Both strings had the same length (checked initially).
-        // 2. 't' did not contain any character more times than 's' did.
-        // Since lengths are equal, and 't' didn't have excess characters,
-        // all counts in the 'count' array must now be exactly zero.
-        // This implies 's' and 't' have the exact same character frequencies.
+        // If we reach here, it means all characters in 't' were found in 's'
+        // with sufficient counts, and no count ever went negative.
+        // Since we already checked for equal lengths, this implies all counts
+        // must now be exactly zero, meaning 't' is an anagram of 's'.
         return true;
     }
 };
-
 ```
 
 ## ⏱️ Complexity Analysis
 | | Complexity | Reason |
 |---|---|---|
-| **Time** | O(N) | We iterate through string `s` once (O(N)) and string `t` once (O(N)). The length check is O(1). Overall, it's O(N + M), where N and M are lengths of `s` and `t`. Since anagrams must have equal length, this simplifies to O(N). |
-| **Space** | O(1) | We use a fixed-size array of 26 integers to store character frequencies, regardless of the input string lengths. |
+| **Time** | O(N) | We iterate through string `s` once (O(N)) and string `t` once (O(N)). Since anagrams have the same length, N is the length of either string. |
+| **Space** | O(1) | We use a fixed-size array of 26 integers to store character frequencies. This space is constant, regardless of the input string length. |
 
 ## 🔗 Related Problems
-- 49. Group Anagrams
-- 383. Ransom Note
-- 2423. Remove Letter To Equalize Frequency
+*   383. Ransom Note
+*   49. Group Anagrams
+*   76. Minimum Window Substring
