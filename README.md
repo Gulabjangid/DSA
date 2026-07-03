@@ -15,6 +15,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0125-valid-palindrome](https://github.com/Gulabjangid/DSA/tree/master/0125-valid-palindrome) |
 | [0205-isomorphic-strings](https://github.com/Gulabjangid/DSA/tree/master/0205-isomorphic-strings) |
 | [0242-valid-anagram](https://github.com/Gulabjangid/DSA/tree/master/0242-valid-anagram) |
+| [0257-binary-tree-paths](https://github.com/Gulabjangid/DSA/tree/master/0257-binary-tree-paths) |
 | [0383-ransom-note](https://github.com/Gulabjangid/DSA/tree/master/0383-ransom-note) |
 ## Array
 |  |
@@ -89,10 +90,12 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | ------- |
 | [0102-binary-tree-level-order-traversal](https://github.com/Gulabjangid/DSA/tree/master/0102-binary-tree-level-order-traversal) |
 | [0107-binary-tree-level-order-traversal-ii](https://github.com/Gulabjangid/DSA/tree/master/0107-binary-tree-level-order-traversal-ii) |
+| [0257-binary-tree-paths](https://github.com/Gulabjangid/DSA/tree/master/0257-binary-tree-paths) |
 | [0637-average-of-levels-in-binary-tree](https://github.com/Gulabjangid/DSA/tree/master/0637-average-of-levels-in-binary-tree) |
 ## Depth-First Search
 |  |
 | ------- |
+| [0257-binary-tree-paths](https://github.com/Gulabjangid/DSA/tree/master/0257-binary-tree-paths) |
 | [0637-average-of-levels-in-binary-tree](https://github.com/Gulabjangid/DSA/tree/master/0637-average-of-levels-in-binary-tree) |
 ## Breadth-First Search
 |  |
@@ -105,9 +108,14 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | ------- |
 | [0102-binary-tree-level-order-traversal](https://github.com/Gulabjangid/DSA/tree/master/0102-binary-tree-level-order-traversal) |
 | [0107-binary-tree-level-order-traversal-ii](https://github.com/Gulabjangid/DSA/tree/master/0107-binary-tree-level-order-traversal-ii) |
+| [0257-binary-tree-paths](https://github.com/Gulabjangid/DSA/tree/master/0257-binary-tree-paths) |
 | [0637-average-of-levels-in-binary-tree](https://github.com/Gulabjangid/DSA/tree/master/0637-average-of-levels-in-binary-tree) |
 ## Linked List
 |  |
 | ------- |
 | [0328-odd-even-linked-list](https://github.com/Gulabjangid/DSA/tree/master/0328-odd-even-linked-list) |
+## Backtracking
+|  |
+| ------- |
+| [0257-binary-tree-paths](https://github.com/Gulabjangid/DSA/tree/master/0257-binary-tree-paths) |
 <!---LeetCode Topics End-->
