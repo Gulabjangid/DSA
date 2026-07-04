@@ -39,6 +39,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 ## Math
 |  |
 | ------- |
+| [0002-add-two-numbers](https://github.com/Gulabjangid/DSA/tree/master/0002-add-two-numbers) |
 | [0189-rotate-array](https://github.com/Gulabjangid/DSA/tree/master/0189-rotate-array) |
 ## Hash Table
 |  |
@@ -128,6 +129,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 ## Linked List
 |  |
 | ------- |
+| [0002-add-two-numbers](https://github.com/Gulabjangid/DSA/tree/master/0002-add-two-numbers) |
 | [0328-odd-even-linked-list](https://github.com/Gulabjangid/DSA/tree/master/0328-odd-even-linked-list) |
 ## Backtracking
 |  |
@@ -142,4 +144,8 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 |  |
 | ------- |
 | [0324-wiggle-sort-ii](https://github.com/Gulabjangid/DSA/tree/master/0324-wiggle-sort-ii) |
+## Recursion
+|  |
+| ------- |
+| [0002-add-two-numbers](https://github.com/Gulabjangid/DSA/tree/master/0002-add-two-numbers) |
 <!---LeetCode Topics End-->
