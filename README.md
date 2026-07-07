@@ -13,6 +13,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 |  |
 | ------- |
 | [0003-longest-substring-without-repeating-characters](https://github.com/Gulabjangid/DSA/tree/master/0003-longest-substring-without-repeating-characters) |
+| [0049-group-anagrams](https://github.com/Gulabjangid/DSA/tree/master/0049-group-anagrams) |
 | [0125-valid-palindrome](https://github.com/Gulabjangid/DSA/tree/master/0125-valid-palindrome) |
 | [0205-isomorphic-strings](https://github.com/Gulabjangid/DSA/tree/master/0205-isomorphic-strings) |
 | [0242-valid-anagram](https://github.com/Gulabjangid/DSA/tree/master/0242-valid-anagram) |
@@ -23,6 +24,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | ------- |
 | [0001-two-sum](https://github.com/Gulabjangid/DSA/tree/master/0001-two-sum) |
 | [0027-remove-element](https://github.com/Gulabjangid/DSA/tree/master/0027-remove-element) |
+| [0049-group-anagrams](https://github.com/Gulabjangid/DSA/tree/master/0049-group-anagrams) |
 | [0118-pascals-triangle](https://github.com/Gulabjangid/DSA/tree/master/0118-pascals-triangle) |
 | [0167-two-sum-ii-input-array-is-sorted](https://github.com/Gulabjangid/DSA/tree/master/0167-two-sum-ii-input-array-is-sorted) |
 | [0169-majority-element](https://github.com/Gulabjangid/DSA/tree/master/0169-majority-element) |
@@ -47,6 +49,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | ------- |
 | [0001-two-sum](https://github.com/Gulabjangid/DSA/tree/master/0001-two-sum) |
 | [0003-longest-substring-without-repeating-characters](https://github.com/Gulabjangid/DSA/tree/master/0003-longest-substring-without-repeating-characters) |
+| [0049-group-anagrams](https://github.com/Gulabjangid/DSA/tree/master/0049-group-anagrams) |
 | [0169-majority-element](https://github.com/Gulabjangid/DSA/tree/master/0169-majority-element) |
 | [0205-isomorphic-strings](https://github.com/Gulabjangid/DSA/tree/master/0205-isomorphic-strings) |
 | [0242-valid-anagram](https://github.com/Gulabjangid/DSA/tree/master/0242-valid-anagram) |
@@ -61,6 +64,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 ## Sorting
 |  |
 | ------- |
+| [0049-group-anagrams](https://github.com/Gulabjangid/DSA/tree/master/0049-group-anagrams) |
 | [0169-majority-element](https://github.com/Gulabjangid/DSA/tree/master/0169-majority-element) |
 | [0242-valid-anagram](https://github.com/Gulabjangid/DSA/tree/master/0242-valid-anagram) |
 | [0324-wiggle-sort-ii](https://github.com/Gulabjangid/DSA/tree/master/0324-wiggle-sort-ii) |
