@@ -1,20 +1,21 @@
 # 0643-maximum-average-subarray-i
 
 ## 📋 Problem Description
-You are given an integer array `nums` of `n` elements and an integer `k`. Your task is to find a contiguous subarray (a sequence of adjacent elements) within `nums` that has a length exactly equal to `k`. Among all such subarrays, you need to find the one with the maximum average value and return this maximum average. Any answer with a calculation error less than `10^-5` will be accepted.
+You are given an integer array `nums` consisting of `n` elements, and an integer `k`.
+Your task is to find a contiguous subarray (a sequence of adjacent elements) whose length is exactly `k` and which has the maximum possible average value. You must return this maximum average value. Any answer with a calculation error less than `10^-5` will be accepted.
 
-**Input:**
-*   `nums`: An array of integers.
-*   `k`: An integer representing the required length of the subarray.
+The function `findMaxAverage` receives:
+- `nums`: A `std::vector<int>` representing the input array.
+- `k`: An `int` representing the required length of the subarray.
 
-**Output:**
-*   A `double` representing the maximum average value found.
+It must return:
+- A `double` representing the maximum average value found.
 
 ## 🔍 Examples
 ```
 Input: nums = [1,12,-5,-6,50,3], k = 4
 Output: 12.75000
-Explanation: The subarray [12, -5, -6, 50] has a sum of 12 - 5 - 6 + 50 = 51.
+Explanation: The subarray [12,-5,-6,50] has a sum of 12 - 5 - 6 + 50 = 51.
 Its average is 51 / 4 = 12.75. This is the maximum average for any subarray of length 4.
 
 Input: nums = [5], k = 1
@@ -28,85 +29,77 @@ Explanation: The only subarray of length 1 is [5]. Its sum is 5, and its average
 *   `-10^4 <= nums[i] <= 10^4`
 
 ## 🤔 Understanding the Problem
-The problem asks us to identify a specific segment of `k` consecutive numbers within a larger array `nums` such that the average of these `k` numbers is as high as possible. Since `k` is fixed, maximizing the average is equivalent to maximizing the sum of the `k` numbers. The challenge lies in efficiently checking all possible contiguous subarrays of length `k` without redundant calculations.
+The problem asks us to identify a specific type of subarray: it must be contiguous (elements must be adjacent in the original array) and have a fixed length `k`. Among all such subarrays, we need to find the one whose elements sum up to the largest value, as a larger sum directly translates to a larger average when the divisor (`k`) is constant. The core challenge is to efficiently calculate the sum for all possible `k`-length subarrays without redundant computations.
 
 ## 💡 Core Idea
-To find the maximum sum (and thus maximum average) of a fixed-length subarray efficiently, we can use a "sliding window" approach. Instead of re-calculating the sum for each new subarray of length `k`, we can maintain a running sum and update it incrementally as the window slides.
+Instead of recalculating the sum for each `k`-length subarray from scratch, we can maintain a "current sum" as we move a window of size `k` across the array. When the window slides one position to the right, we simply add the new element entering the window and subtract the element leaving the window, updating the sum in constant time.
 
 ## 🧠 Approach — Sliding Window
-This problem is a classic application of the **Sliding Window** pattern. This pattern is ideal when you need to find something (like a maximum sum, minimum length, or specific count) in a contiguous subarray or substring of a given size, or when the size can vary but needs to satisfy certain conditions.
-
-Here, we are looking for a contiguous subarray of *fixed length* `k`. A sliding window allows us to process each element of the array exactly twice (once when it enters the window, once when it leaves), leading to an optimal linear time complexity. We maintain a window of size `k`, calculate its sum, update our maximum average, and then "slide" the window one position to the right by adding the new element entering the window and subtracting the element leaving it.
+This problem is a classic example of the **Sliding Window** pattern.
+The Sliding Window technique is ideal here because we are looking for a contiguous subarray of a *fixed size* (`k`). Instead of iterating through all possible starting positions and then summing `k` elements for each (which would be inefficient), we can use a window that "slides" across the array. This allows us to update the sum of elements within the window in O(1) time for each step, by adding the new element that enters the window and subtracting the element that leaves it. This significantly optimizes the overall time complexity.
 
 ## 📝 Step-by-Step Algorithm
-1.  **Initialization**:
-    *   Initialize a variable `current_window_sum` to `0.0` to store the sum of elements in the current window. We use `double` to avoid potential integer overflow for sums and for accurate average calculation.
-    *   Initialize a variable `max_average` to a very small negative number (e.g., `-(double)INT_MAX` or the average of the first `k` elements) to ensure any valid average will be greater.
-    *   Initialize a `left` pointer to `0`, representing the start of our sliding window.
-    *   Initialize a `count` variable to `0` to track the number of elements currently in the window.
-
-2.  **Iterate and Slide**:
-    *   Use a `right` pointer to iterate through the `nums` array from index `0` to `n-1` (where `n` is `nums.size()`).
-    *   In each iteration, add `nums[right]` to `current_window_sum` and increment `count`. This expands the window to the right.
-
-3.  **Check Window Size and Update**:
-    *   Once `count` becomes equal to `k` (meaning the window has reached the desired length):
-        *   Calculate the `current_average` as `current_window_sum / k`.
-        *   Update `max_average = max(max_average, current_average)`.
-        *   To slide the window forward, subtract `nums[left]` from `current_window_sum` (removing the element that is now leaving the window).
-        *   Increment `left` by `1` (moving the window's start).
-        *   Decrement `count` by `1` (as one element left the window).
-
-4.  **Return Result**:
-    *   After the `right` pointer has traversed the entire array, `max_average` will hold the maximum average value found. Return `max_average`.
+1.  Initialize `current_sum` to `0.0` (using a double to ensure accurate average calculation).
+2.  Initialize `max_average` to a very small negative number (e.g., `INT_MIN` cast to `double`) to ensure any valid average will be greater.
+3.  Initialize a `left` pointer to `0`, representing the start of our sliding window.
+4.  Initialize a `count` variable to `0`, which will track the number of elements currently in our `current_sum`.
+5.  Iterate with a `right` pointer from `0` to `nums.size() - 1`:
+    a.  Add `nums[right]` to `current_sum`.
+    b.  Increment `count`.
+    c.  Check if the `count` of elements in the window is equal to `k`. This means our window has reached the desired size.
+        i.   Calculate the `current_average` by dividing `current_sum` by `k`.
+        ii.  Update `max_average` to be the maximum of its current value and `current_average`.
+        iii. To slide the window, subtract `nums[left]` from `current_sum` (removing the element that is now outside the window).
+        iv.  Increment `left` to move the window's starting point one position to the right.
+        v.   Decrement `count` (since one element left the window, and `right` will soon add a new one, keeping the effective window size `k`).
+6.  After the loop finishes, `max_average` will hold the maximum average value found. Return `max_average`.
 
 ## 💻 Solution
 ```cpp
 class Solution {
 public:
     double findMaxAverage(vector<int>& nums, int k) {
-        // 'left' pointer marks the beginning of our current sliding window.
+        // 'left' pointer marks the beginning of our sliding window.
         int left = 0;
         
-        // 'current_window_sum' stores the sum of elements within the current window.
-        // It's declared as double to ensure accurate division for average calculation
-        // and to prevent potential integer overflow if sums are very large.
-        double current_window_sum = 0;
+        // 'current_sum' will store the sum of elements within the current window.
+        // Use double to prevent integer division issues and maintain precision for average.
+        double current_sum = 0;
         
-        // 'count' keeps track of how many elements are currently in the window.
+        // 'count' tracks how many elements are currently included in 'current_sum'.
+        // This helps determine when the window has reached size 'k'.
         int count = 0;
         
-        // 'max_average' will store the maximum average found across all valid windows.
-        // Initialized to a very small double value to ensure any valid average will be greater.
-        // INT_MIN is an int, but when compared with a double, it will be promoted.
-        // Using -(double)INT_MAX or similar would be more explicit for doubles.
-        double max_average = -2000000000.0; // A value smaller than any possible average (-10^4 * 10^5 / 10^5 = -10^4)
-
-        // The 'right' pointer iterates through the array, expanding the window.
+        // 'max_average' stores the maximum average found so far.
+        // Initialize with the smallest possible double value to ensure any valid average is greater.
+        double max_average = -2000000000.0; // A value smaller than any possible average (-10^4 * 10^5 / 10^5 = -10^4, so -2*10^9 is safe)
+                                            // Or simply use std::numeric_limits<double>::lowest() if available and preferred.
+                                            // For competitive programming, a sufficiently small constant is often used.
+        
+        // 'right' pointer iterates through the array, expanding the window.
         for (int right = 0; right < nums.size(); right++) {
-            // Add the element at the 'right' pointer to the current window sum.
-            current_window_sum += nums[right];
+            // Add the element at the 'right' pointer to our current sum.
+            current_sum += nums[right];
             // Increment the count of elements in the window.
             count++;
             
-            // Check if the window has reached the desired length 'k'.
-            // The condition 'left <= right' is always true when 'count == k' for k >= 1,
-            // so it's technically redundant but harmless.
+            // Once the window size ('count') equals 'k', we have a valid subarray of length 'k'.
             if (count == k) {
                 // Calculate the average for the current window.
-                // Update 'max_average' if the current window's average is higher.
-                max_average = std::max(max_average, current_window_sum / k);
+                // Update 'max_average' if the current window's average is greater.
+                max_average = std::max(max_average, current_sum / k);
                 
-                // To slide the window, remove the element at the 'left' pointer
-                // from the 'current_window_sum'.
-                current_window_sum -= nums[left];
+                // To slide the window, remove the element at the 'left' pointer from 'current_sum'.
+                current_sum -= nums[left];
                 // Move the 'left' pointer one step to the right.
                 left++;
-                // Decrement the count as one element has left the window.
+                // Decrement 'count' as one element has left the window.
+                // The next iteration will add a new element at 'right', bringing 'count' back to 'k'.
                 count--;
             }
         }
-        // After iterating through all possible windows, return the maximum average found.
+        
+        // After iterating through all possible windows, 'max_average' holds the result.
         return max_average;
     }
 };
@@ -115,10 +108,10 @@ public:
 ## ⏱️ Complexity Analysis
 | | Complexity | Reason |
 |---|---|---|
-| **Time** | O(N) | The `right` pointer iterates through the `nums` array exactly once. Each element is added to `current_window_sum` once and subtracted once. All operations inside the loop are constant time. |
-| **Space** | O(1) | Only a few constant extra variables (`left`, `current_window_sum`, `count`, `max_average`) are used, regardless of the input array size. |
+| **Time** | O(N) | The `right` pointer iterates through the `nums` array exactly once. Each element is added to `current_sum` once and potentially subtracted once. All operations inside the loop (addition, subtraction, comparison, division) are constant time (O(1)). |
+| **Space** | O(1) | We only use a few constant extra variables (`left`, `current_sum`, `count`, `max_average`) regardless of the input array size `N`. |
 
 ## 🔗 Related Problems
-*   209. Minimum Size Subarray Sum
-*   3. Longest Substring Without Repeating Characters
-*   713. Subarray Product Less Than K
+- 209. Minimum Size Subarray Sum
+- 3. Longest Substring Without Repeating Characters
+- 1456. Maximum Number of Vowels in a Substring of Given Length
