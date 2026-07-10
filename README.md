@@ -11,6 +11,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0167-two-sum-ii-input-array-is-sorted](https://github.com/Gulabjangid/DSA/tree/master/0167-two-sum-ii-input-array-is-sorted) |
 | [0189-rotate-array](https://github.com/Gulabjangid/DSA/tree/master/0189-rotate-array) |
 | [0349-intersection-of-two-arrays](https://github.com/Gulabjangid/DSA/tree/master/0349-intersection-of-two-arrays) |
+| [0443-string-compression](https://github.com/Gulabjangid/DSA/tree/master/0443-string-compression) |
 | [0977-squares-of-a-sorted-array](https://github.com/Gulabjangid/DSA/tree/master/0977-squares-of-a-sorted-array) |
 ## String
 |  |
@@ -22,6 +23,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0242-valid-anagram](https://github.com/Gulabjangid/DSA/tree/master/0242-valid-anagram) |
 | [0257-binary-tree-paths](https://github.com/Gulabjangid/DSA/tree/master/0257-binary-tree-paths) |
 | [0383-ransom-note](https://github.com/Gulabjangid/DSA/tree/master/0383-ransom-note) |
+| [0443-string-compression](https://github.com/Gulabjangid/DSA/tree/master/0443-string-compression) |
 ## Array
 |  |
 | ------- |
