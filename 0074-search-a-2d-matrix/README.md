@@ -2,12 +2,12 @@
 
 ## 📋 Problem Description
 You are given an `m x n` integer matrix with two special properties:
-1.  Each row is sorted in non-decreasing order (elements are arranged from smallest to largest).
-2.  The first integer of each row is strictly greater than the last integer of the previous row.
+1. Each row is sorted in non-decreasing order from left to right.
+2. The first integer of each row is greater than the last integer of the previous row.
 
-Given this matrix and an integer `target`, your task is to determine if the `target` value exists within the matrix. You must return `true` if the `target` is found, and `false` otherwise.
+Given an integer `target`, your task is to determine if `target` exists within the `matrix`. You must return `true` if it's found, and `false` otherwise.
 
-The solution must achieve an `O(log(m * n))` time complexity.
+The solution must have a time complexity of `O(log(m * n))`.
 
 ## 🔍 Examples
 ```
@@ -22,6 +22,12 @@ Output: false
 Explanation: The target '13' is not present in the matrix.
 ```
 
+```
+Input: matrix = [[1]], target = 1
+Output: true
+Explanation: The target '1' is present in the single-element matrix.
+```
+
 ## 📌 Constraints
 *   `m == matrix.length` (number of rows)
 *   `n == matrix[i].length` (number of columns)
@@ -29,121 +35,120 @@ Explanation: The target '13' is not present in the matrix.
 *   `-10^4 <= matrix[i][j], target <= 10^4`
 
 ## 🤔 Understanding the Problem
-The problem asks us to find a specific `target` value in a 2D matrix that has a very specific sorted structure. Not only are individual rows sorted, but the rows themselves are "sorted" relative to each other. This means that if you were to flatten the entire matrix into a single 1D array, it would be completely sorted. This crucial property is what makes the problem non-trivial and hints at a highly efficient search algorithm, specifically one that can leverage sorted data. The `O(log(m * n))` time complexity requirement further reinforces this idea.
+The problem asks us to efficiently find a `target` value in a 2D matrix. The key to solving this efficiently lies in the two given properties: rows are sorted, and the first element of a row is greater than the last element of the previous row. These properties imply that if we were to flatten the entire matrix into a single 1D array, that array would also be sorted. This strong ordering suggests that a linear scan (which would be `O(m*n)`) is not optimal, and we should aim for a logarithmic time complexity.
 
 ## 💡 Core Idea
-The key insight is that due to the two sorted properties (rows sorted, and first element of a row > last element of previous row), the entire `m x n` matrix can be conceptually treated as a single, flattened 1D sorted array of `m * n` elements. This allows us to apply binary search, which is ideal for searching in sorted data structures, to achieve the required logarithmic time complexity.
+The core idea is to leverage the fully sorted nature of the matrix (conceptually, if flattened) to apply binary search. Since the matrix is sorted both row-wise and across rows, we can use binary search to first pinpoint the correct row where the target *might* exist, and then use another binary search to find the target within that specific row.
 
-## 🧠 Approach — Binary Search
-This problem is a classic application of **Binary Search**.
-The reason this pattern fits perfectly is because of the two strong sorted properties of the matrix. Each row is sorted, and critically, the first element of any row is greater than the last element of the preceding row. This implies that if you were to concatenate all rows, you would get a single, perfectly sorted 1D array. Binary search is the most efficient algorithm for searching in sorted data, providing a logarithmic time complexity, which directly matches the `O(log(m * n))` requirement. We can perform two binary searches: one to find the correct row, and another to find the element within that row.
+## 🧠 Approach — Binary Search (Two-Phase)
+This problem is a classic application of **Binary Search**. The reason this pattern fits perfectly is due to the highly sorted nature of the matrix. The two properties (rows sorted, and first element of a row greater than the last of the previous) essentially mean that the entire matrix, when viewed as a single sequence of numbers, is sorted. This allows us to eliminate large portions of the search space in logarithmic time. We can perform a binary search on the rows to find the correct row, and then a second binary search on the elements within that row.
 
 ## 📝 Step-by-Step Algorithm
 
-1.  **First Binary Search (Row Search):**
-    *   Initialize `str` (start row index) to `0` and `enr` (end row index) to `m - 1` (where `m` is the number of rows).
-    *   Enter a `while` loop that continues as long as `str <= enr`.
-    *   Inside the loop, calculate the `mid` row index: `mid = str + (enr - str) / 2`. This prevents potential integer overflow compared to `(str + enr) / 2`.
-    *   Compare the `target` with the first and last elements of the `mid`-th row:
-        *   If `target` is greater than or equal to `mat[mid][0]` (the first element of the `mid` row) AND `target` is less than or equal to `mat[mid][n-1]` (the last element of the `mid` row), it means the `target` *could* be in this `mid` row. At this point, we've narrowed down the search to a single row. Proceed to step 2 (Second Binary Search) on this specific row.
-        *   If `target` is less than `mat[mid][0]`, it means the `target` must be in a row *before* the `mid` row (if it exists). So, update `enr = mid - 1`.
-        *   If `target` is greater than `mat[mid][n-1]`, it means the `target` must be in a row *after* the `mid` row (if it exists). So, update `str = mid + 1`.
-    *   If the `while` loop finishes without finding a suitable row (i.e., the target was not within the range of any row), it means the `target` is not in the matrix. Return `false`.
-
-2.  **Second Binary Search (Column Search within the identified Row):**
-    *   This step is called if the first binary search successfully identifies a potential row. Let's say this row is `mat[row_index]`.
-    *   Initialize `st` (start column index) to `0` and `end` (end column index) to `n - 1` (where `n` is the number of columns).
-    *   Enter a `while` loop that continues as long as `st <= end`.
-    *   Inside the loop, calculate the `midr` (mid column index): `midr = st + (end - st) / 2`.
-    *   Compare `mat[row_index][midr]` with the `target`:
-        *   If `mat[row_index][midr] == target`, we found the `target`. Return `true`.
-        *   If `mat[row_index][midr] < target`, the `target` must be in the right half of the current search space within this row. Update `st = midr + 1`.
-        *   If `mat[row_index][midr] > target`, the `target` must be in the left half of the current search space within this row. Update `end = midr - 1`.
-    *   If this `while` loop finishes without finding the `target` in the specified row, it means the `target` is not in that row. Return `false`.
+1.  **Initialize Row Search Boundaries**: Set `str` (start row) to `0` and `enr` (end row) to `m-1` (where `m` is the number of rows).
+2.  **Binary Search for the Correct Row**:
+    *   While `str` is less than or equal to `enr`:
+        *   Calculate `mid` row index: `mid = str + (enr - str) / 2`.
+        *   **Check if target is in the current `mid` row's range**:
+            *   If `target` is greater than or equal to the first element of `matrix[mid]` (`matrix[mid][0]`) AND `target` is less than or equal to the last element of `matrix[mid]` (`matrix[mid][n-1]`):
+                *   This means the `target` *could* be in this row. Proceed to step 3 (binary search within this row).
+        *   **Adjust row search boundaries**:
+            *   If `target` is less than `matrix[mid][0]`:
+                *   The target must be in an earlier row (if it exists). Update `enr = mid - 1`.
+            *   Else (if `target` is greater than `matrix[mid][n-1]`):
+                *   The target must be in a later row (if it exists). Update `str = mid + 1`.
+3.  **Binary Search within the Identified Row**:
+    *   If a potential row was found in step 2 (i.e., the `target` falls within its range), perform a standard binary search on that specific row (`matrix[mid]`).
+    *   Initialize `st` (start column) to `0` and `end` (end column) to `n-1` (where `n` is the number of columns).
+    *   While `st` is less than or equal to `end`:
+        *   Calculate `midr` (middle column index): `midr = st + (end - st) / 2`.
+        *   **Compare `matrix[mid][midr]` with `target`**:
+            *   If `matrix[mid][midr]` equals `target`:
+                *   The target is found. Return `true`.
+            *   If `matrix[mid][midr]` is less than `target`:
+                *   The target must be in the right half of the current search space. Update `st = midr + 1`.
+            *   Else (`matrix[mid][midr]` is greater than `target`):
+                *   The target must be in the left half of the current search space. Update `end = midr - 1`.
+4.  **Target Not Found**: If the binary search for rows completes without finding a suitable row, or if the binary search within a row completes without finding the target, return `false`.
 
 ## 💻 Solution
-
 ```cpp
 class Solution {
 public:
-    // Helper function to perform binary search on a single row
-    // 'mat' is the entire matrix, 'target' is the value to find,
-    // 'mid' is the index of the row to search within.
-    bool search(vector<vector<int>>& mat, int target, int mid) {
-        // Initialize start and end pointers for binary search within the row
-        int st = 0;
-        int end = mat[mid].size() - 1; // 'mat[mid].size()' gives the number of columns in this row
+    // Helper function to perform binary search within a specific row
+    bool search(vector<vector<int>>& mat, int target, int mid_row_idx) {
+        // 'mid_row_idx' is the index of the row we need to search in.
+        // 'mat[mid_row_idx]' is the actual row (a 1D vector).
 
-        // Perform standard binary search
+        int st = 0; // Start index for column search
+        int end = mat[mid_row_idx].size() - 1; // End index for column search
+
+        // Standard binary search loop
         while (st <= end) {
-            // Calculate the middle index to avoid potential integer overflow
-            int midr = st + (end - st) / 2;
+            int mid_col_idx = st + (end - st) / 2; // Calculate middle column index to prevent overflow
 
-            // Check if the element at midr is the target
-            if (mat[mid][midr] == target) {
-                return true; // Target found
+            // Check if the element at the middle column is our target
+            if (mat[mid_row_idx][mid_col_idx] == target) {
+                return true; // Target found in this row
             }
-            // If target is greater, search in the right half
-            else if (mat[mid][midr] < target) {
-                st = midr + 1;
+            // If the middle element is less than target, search in the right half
+            else if (mat[mid_row_idx][mid_col_idx] < target) {
+                st = mid_col_idx + 1;
             }
-            // If target is smaller, search in the left half
+            // If the middle element is greater than target, search in the left half
             else {
-                end = midr - 1;
+                end = mid_col_idx - 1;
             }
         }
         return false; // Target not found in this row
     }
 
-    // Main function to search for target in the 2D matrix
+    // Main function to search for the target in the 2D matrix
     bool searchMatrix(vector<vector<int>>& mat, int target) {
-        // Get the dimensions of the matrix
-        int m = mat.size();    // Number of rows
-        int n = mat[0].size(); // Number of columns (assuming matrix is not empty and rows have same length)
+        int m = mat.size(); // Number of rows
+        if (m == 0) return false; // Handle empty matrix case
+        int n = mat[0].size(); // Number of columns
+        if (n == 0) return false; // Handle empty rows case
 
-        // Initialize start and end pointers for binary search on rows
-        int str = 0; // Start row index
-        int enr = m - 1; // End row index
+        int str = 0; // Start index for row search
+        int enr = m - 1; // End index for row search
 
-        // Perform binary search to find the correct row
+        // Binary search to find the correct row where the target might reside
         while (str <= enr) {
-            // Calculate the middle row index
-            int mid = str + (enr - str) / 2;
+            int mid_row_idx = str + (enr - str) / 2; // Calculate middle row index
 
-            // Check if the target falls within the range of the current 'mid' row
-            // This means target >= first element of mid row AND target <= last element of mid row
-            if (target >= mat[mid][0] && target <= mat[mid][n - 1]) {
-                // If it does, perform a binary search within this specific row
-                return search(mat, target, mid);
+            // Check if the target falls within the range of values in the current middle row.
+            // Due to the matrix properties, if target is in the matrix, it must be in this row
+            // if it's between the first and last elements of this row.
+            if (target >= mat[mid_row_idx][0] && target <= mat[mid_row_idx][n - 1]) {
+                // Target is potentially in this row, so perform a binary search within this row
+                return search(mat, target, mid_row_idx);
             }
-            // If target is smaller than the first element of the 'mid' row,
+            // If target is less than the first element of the current row,
             // it must be in an earlier row (if it exists).
-            else if (target < mat[mid][0]) {
-                enr = mid - 1;
+            else if (target < mat[mid_row_idx][0]) {
+                enr = mid_row_idx - 1;
             }
-            // If target is larger than the last element of the 'mid' row,
+            // If target is greater than the last element of the current row,
             // it must be in a later row (if it exists).
             else {
-                str = mid + 1;
+                str = mid_row_idx + 1;
             }
         }
 
-        // If the loop finishes, it means no suitable row was found,
-        // so the target is not in the matrix.
+        // If the loop finishes, it means no suitable row was found where the target could exist.
         return false;
     }
 };
-
 ```
 
 ## ⏱️ Complexity Analysis
-
 | | Complexity | Reason |
 |---|---|---|
-| **Time** | O(log(m * n)) | The first binary search takes O(log m) time to find the correct row. The second binary search takes O(log n) time to find the element within that row. The total time is O(log m + log n), which simplifies to O(log(m * n)). |
-| **Space** | O(1) | The solution uses a constant amount of extra space for variables (pointers, mid indices) regardless of the input matrix size. |
+| **Time** | O(log(m * n)) | The algorithm performs two binary searches: one on `m` rows (O(log m)) and another on `n` columns (O(log n)). The total time is O(log m + log n), which simplifies to O(log(m * n)). |
+| **Space** | O(1) | The solution uses a constant amount of extra space for variables like `str`, `enr`, `mid`, etc., regardless of the input matrix size. |
 
 ## 🔗 Related Problems
-- 704. Binary Search
-- 33. Search in Rotated Sorted Array
+- 240. Search a 2D Matrix II
 - 162. Find Peak Element
+- 33. Search in Rotated Sorted Array
