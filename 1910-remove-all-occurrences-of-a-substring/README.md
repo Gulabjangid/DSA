@@ -1,35 +1,41 @@
 # 1910-remove-all-occurrences-of-a-substring
 
 ## 📋 Problem Description
-Given two strings, `s` and `part`, the task is to repeatedly remove all occurrences of the substring `part` from `s`. The removal operation must always target the **leftmost** occurrence of `part` in `s`. This process continues until `s` no longer contains any occurrences of `part`. The function should return the final string `s` after all such removals have been completed.
+You are given two strings, `s` and `part`. Your task is to repeatedly perform an operation on `s` until all occurrences of the substring `part` have been removed. The operation is as follows:
+1. Find the **leftmost** occurrence of `part` within `s`.
+2. Remove this occurrence of `part` from `s`.
+
+You must return the final string `s` after all occurrences of `part` have been removed.
+
+A substring is defined as a contiguous sequence of characters within a string.
 
 **Input:**
 *   `s`: The main string from which occurrences of `part` are to be removed.
 *   `part`: The substring to be removed.
 
 **Output:**
-*   The modified string `s` after all occurrences of `part` have been removed according to the specified rule.
+*   A string, which is `s` after all specified operations have been completed.
 
 ## 🔍 Examples
 ```
 Input: s = "daabcbaabcbc", part = "abc"
 Output: "dab"
-Explanation:
-1. s = "da_abc_baabcbc", remove "abc" at index 2. s becomes "dabaabcbc".
-2. s = "daba_abc_bc", remove "abc" at index 4. s becomes "dababc".
-3. s = "dab_abc_", remove "abc" at index 3. s becomes "dab".
-Now "dab" contains no "abc".
+Explanation: The following operations are done:
+- s = "da_abc_baabcbc", remove "abc" starting at index 2, so s becomes "dabaabcbc".
+- s = "daba_abc_bc", remove "abc" starting at index 4, so s becomes "dababc".
+- s = "dab_abc_", remove "abc" starting at index 3, so s becomes "dab".
+Now s has no occurrences of "abc".
 ```
 
 ```
 Input: s = "axxxxyyyyb", part = "xy"
 Output: "ab"
-Explanation:
-1. s = "axxx_xy_yyyb", remove "xy" at index 4. s becomes "axxxyyyb".
-2. s = "axx_xy_yyb", remove "xy" at index 3. s becomes "axxyyb".
-3. s = "ax_xy_yb", remove "xy" at index 2. s becomes "axyb".
-4. s = "a_xy_b", remove "xy" at index 1. s becomes "ab".
-Now "ab" contains no "xy".
+Explanation: The following operations are done:
+- s = "axxx_xy_yyyb", remove "xy" starting at index 4, so s becomes "axxxyyyb".
+- s = "axx_xy_yyb", remove "xy" starting at index 3, so s becomes "axxyyb".
+- s = "ax_xy_yb", remove "xy" starting at index 2, so s becomes "axyb".
+- s = "a_xy_b", remove "xy" starting at index 1, so s becomes "ab".
+Now s has no occurrences of "xy".
 ```
 
 ## 📌 Constraints
@@ -38,63 +44,64 @@ Now "ab" contains no "xy".
 *   `s` and `part` consist of lowercase English letters.
 
 ## 🤔 Understanding the Problem
-The problem asks us to simulate a specific string manipulation process. The key aspects are:
-1.  **Repeated Removal**: We must continue removing `part` until no occurrences are left. This implies a loop.
-2.  **Leftmost Occurrence**: In each step, if multiple `part` substrings exist, we *must* remove the one that starts earliest in `s`.
-3.  **Dynamic String**: Removing a substring changes `s`, potentially creating new occurrences of `part` or shifting existing ones. For example, if `s = "ababa"` and `part = "aba"`, removing the first "aba" at index 0 leaves "ba". If we removed the "aba" at index 2, it would leave "ab". The "leftmost" rule is crucial.
-
-The non-trivial aspect is that string modifications can be expensive, and the number of operations might be large. We need an efficient way to find and remove substrings repeatedly.
+The problem asks us to repeatedly find and remove the *leftmost* occurrence of a given `part` substring from a main string `s`. This process continues until `part` can no longer be found in `s`. The key challenge is that removing a substring can potentially create new occurrences of `part` that weren't there before, or shift existing ones. For example, if `s = "ababa"` and `part = "aba"`, removing the first "aba" leaves "ba". If `s = "abccba"` and `part = "bc"`, removing "bc" leaves "acba". The "leftmost" rule is crucial for deterministic behavior.
 
 ## 💡 Core Idea
-The most straightforward approach is to directly simulate the process described: repeatedly find the leftmost occurrence of `part` and remove it. This continues until `part` is no longer found in the string `s`.
+The most straightforward approach is to directly simulate the process described: repeatedly search for the `part` substring and remove it. The problem statement explicitly defines the operation, and we can use built-in string functions to perform these steps efficiently.
 
-## 🧠 Approach — Direct Simulation
-This problem can be solved using a **Direct Simulation** approach. This pattern is suitable when the problem statement explicitly describes a sequence of operations to be performed until a certain condition is met. Here, we are told to "perform the following operation on `s` until all occurrences of the substring `part` are removed." The operation itself is simple: find the leftmost `part` and remove it. Modern string libraries often provide efficient built-in functions for finding and removing substrings, making direct simulation a viable and often optimal strategy for problems with these constraints.
+## 🧠 Approach — Simulation / Direct String Manipulation
+This problem can be solved using a **Simulation** approach, which directly mimics the operations described in the problem statement. We repeatedly perform the "find leftmost occurrence and remove it" step until no more occurrences are found. This pattern fits because the problem's rules are simple and can be directly translated into common string manipulation functions. There's no complex state to manage or optimization required beyond the basic operations.
 
 ## 📝 Step-by-Step Algorithm
-1.  Initialize a variable, say `part_length`, with the length of the `part` string. This will be used for the removal operation.
-2.  Enter a loop that continues as long as `part` can be found within the string `s`.
-    a.  Inside the loop, search for the first (leftmost) occurrence of `part` in `s`. Store its starting index, say `found_index`.
-    b.  If `part` is not found (i.e., `found_index` indicates "not found"), exit the loop.
-    c.  If `part` is found, remove the substring `part` from `s` starting at `found_index` and extending for `part_length` characters.
-3.  Once the loop terminates (meaning `part` is no longer present in `s`), return the modified string `s`.
+1.  Get the length of the `part` string, let's call it `part_len`. This will be useful for the removal step.
+2.  Start a loop that continues indefinitely (or until a condition is met to break it).
+3.  Inside the loop, search for the first (leftmost) occurrence of `part` within the current `s` string.
+    *   If `part` is found, get its starting index.
+    *   If `part` is *not* found, it means all occurrences have been removed. Exit the loop.
+4.  If `part` was found at a certain index, remove `part_len` characters from `s` starting at that index. This modifies `s` in place.
+5.  After removing `part`, the loop restarts, and the process repeats with the modified `s`.
+6.  Once the loop terminates (because `part` is no longer found), return the final `s`.
 
 ## 💻 Solution
 ```cpp
 class Solution {
 public:
     string removeOccurrences(string s, string part) {
-        // Get the length of the 'part' string. This will be used for the erase operation.
-        int part_length = part.size();
+        // Get the length of the 'part' string. This will be used
+        // when erasing 'part' from 's'.
+        int part_len = part.size();
 
-        // Continue looping as long as 'part' can be found within 's'.
+        // The loop continues as long as 'part' can be found in 's'.
         // string::npos is a special value indicating that the substring was not found.
         while (s.find(part) != string::npos) {
-            // Find the starting index of the first (leftmost) occurrence of 'part' in 's'.
-            // string::find returns the starting index if found, or string::npos otherwise.
-            int found_index = s.find(part);
+            // Find the starting index of the leftmost occurrence of 'part' in 's'.
+            // string::find returns the index of the first character of the found substring.
+            int found_pos = s.find(part);
 
-            // Erase 'part_length' characters from 's' starting at 'found_index'.
-            // This modifies 's' in-place.
-            s.erase(found_index, part_length);
+            // Erase 'part_len' characters from 's' starting at 'found_pos'.
+            // string::erase(index, count) removes 'count' characters starting at 'index'.
+            s.erase(found_pos, part_len);
+            
+            // The loop will then re-evaluate the condition (s.find(part) != string::npos)
+            // with the modified string 's'. This ensures that if removing 'part' creates
+            // a new leftmost 'part' (e.g., "ababa", remove "aba" -> "ba"), it will be
+            // found and removed in the next iteration.
         }
 
-        // After the loop finishes, 's' no longer contains any occurrences of 'part'.
-        // Return the final modified string.
+        // Once the loop finishes, it means no more occurrences of 'part' are found in 's'.
+        // Return the final modified string 's'.
         return s;
     }
 };
 ```
 
 ## ⏱️ Complexity Analysis
-Let `N` be the initial length of string `s` and `M` be the length of string `part`.
-
 | | Complexity | Reason |
 |---|---|---|
-| **Time** | O(N^2) | In the worst case, `s.find(part)` can take O(N*M) time (using a naive search, which `std::string::find` might use in worst-case scenarios). `s.erase(pos, len)` takes O(N) time as it shifts characters. The loop can run up to N/M times (e.g., `s = "abcabcabc", part = "abc"`). Summing the costs over all iterations: total `find` operations sum to O(N^2) and total `erase` operations sum to O(N^2/M). The dominant factor is O(N^2). |
-| **Space** | O(1) | The solution modifies the input string `s` in-place. No additional data structures are used that scale with the input size. (Note: `std::string` operations might involve internal reallocations, but this is an implementation detail for managing the string's buffer, not auxiliary space for the algorithm itself.) |
+| **Time** | O(N^2) | Let `N` be the initial length of `s` and `M` be the length of `part`. <br> The `while` loop runs `k` times, where `k` is the total number of `part` occurrences removed. In the worst case, `k` can be `O(N)` (e.g., `s = "aaaaa"`, `part = "a"`). <br> Inside the loop: `s.find(part)` takes `O(L_s * M)` in the worst case (where `L_s` is the current length of `s`). `s.erase(pos, M)` takes `O(L_s)` time as characters need to be shifted. <br> Summing these costs over `k` iterations, where `L_s` can be up to `N`, results in a total time complexity of `O(k * (N * M + N))`. <br> Given `k` can be `O(N/M)` (e.g., `s = "abcabc..."`, `part = "abc"`) or `O(N)` (e.g., `s = "aaaaa"`, `part = "a"`), the dominant term becomes `O(N^2)`. For `N=1000`, `N^2 = 10^6`, which is acceptable. |
+| **Space** | O(N) | The solution modifies the input string `s` in place. No additional data structures are created that scale significantly with the input size beyond the string `s` itself, which occupies `O(N)` space. |
 
 ## 🔗 Related Problems
-*   28. Find the Index of the First Occurrence in a String
-*   1047. Remove All Adjacent Duplicates In String
-*   1249. Minimum Remove to Make Valid Parentheses
+*   [1047. Remove All Adjacent Duplicates In String](https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string)
+*   [1209. Remove All Adjacent Duplicates in String II](https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string-ii)
+*   [686. Repeated String Match](https://leetcode.com/problems/repeated-string-match)
