@@ -1,30 +1,31 @@
 # 0240-search-a-2d-matrix-ii
 
 ## 📋 Problem Description
-You are given an `m x n` integer matrix. Your task is to write an efficient algorithm to determine if a given `target` integer exists within this matrix.
+You are given an `m x n` integer matrix. Your task is to write an efficient algorithm that determines if a given `target` value exists within this matrix.
 
-The matrix has two special properties:
+The matrix has two important properties:
 1.  Integers in each row are sorted in ascending order from left to right.
 2.  Integers in each column are sorted in ascending order from top to bottom.
 
-The function should receive the `matrix` (a `vector` of `vector`s of integers) and the `target` integer, and it must return `true` if the `target` is found in the matrix, otherwise `false`.
+The function should receive the `matrix` (a 2D vector of integers) and the `target` integer. It must return `true` if the `target` is found in the matrix, and `false` otherwise.
 
 ## 🔍 Examples
 ```
 Input: matrix = [[1,4,7,11,15],[2,5,8,12,19],[3,6,9,16,22],[10,13,14,17,24],[18,21,23,26,30]], target = 5
 Output: true
-Explanation: The number 5 is present in the matrix at matrix[1][1].
+Explanation: The value 5 is present in the matrix at matrix[1][1].
 ```
 
 ```
 Input: matrix = [[1,4,7,11,15],[2,5,8,12,19],[3,6,9,16,22],[10,13,14,17,24],[18,21,23,26,30]], target = 20
 Output: false
-Explanation: The number 20 is not present in the matrix.
+Explanation: The value 20 is not present in the matrix.
 ```
 
 ```
 Input: matrix = [[-5]], target = -5
 Output: true
+Explanation: The value -5 is present in the matrix at matrix[0][0].
 ```
 
 ## 📌 Constraints
@@ -37,73 +38,82 @@ Output: true
 *   `-10^9 <= target <= 10^9`
 
 ## 🤔 Understanding the Problem
-The problem asks us to find a `target` value in a 2D matrix that has a unique sorting property: both its rows and columns are sorted. This is not a standard sorted matrix where the first element of each row is greater than the last element of the previous row (like in problem 74). Here, an element might be smaller than elements above it in a different column, but larger than elements to its left in the same row. A naive approach of iterating through all elements would be O(m*n), and performing binary search on each row would be O(m log n). The challenge is to leverage the combined row and column sorting for a more efficient solution.
+The problem asks us to find a `target` value in a 2D matrix with a specific sorting property: both rows and columns are sorted. This is not a standard sorted matrix where the first element of each row is greater than the last element of the previous row (like in LeetCode 74). Here, the sorting is independent for rows and columns, which means a simple binary search on the flattened matrix or a binary search on rows followed by binary search on columns won't work directly. The challenge is to leverage *both* sorting properties simultaneously to find the target efficiently, avoiding a brute-force O(m*n) scan.
 
 ## 💡 Core Idea
-The key insight is to start the search from a corner where we can consistently eliminate either a row or a column based on the comparison with the `target`. The top-right or bottom-left corners are ideal for this "elimination" strategy.
+The key insight is to start the search from a corner where we can make a definitive decision about eliminating a row or a column based on comparing the current element with the target. The top-right or bottom-left corners are ideal for this.
 
-## 🧠 Approach — Staircase Search (or Zig-zag Search)
-This problem can be efficiently solved using a "Staircase Search" or "Zig-zag Search" pattern. This pattern is suitable because the sorted nature of both rows and columns allows us to make informed decisions about where to move next in the matrix. By starting at a specific corner (e.g., top-right or bottom-left), comparing the current element with the `target` allows us to eliminate an entire row or an entire column from the search space in each step, significantly reducing the search area.
+## 🧠 Approach — Staircase Search (or Zigzag Search)
+This problem can be efficiently solved using a "Staircase Search" or "Zigzag Search" pattern. This pattern is particularly well-suited for matrices where both rows and columns are sorted. The reason it fits is that by starting at a specific corner (e.g., top-right), comparing the current element with the target allows us to eliminate an entire row or an entire column from the search space in each step, significantly reducing the search area.
 
 ## 📝 Step-by-Step Algorithm
-1.  **Handle Edge Cases**: First, check if the matrix is empty or if its first row is empty. If so, the `target` cannot be found, so return `false`.
-2.  **Initialize Pointers**: Get the number of rows (`m`) and columns (`n`). Initialize two pointers: `row` to `0` (start at the first row) and `col` to `n - 1` (start at the last column). This places our starting point at the top-right corner of the matrix.
-3.  **Iterate and Search**: Enter a `while` loop that continues as long as `row` is within the matrix bounds (`row < m`) and `col` is within the matrix bounds (`col >= 0`).
-    *   **Found Target**: Inside the loop, compare the element at `matrix[row][col]` with the `target`. If `matrix[row][col]` is equal to `target`, we have found it, so return `true`.
-    *   **Current Element Too Large**: If `matrix[row][col]` is greater than `target`: Since the current row is sorted in ascending order, all elements to the right of `matrix[row][col]` would also be greater than `target`. Therefore, we must move left to find a smaller value. Decrement `col` by 1.
-    *   **Current Element Too Small**: If `matrix[row][col]` is less than `target`: Since the current column is sorted in ascending order, all elements above `matrix[row][col]` would also be smaller than `target`. Therefore, we must move down to find a larger value. Increment `row` by 1.
-4.  **Target Not Found**: If the loop finishes without returning `true`, it means the `target` was not found in the matrix. Return `false`.
+1.  **Handle Edge Cases**: First, check if the matrix is empty or if its first row is empty. If so, the target cannot be found, so return `false`.
+2.  **Initialize Pointers**: Get the number of rows (`m`) and columns (`n`). Initialize two pointers:
+    *   `row_idx` to `0` (start at the first row).
+    *   `col_idx` to `n - 1` (start at the last column).
+    This places our starting point at the top-right corner of the matrix.
+3.  **Iterate and Search**: Enter a `while` loop that continues as long as `row_idx` is within the matrix bounds (`row_idx < m`) and `col_idx` is within the matrix bounds (`col_idx >= 0`).
+4.  **Compare Current Element**: Inside the loop, compare the value at `matrix[row_idx][col_idx]` with the `target`:
+    *   **If `matrix[row_idx][col_idx] == target`**: The target is found. Return `true`.
+    *   **If `matrix[row_idx][col_idx] > target`**: The current element is greater than the target. Since elements in the current column are sorted in ascending order from top to bottom, all elements below `matrix[row_idx][col_idx]` in this column will also be greater than the target. Also, elements to the right in the current row are greater. Therefore, we must move to a smaller value. The only way to find a potentially smaller value is to move left in the current row. So, decrement `col_idx` by 1.
+    *   **If `matrix[row_idx][col_idx] < target`**: The current element is smaller than the target. Since elements in the current row are sorted in ascending order from left to right, all elements to the left of `matrix[row_idx][col_idx]` in this row will also be smaller than the target. Also, elements above in the current column are smaller. Therefore, we must move to a larger value. The only way to find a potentially larger value is to move down in the current column. So, increment `row_idx` by 1.
+5.  **Target Not Found**: If the loop finishes (meaning `row_idx` went out of bounds or `col_idx` went out of bounds), it means the target was not found in the matrix. Return `false`.
 
 ## 💻 Solution
 ```cpp
 class Solution {
 public:
     bool searchMatrix(vector<vector<int>>& mat, int tar) {
-        // Handle edge case: if the matrix is empty or has empty rows, target cannot be found.
+        // Handle edge cases: If the matrix is empty or has empty rows,
+        // the target cannot be found.
         if (mat.empty() || mat[0].empty())
-            return false; 
+            return false;
 
         // Get the dimensions of the matrix.
-        int row_count = mat.size();    // Number of rows
-        int col_count = mat[0].size(); // Number of columns
+        int numRows = mat.size();
+        int numCols = mat[0].size();
 
         // Initialize pointers for our search.
         // We start from the top-right corner of the matrix.
-        // 'r' for current row index, 'c' for current column index.
-        int r = 0;             // Start at the first row (index 0)
-        int c = col_count - 1; // Start at the last column (index col_count - 1)
+        // 'r' represents the current row index, starting at 0 (first row).
+        // 'c' represents the current column index, starting at numCols - 1 (last column).
+        int r = 0;
+        int c = numCols - 1;
 
-        // Continue searching as long as our pointers are within the matrix boundaries.
-        // 'r' must be less than total rows, 'c' must be non-negative.
-        while (r < row_count && c >= 0) {
-            // Get the current element being examined.
-            int current_val = mat[r][c];
+        // Continue the search as long as our pointers are within the matrix bounds.
+        // 'r' must be less than numRows (not gone past the last row).
+        // 'c' must be greater than or equal to 0 (not gone past the first column).
+        while (r < numRows && c >= 0) {
+            // Get the value at the current position.
+            int currentValue = mat[r][c];
 
-            // Case 1: Target found!
-            if (current_val == tar) {
+            // Case 1: Current value matches the target.
+            // We found the target, so return true.
+            if (currentValue == tar) {
                 return true;
-            } 
-            // Case 2: Current element is greater than the target.
-            // Since the row is sorted ascendingly from left to right,
-            // all elements to the right of 'current_val' in this row are even larger.
-            // Also, since the column is sorted ascendingly from top to bottom,
-            // all elements below 'current_val' in this column are larger.
-            // To find a smaller value (our target), we must move left in the current row.
-            else if (current_val > tar) {
-                c--; // Move to the previous column
-            } 
-            // Case 3: Current element is less than the target.
-            // Since the column is sorted ascendingly from top to bottom,
-            // all elements above 'current_val' in this column are smaller.
-            // Also, since the row is sorted ascendingly from left to right,
-            // all elements to the left of 'current_val' in this row are smaller.
-            // To find a larger value (our target), we must move down in the current column.
-            else { // current_val < tar
-                r++; // Move to the next row
+            }
+            // Case 2: Current value is greater than the target.
+            // Since rows are sorted left-to-right, all elements to the right of 'currentValue'
+            // in the current row would also be greater.
+            // Since columns are sorted top-to-bottom, all elements below 'currentValue'
+            // in the current column would also be greater.
+            // To find a smaller value (closer to target), we must move left.
+            else if (currentValue > tar) {
+                c--; // Move to the previous column.
+            }
+            // Case 3: Current value is less than the target.
+            // Since rows are sorted left-to-right, all elements to the left of 'currentValue'
+            // in the current row would also be smaller.
+            // Since columns are sorted top-to-bottom, all elements above 'currentValue'
+            // in the current column would also be smaller.
+            // To find a larger value (closer to target), we must move down.
+            else { // currentValue < tar
+                r++; // Move to the next row.
             }
         }
 
-        // If the loop finishes, it means the target was not found in the matrix.
+        // If the loop finishes, it means the pointers have gone out of bounds
+        // without finding the target.
         return false;
     }
 };
@@ -112,10 +122,10 @@ public:
 ## ⏱️ Complexity Analysis
 | | Complexity | Reason |
 |---|---|---|
-| **Time** | O(m + n) | In the worst case, the search path starts at one corner and moves diagonally across the matrix, eliminating one row or one column in each step. The total number of steps is at most `m + n`. |
-| **Space** | O(1) | The algorithm uses only a few constant extra variables for pointers and dimensions, regardless of the matrix size. |
+| **Time** | O(m + n) | In the worst case, the `row` pointer traverses `m` rows and the `col` pointer traverses `n` columns. Each step eliminates either a row or a column from the search space. Thus, the total number of steps is at most `m + n`. |
+| **Space** | O(1) | The algorithm uses a constant amount of extra space for pointers (`r`, `c`) and variables, regardless of the input matrix size. |
 
 ## 🔗 Related Problems
-- 74. Search a 2D Matrix
-- 378. Kth Smallest Element in a Sorted Matrix
-- 1351. Count Negative Numbers in a Sorted Matrix
+*   74. Search a 2D Matrix
+*   1351. Count Negative Numbers in a Sorted Matrix
+*   378. Kth Smallest Element in a Sorted Matrix
