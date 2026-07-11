@@ -1,13 +1,9 @@
 # 0287-find-the-duplicate-number
 
 ## 📋 Problem Description
-You are given an array of integers called `nums`. This array contains `n + 1` integers, and every integer in the array is guaranteed to be in the range `[1, n]` (inclusive).
+You are given an array of integers `nums` that contains `n + 1` integers. All these integers are guaranteed to be in the range `[1, n]` inclusive. The problem states that there is exactly one repeated number within `nums`. Your task is to find and return this repeated number.
 
-The problem states that there is exactly one repeated number within `nums`. Your task is to find and return this repeated number.
-
-**Important constraints:**
-*   You must solve the problem without modifying the original array `nums`.
-*   You must use only constant extra space (i.e., O(1) space complexity).
+Crucially, you must solve this problem without modifying the original array `nums` and using only constant extra space.
 
 ## 🔍 Examples
 ```
@@ -15,15 +11,17 @@ Input: nums = [1,3,4,2,2]
 Output: 2
 Explanation: The number 2 appears twice.
 ```
+
 ```
 Input: nums = [3,1,3,4,2]
 Output: 3
 Explanation: The number 3 appears twice.
 ```
+
 ```
 Input: nums = [3,3,3,3,3]
 Output: 3
-Explanation: The number 3 appears multiple times, but it is the only repeated number.
+Explanation: The number 3 is the only number, and it is repeated multiple times.
 ```
 
 ## 📌 Constraints
@@ -33,62 +31,65 @@ Explanation: The number 3 appears multiple times, but it is the only repeated nu
 *   All integers in `nums` appear only once, except for precisely one integer which appears two or more times.
 
 ## 🤔 Understanding the Problem
-The problem presents a classic scenario where the "Pigeonhole Principle" is at play: if you have `n + 1` items (numbers) and they can only take `n` possible values (from `1` to `n`), then at least one value must be repeated. The challenge isn't just finding *any* duplicate, but doing so under strict conditions: no modifying the input array and using only constant extra space. The provided solution effectively finds the duplicate but uses extra space, which is a common first approach before tackling the more advanced space constraint.
+The core of this problem is to identify a single number that appears more than once in a given array. The array has a specific structure: `n+1` numbers, all within the range `[1, n]`. This setup is important because it guarantees, by the Pigeonhole Principle, that at least one number *must* be duplicated. The main challenge lies in the strict constraints: we cannot modify the input array, and ideally, we should use only constant extra space. The provided solution offers a straightforward way to find the duplicate, though it uses linear extra space, not constant.
 
 ## 💡 Core Idea
-The most straightforward way to detect a duplicate in an array is to keep track of all numbers encountered so far. If we encounter a number that we've already seen, then that number must be the duplicate.
+The fundamental idea behind the provided solution is to keep track of every number encountered so far. If we come across a number that we have already seen, then that number must be the duplicate we are looking for.
 
 ## 🧠 Approach — Hash Set / Frequency Counting
-This solution utilizes a **Hash Set** (or `unordered_set` in C++) to efficiently track seen numbers. A hash set allows for average O(1) time complexity for insertion and lookup operations. This pattern is ideal for problems where you need to quickly check for the existence of an element or count frequencies without a fixed range or order. Here, it helps us identify the first number that has already been "seen" during our traversal.
+This approach utilizes a hash set (specifically `unordered_set` in C++) to efficiently store and check for the presence of elements. A hash set is ideal for this scenario because it allows for average O(1) time complexity for both inserting new elements and checking if an element already exists. We iterate through the array, adding each number to the hash set. If we attempt to add a number that is already in the set, we've found our duplicate.
 
 ## 📝 Step-by-Step Algorithm
-1.  Initialize an empty hash set, which will store numbers we have encountered so far.
-2.  Iterate through each number (`val`) in the input array `nums`.
-3.  For each `val`, check if it is already present in the hash set.
-    *   If `val` is found in the hash set, it means we have encountered this number before. Since the problem guarantees there's only one repeated number, this `val` is our duplicate. Return `val`.
-    *   If `val` is not found in the hash set, it means this is the first time we're seeing this number. Add `val` to the hash set to mark it as seen.
-4.  If the loop completes without finding a duplicate (which shouldn't happen based on the problem constraints), you could return a sentinel value like -1, though the problem guarantees a duplicate exists.
+1.  Initialize an empty hash set (e.g., `unordered_set<int> seenNumbers`). This set will store all unique numbers encountered during our traversal of the `nums` array.
+2.  Begin iterating through each number (`val`) in the input array `nums` from the beginning to the end.
+3.  For each `val` encountered:
+    a.  Check if `val` is already present in the `seenNumbers` hash set. This is done using the `find()` method of the hash set.
+    b.  If `val` is found in `seenNumbers` (meaning `seenNumbers.find(val)` does not return `seenNumbers.end()`), it implies that this is the second (or more) time we've seen this number. Therefore, `val` is the repeated number. Return `val` immediately.
+    c.  If `val` is not found in `seenNumbers`, it means this is the first time we've encountered this number. Insert `val` into the `seenNumbers` hash set to mark it as seen for future checks.
+4.  If the loop completes without returning a value (which should not happen given the problem's guarantee that a duplicate always exists), return -1 as a fallback.
 
 ## 💻 Solution
 ```cpp
-#include <vector>
-#include <unordered_set> // Required for using unordered_set
-
 class Solution {
 public:
-    int findDuplicate(std::vector<int>& nums) {
-        // Create an unordered_set to store numbers we have encountered.
-        // An unordered_set provides average O(1) time complexity for insertion and lookup.
-        std::unordered_set<int> seenNumbers; 
+    int findDuplicate(vector<int>& nums) {
+        // Initialize an unordered_set to store numbers encountered so far.
+        // An unordered_set provides average O(1) time complexity for insertion and lookup,
+        // making it efficient for checking duplicates.
+        unordered_set<int> seenNumbers; 
 
         // Iterate through each number in the input array 'nums'.
+        // The range-based for loop simplifies iteration.
         for (int val : nums) {
             // Check if the current number 'val' is already present in our 'seenNumbers' set.
-            // 'find()' returns an iterator to the element if found, or 'end()' if not found.
+            // 'seenNumbers.find(val)' returns an iterator to 'val' if found,
+            // otherwise it returns 'seenNumbers.end()'.
             if (seenNumbers.find(val) != seenNumbers.end()) {
                 // If 'val' is found, it means we have encountered this number before.
-                // Since the problem guarantees only one repeated number, this 'val' is the duplicate.
-                return val; 
+                // This 'val' is the duplicate number we are looking for.
+                // Return it immediately as we only need to find one.
+                return val;
             }
-            // If 'val' is not found, it's a new number. Add it to the set.
+            // If 'val' is not found in the set, it means this is the first time we're seeing it.
+            // Insert 'val' into the set to mark it as encountered.
             seenNumbers.insert(val);
         }
 
-        // This line should theoretically not be reached because the problem guarantees
-        // that a duplicate number always exists. It's a fallback in case of unexpected input.
+        // This line should theoretically not be reached given the problem constraints.
+        // The problem guarantees that exactly one duplicate exists and will be found
+        // within the loop. It's included as a safeguard for completeness.
         return -1; 
     }
 };
-
 ```
 
 ## ⏱️ Complexity Analysis
 | | Complexity | Reason |
 |---|---|---|
-| **Time** | O(N) | We iterate through the `nums` array once. Each `unordered_set` operation (insertion and lookup) takes O(1) time on average. In the worst case (due to hash collisions), these operations could degrade to O(N), but this is rare with good hash functions. |
-| **Space** | O(N) | In the worst case, the `unordered_set` might need to store up to `N` distinct numbers (where `N` is `n`, the maximum value in the array). This means the space complexity is proportional to the number of elements, violating the problem's strict "constant extra space" requirement. |
+| **Time** | O(N) | We iterate through all `N+1` elements of the `nums` array exactly once. For each element, the `unordered_set::find` and `unordered_set::insert` operations take an average of O(1) time. In the worst case (hash collisions), these operations could degrade to O(N), but on average, they are constant time. |
+| **Space** | O(N) | In the worst-case scenario (e.g., the duplicate is the last element, or all elements before the duplicate are unique), we might insert up to `N` unique numbers into the `unordered_set`. This requires space proportional to `N`, where `N` is the range of numbers (and approximately the array size). Note: The problem statement asks for a constant extra space solution, which this hash set approach does not meet. |
 
 ## 🔗 Related Problems
-*   217. Contains Duplicate
-*   1. Two Sum
-*   136. Single Number
+- 217. Contains Duplicate
+- 1. Two Sum
+- 136. Single Number
