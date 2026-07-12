@@ -20,6 +20,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 |  |
 | ------- |
 | [0003-longest-substring-without-repeating-characters](https://github.com/Gulabjangid/DSA/tree/master/0003-longest-substring-without-repeating-characters) |
+| [0013-roman-to-integer](https://github.com/Gulabjangid/DSA/tree/master/0013-roman-to-integer) |
 | [0049-group-anagrams](https://github.com/Gulabjangid/DSA/tree/master/0049-group-anagrams) |
 | [0125-valid-palindrome](https://github.com/Gulabjangid/DSA/tree/master/0125-valid-palindrome) |
 | [0131-palindrome-partitioning](https://github.com/Gulabjangid/DSA/tree/master/0131-palindrome-partitioning) |
@@ -71,6 +72,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 |  |
 | ------- |
 | [0002-add-two-numbers](https://github.com/Gulabjangid/DSA/tree/master/0002-add-two-numbers) |
+| [0013-roman-to-integer](https://github.com/Gulabjangid/DSA/tree/master/0013-roman-to-integer) |
 | [0048-rotate-image](https://github.com/Gulabjangid/DSA/tree/master/0048-rotate-image) |
 | [0189-rotate-array](https://github.com/Gulabjangid/DSA/tree/master/0189-rotate-array) |
 ## Hash Table
@@ -78,6 +80,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | ------- |
 | [0001-two-sum](https://github.com/Gulabjangid/DSA/tree/master/0001-two-sum) |
 | [0003-longest-substring-without-repeating-characters](https://github.com/Gulabjangid/DSA/tree/master/0003-longest-substring-without-repeating-characters) |
+| [0013-roman-to-integer](https://github.com/Gulabjangid/DSA/tree/master/0013-roman-to-integer) |
 | [0049-group-anagrams](https://github.com/Gulabjangid/DSA/tree/master/0049-group-anagrams) |
 | [0169-majority-element](https://github.com/Gulabjangid/DSA/tree/master/0169-majority-element) |
 | [0205-isomorphic-strings](https://github.com/Gulabjangid/DSA/tree/master/0205-isomorphic-strings) |
