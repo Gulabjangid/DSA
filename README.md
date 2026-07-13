@@ -192,6 +192,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 |  |
 | ------- |
 | [0002-add-two-numbers](https://github.com/Gulabjangid/DSA/tree/master/0002-add-two-numbers) |
+| [0206-reverse-linked-list](https://github.com/Gulabjangid/DSA/tree/master/0206-reverse-linked-list) |
 | [0328-odd-even-linked-list](https://github.com/Gulabjangid/DSA/tree/master/0328-odd-even-linked-list) |
 | [0445-add-two-numbers-ii](https://github.com/Gulabjangid/DSA/tree/master/0445-add-two-numbers-ii) |
 ## Backtracking
@@ -212,6 +213,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 |  |
 | ------- |
 | [0002-add-two-numbers](https://github.com/Gulabjangid/DSA/tree/master/0002-add-two-numbers) |
+| [0206-reverse-linked-list](https://github.com/Gulabjangid/DSA/tree/master/0206-reverse-linked-list) |
 ## Stack
 |  |
 | ------- |
