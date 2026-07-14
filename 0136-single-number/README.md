@@ -1,21 +1,21 @@
 # 0136-single-number
 
 ## 📋 Problem Description
-You are given a non-empty array of integers, `nums`. In this array, every integer appears exactly twice, except for one integer which appears only once. Your task is to find and return that single unique integer.
+You are given a non-empty array of integers, `nums`. In this array, every element appears exactly twice, except for one element which appears only once. Your task is to find and return that single unique number.
 
 The solution must adhere to specific efficiency requirements: it must have a linear runtime complexity (O(N)) and use only constant extra space (O(1)).
 
 ## 🔍 Examples
 ```
-Input: nums = [2,2,1]
+Input:  nums = [2,2,1]
 Output: 1
-Explanation: The number 1 appears once, while 2 appears twice.
+Explanation: The number '1' appears once, while '2' appears twice.
 
-Input: nums = [4,1,2,1,2]
+Input:  nums = [4,1,2,1,2]
 Output: 4
-Explanation: The number 4 appears once. Numbers 1 and 2 each appear twice.
+Explanation: The number '4' appears once. '1' and '2' each appear twice.
 
-Input: nums = [1]
+Input:  nums = [1]
 Output: 1
 Explanation: The array contains only one element, which is the single number.
 ```
@@ -26,24 +26,24 @@ Explanation: The array contains only one element, which is the single number.
 *   Each element in the array appears twice except for one element which appears only once.
 
 ## 🤔 Understanding the Problem
-The problem asks us to identify a unique element in an array where all other elements have a duplicate. The key challenge lies in the strict efficiency requirements: we need a solution that processes the array in a single pass (or equivalent linear time) and does not use any additional memory proportional to the input size. This rules out common approaches like using hash maps to count frequencies (which would use O(N) space) or sorting the array (which is typically O(N log N) time).
+The problem asks us to identify a unique number in an array where all other numbers have a duplicate. The key challenge is to do this efficiently, specifically in linear time without using additional memory proportional to the input size. This rules out common approaches like using hash maps (which would use O(N) space) or sorting (which often takes O(N log N) time). We need a clever way to "cancel out" the duplicate numbers.
 
 ## 💡 Core Idea
-The core idea leverages the properties of the bitwise XOR (exclusive OR) operation. Specifically, XORing a number with itself results in 0 (`A ^ A = 0`), and XORing any number with 0 results in the number itself (`A ^ 0 = A`). Furthermore, XOR is commutative and associative, meaning the order of operations doesn't matter.
+The core idea leverages the properties of the bitwise XOR operation. XORing a number with itself results in zero (`A ^ A = 0`), and XORing a number with zero results in the number itself (`A ^ 0 = A`). Furthermore, XOR is commutative and associative (`A ^ B ^ A = B ^ A ^ A`).
 
 ## 🧠 Approach — Bit Manipulation
-This problem is perfectly suited for a **Bit Manipulation** approach using the XOR operator. The reason this pattern fits so well is due to the unique properties of XOR:
-1.  **Self-cancellation**: Any number XORed with itself results in zero (e.g., `5 ^ 5 = 0`).
-2.  **Identity element**: Any number XORed with zero results in the number itself (e.g., `5 ^ 0 = 5`).
-3.  **Commutativity and Associativity**: The order of XOR operations does not affect the final result (e.g., `A ^ B ^ C = C ^ A ^ B`).
+This problem can be elegantly solved using the **Bit Manipulation** pattern, specifically by utilizing the properties of the XOR (exclusive OR) bitwise operator. The reason this pattern fits perfectly is due to XOR's unique behavior:
+1.  Any number XORed with itself results in `0`.
+2.  Any number XORed with `0` results in the number itself.
+3.  XOR operations are commutative and associative, meaning the order of operations does not matter.
 
-When we XOR all the numbers in the array together, all the numbers that appear twice will effectively cancel each other out (e.g., `X ^ Y ^ X ^ Z ^ Y` becomes `(X ^ X) ^ (Y ^ Y) ^ Z = 0 ^ 0 ^ Z = Z`). The only number that will remain is the one that appeared only once.
+If we XOR all the numbers in the array together, all numbers that appear twice will effectively cancel each other out (e.g., `A ^ A = 0`). The single unique number, which only appears once, will be XORed with `0` (the result of all pairs canceling out) and thus remain as the final result.
 
 ## 📝 Step-by-Step Algorithm
-1.  Initialize a variable, let's call it `result`, to `0`. This variable will accumulate the XOR sum of all elements.
+1.  Initialize a variable, let's call it `result`, to `0`. This variable will accumulate the XOR sum of all numbers.
 2.  Iterate through each number (`num`) in the input array `nums`.
-3.  In each iteration, update `result` by performing a bitwise XOR operation with the current `num`: `result = result ^ num`.
-4.  After the loop finishes and all numbers in the array have been XORed with `result`, the `result` variable will hold the value of the single unique number.
+3.  In each iteration, update `result` by XORing it with the current number: `result = result ^ num`.
+4.  After iterating through all numbers in the array, the `result` variable will hold the single number that appears only once.
 5.  Return the final `result`.
 
 ## 💻 Solution
@@ -52,36 +52,32 @@ class Solution {
 public:
     int singleNumber(vector<int>& nums) {
         // Initialize a variable 'result' to 0.
-        // This variable will accumulate the XOR sum of all numbers.
-        // The property of XOR is that A ^ 0 = A, so initializing with 0
-        // does not affect the first number XORed with it.
-        int result = 0;
-
-        // Iterate through each number in the input array 'nums'.
-        // This is a range-based for loop, convenient for iterating over collections.
+        // The XOR property A ^ 0 = A ensures that XORing with 0
+        // initially does not change the first number.
+        int result = 0; 
+        
+        // Iterate through each number in the input vector 'nums'.
         for(int num : nums){
-            // Perform a bitwise XOR operation between the current 'result'
-            // and the current number 'num'.
+            // Apply the XOR operation: result = result ^ num.
             //
-            // Key properties of XOR that make this work:
-            // 1. A ^ A = 0: If a number appears twice, XORing it with itself cancels it out.
-            // 2. A ^ 0 = A: If a number appears only once, it will eventually be XORed with 0
-            //                 (from all the cancelled pairs) and remain itself.
-            // 3. Associativity and Commutativity: The order of numbers in the array
-            //    does not matter for the final XOR sum.
+            // Key properties of XOR:
+            // 1. A ^ A = 0 (XORing a number with itself yields 0)
+            // 2. A ^ 0 = A (XORing a number with 0 yields the number itself)
+            // 3. XOR is commutative and associative (order doesn't matter)
             //
-            // Example: nums = [4, 1, 2, 1, 2]
-            // result = 0
-            // result = 0 ^ 4 = 4
-            // result = 4 ^ 1
-            // result = (4 ^ 1) ^ 2
-            // result = (4 ^ 1 ^ 2) ^ 1  => (4 ^ 2) ^ (1 ^ 1) => (4 ^ 2) ^ 0 => 4 ^ 2
-            // result = (4 ^ 2) ^ 2      => 4 ^ (2 ^ 2) => 4 ^ 0 => 4
+            // Example dry run with nums = [4, 1, 2, 1, 2]:
+            // Initial: result = 0
+            // 1. num = 4: result = 0 ^ 4 = 4
+            // 2. num = 1: result = 4 ^ 1
+            // 3. num = 2: result = (4 ^ 1) ^ 2
+            // 4. num = 1: result = (4 ^ 1 ^ 2) ^ 1  =>  4 ^ (1 ^ 1) ^ 2  =>  4 ^ 0 ^ 2  =>  4 ^ 2
+            // 5. num = 2: result = (4 ^ 2) ^ 2      =>  4 ^ (2 ^ 2)      =>  4 ^ 0      =>  4
+            //
+            // All numbers appearing twice cancel each other out, leaving only the single number.
             result = result ^ num;
         }
-
-        // After iterating through all numbers, 'result' will hold the single number
-        // that appeared only once, as all paired numbers have cancelled each other out.
+        
+        // After iterating through all numbers, 'result' will hold the single unique number.
         return result;
     }
 };
@@ -90,10 +86,10 @@ public:
 ## ⏱️ Complexity Analysis
 | | Complexity | Reason |
 |---|---|---|
-| **Time** | O(N) | The algorithm iterates through the input array `nums` exactly once. Each XOR operation is a constant-time operation. |
-| **Space** | O(1) | The algorithm uses a single integer variable (`result`) to store the XOR sum, regardless of the input array's size. No additional data structures are allocated. |
+| **Time** | O(N) | We iterate through the array exactly once, performing a constant-time XOR operation for each element. |
+| **Space** | O(1) | We only use a single integer variable (`result`) to store the accumulated XOR sum, regardless of the input array size. |
 
 ## 🔗 Related Problems
 - 137. Single Number II
 - 260. Single Number III
-- 389. Find the Difference
+- 268. Missing Number
