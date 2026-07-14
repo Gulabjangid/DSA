@@ -1,38 +1,37 @@
 # 0682-baseball-game
 
 ## 📋 Problem Description
-You are tasked with keeping score for a unique baseball game. You begin with an empty record of scores. You are provided with a list of strings, `operations`, where each string represents an action to be applied to the score record. There are four types of operations:
+You are tasked with keeping score for a baseball game with unusual rules. You begin with an empty record of scores. You are given a list of strings, `operations`, where each string represents an operation to apply to the record.
 
-1.  **Integer `x`**: Record a new score of `x`.
-2.  **`'+'`**: Record a new score that is the sum of the previous two valid scores.
-3.  **`'D'`**: Record a new score that is double the previous valid score.
-4.  **`'C'`**: Invalidate and remove the previous valid score from the record.
+There are four types of operations:
+1.  **An integer `x`**: Record a new score of `x`.
+2.  **`'+'`**: Record a new score that is the sum of the previous two scores on the record.
+3.  **`'D'`**: Record a new score that is double the previous score on the record.
+4.  **`'C'`**: Invalidate the previous score, removing it from the record.
 
-After processing all operations in the `operations` list, your goal is to return the total sum of all scores that remain on the record.
+After applying all operations in the given order, you must return the total sum of all scores currently on the record.
 
-The problem guarantees that all intermediate calculations and the final answer will fit within a 32-bit integer. Additionally, operations like `'+'`, `'D'`, and `'C'` will always have enough preceding scores on the record to be valid.
+The problem guarantees that all intermediate calculations and the final answer will fit within a 32-bit integer. Additionally, operations `'+'`, `'C'`, and `'D'` will always be valid, meaning there will be enough previous scores on the record for them to execute.
 
 ## 🔍 Examples
 ```
-Input:  operations = ["5","2","C","D","+"]
+Input:  ops = ["5","2","C","D","+"]
 Output: 30
 Explanation:
 "5" - Add 5 to the record, record is now [5].
 "2" - Add 2 to the record, record is now [5, 2].
-"C" - Invalidate and remove the previous score (2), record is now [5].
+"C" - Invalidate and remove the previous score, record is now [5].
 "D" - Add 2 * 5 = 10 to the record, record is now [5, 10].
 "+" - Add 5 + 10 = 15 to the record, record is now [5, 10, 15].
 The total sum is 5 + 10 + 15 = 30.
-```
 
-```
-Input:  operations = ["5","-2","4","C","D","9","+","+",""]
+Input:  ops = ["5","-2","4","C","D","9","+","+",""]
 Output: 27
 Explanation:
 "5" - Add 5 to the record, record is now [5].
 "-2" - Add -2 to the record, record is now [5, -2].
 "4" - Add 4 to the record, record is now [5, -2, 4].
-"C" - Invalidate and remove the previous score (4), record is now [5, -2].
+"C" - Invalidate and remove the previous score, record is now [5, -2].
 "D" - Add 2 * -2 = -4 to the record, record is now [5, -2, -4].
 "9" - Add 9 to the record, record is now [5, -2, -4, 9].
 "+" - Add -4 + 9 = 5 to the record, record is now [5, -2, -4, 9, 5].
@@ -40,128 +39,104 @@ Explanation:
 The total sum is 5 + -2 + -4 + 9 + 5 + 14 = 27.
 ```
 
-```
-Input:  operations = ["1","C"]
-Output: 0
-Explanation:
-"1" - Add 1 to the record, record is now [1].
-"C" - Invalidate and remove the previous score (1), record is now [].
-Since the record is empty, the total sum is 0.
-```
-
 ## 📌 Constraints
 *   `1 <= operations.length <= 1000`
 *   `operations[i]` is `"C"`, `"D"`, `"+"`, or a string representing an integer in the range `[-3 * 10^4, 3 * 10^4]`.
 *   For operation `"+"`, there will always be at least two previous scores on the record.
 *   For operations `"C"` and `"D"`, there will always be at least one previous score on the record.
+*   The answer and all intermediate calculations fit in a 32-bit integer.
 
 ## 🤔 Understanding the Problem
-The problem requires us to simulate a sequence of operations that dynamically modify a list of scores. The crucial aspect is that most operations (`+`, `D`, `C`) depend on the *most recently added* scores. This means we need a data structure that can efficiently add elements to the end, remove elements from the end, and peek at the last one or two elements. The final task is to sum all scores remaining in this dynamic record.
+The problem asks us to simulate a sequence of operations that modify a dynamic list of scores. The crucial aspect is that most operations (`C`, `D`, `+`) refer to the "previous" or "last" scores. For example, `'C'` removes the most recent score, `'D'` doubles the most recent score, and `'+'` sums the two most recent scores. We need to keep track of these scores in the correct order and then sum them up at the end. The challenge lies in efficiently accessing and modifying the "previous" elements.
 
 ## 💡 Core Idea
-The operations `'+'`, `'D'`, and `'C'` all refer to "previous scores" or "the previous score," indicating a Last-In, First-Out (LIFO) access pattern. A stack is the ideal data structure to manage this kind of dynamic record where only the most recent elements are relevant for operations.
+The operations `C`, `D`, and `+` all depend on the *most recently added* scores. This "last-in, first-out" (LIFO) behavior is a strong indicator that a stack data structure would be ideal for maintaining the record of scores.
 
 ## 🧠 Approach — Stack
-A stack is a linear data structure that follows the Last-In, First-Out (LIFO) principle. This pattern is perfectly suited for this problem because operations like 'C' (invalidate previous score), 'D' (double previous score), and '+' (sum of previous two scores) all exclusively interact with the most recently added scores. A stack naturally provides `push` (add to top), `pop` (remove from top), and `top` (peek at top) operations, which directly map to the problem's requirements for managing the record of scores. By using a stack, we can ensure that "previous scores" are always readily available at the top of the stack.
+A stack is a perfect fit for this problem because it naturally supports the "last-in, first-out" (LIFO) principle. Operations like adding a new score (`push`), removing the last score (`pop`), peeking at the last score (`top`), and even accessing the second-to-last score (by temporarily popping the top, peeking, then pushing back) are all efficient stack operations. This allows us to easily manage the dynamic record of scores as described by the problem rules, ensuring that "previous" always refers to the element most recently added to the stack.
 
 ## 📝 Step-by-Step Algorithm
-1.  Initialize an empty stack, let's call it `scoreStack`, to store the valid scores.
-2.  Iterate through each string `op` in the input `operations` list:
-    a.  **If `op` is `"C"`**:
-        *   Remove the top element from `scoreStack`. This invalidates the most recent score. (Constraints guarantee the stack won't be empty).
-    b.  **If `op` is `"D"`**:
-        *   Retrieve the value of the top element from `scoreStack` (this is the previous score).
-        *   Calculate double this value.
-        *   Push the doubled value onto `scoreStack`. (Constraints guarantee the stack won't be empty).
-    c.  **If `op` is `"+"`**:
-        *   Retrieve the value of the top element from `scoreStack` (this is the most recent score) and store it in a temporary variable, say `firstPrev`.
-        *   Remove `firstPrev` from `scoreStack`.
-        *   Retrieve the value of the new top element from `scoreStack` (this is the second most recent score) and store it in `secondPrev`.
-        *   Push `firstPrev` back onto `scoreStack` to restore the stack's state.
-        *   Calculate the sum `firstPrev + secondPrev`.
-        *   Push this sum onto `scoreStack`. (Constraints guarantee at least two scores are available).
-    d.  **If `op` is an integer string**:
-        *   Convert the string `op` to an integer.
-        *   Push this integer onto `scoreStack`.
-3.  After processing all operations, initialize a variable `totalSum` to 0.
-4.  While `scoreStack` is not empty:
-    *   Add the top element of `scoreStack` to `totalSum`.
-    *   Remove the top element from `scoreStack`.
-5.  Return `totalSum`.
+1.  **Initialize a Stack**: Create an empty stack (e.g., `std::stack<int>` in C++) to store the scores. This stack will represent our dynamic record of scores.
+2.  **Process Operations**: Iterate through each string `op` in the input `operations` vector.
+    *   **If `op` is `"C"`**: This means "invalidate the previous score". Pop the top element from the stack.
+    *   **If `op` is `"D"`**: This means "record a new score that is double the previous score". Get the top element of the stack (the previous score), multiply it by 2, and push the result onto the stack.
+    *   **If `op` is `"+"`**: This means "record a new score that is the sum of the previous two scores".
+        *   Get the top element of the stack (this is the most recent score). Store it in a temporary variable (e.g., `score1`).
+        *   Pop `score1` from the stack.
+        *   Get the new top element of the stack (this is the second most recent score). Store it in another temporary variable (e.g., `score2`).
+        *   Push `score1` back onto the stack (we only temporarily removed it to access `score2`).
+        *   Push the sum `(score1 + score2)` onto the stack as the new score.
+    *   **If `op` is an integer string**: This means "record a new score of `x`". Convert the string `op` to an integer (e.g., using `std::stoi` in C++) and push this integer onto the stack.
+3.  **Calculate Total Sum**: After processing all operations, the stack contains all the valid scores. Initialize a variable `totalSum` to 0. While the stack is not empty, pop each element, add it to `totalSum`, and continue until the stack is empty.
+4.  **Return Result**: Return the final `totalSum`.
 
 ## 💻 Solution
+
 ```cpp
 #include <vector> // Required for std::vector
 #include <string> // Required for std::string, std::stoi
 #include <stack>  // Required for std::stack
-#include <numeric> // Potentially for std::accumulate, but not used in this solution
+#include <numeric> // Required for std::accumulate (though not used in this specific solution, good for general sum)
 
 class Solution {
 public:
     int calPoints(std::vector<std::string>& operations) {
         // Use a stack to keep track of the scores.
-        // A stack is suitable because operations like 'C', 'D', and '+'
-        // always refer to the "previous" or "previous two" scores,
-        // which aligns perfectly with a Last-In, First-Out (LIFO) structure.
+        // A stack is ideal because operations like 'C', 'D', and '+'
+        // always refer to the most recently added scores (LIFO - Last-In, First-Out).
         std::stack<int> s;
         
         // Iterate through each operation in the input list.
-        for(int i = 0; i < operations.size(); i++){
+        for(int i = 0; i < operations.size(); ++i){ // Using ++i for minor optimization
             // Check the type of operation.
             if(operations[i] == "C"){
-                // 'C': Invalidate the previous score.
-                // This means removing the most recently added score from our record.
-                // The problem constraints guarantee there's always at least one score
-                // when 'C' is encountered, so s.pop() is safe.
+                // 'C' operation: Invalidate the previous score.
+                // This means removing the top element from the stack.
+                // Constraints guarantee there's always at least one score for 'C'.
                 s.pop();
             }
             else if(operations[i] == "D"){
-                // 'D': Record a new score that is double the previous score.
-                // Get the top element (previous score) without removing it.
-                // Constraints guarantee at least one score, so s.top() is safe.
-                int previousScore = s.top();
-                // Push double of the previous score onto the stack.
-                s.push(2 * previousScore);
+                // 'D' operation: Record a new score that is double the previous score.
+                // Get the previous score (top of the stack), double it, and push it back.
+                // Constraints guarantee there's always at least one score for 'D'.
+                s.push(2 * s.top());
             }
             else if(operations[i] == "+"){
-                // '+': Record a new score that is the sum of the previous two scores.
-                // The problem constraints guarantee there are always at least two scores
-                // when '+' is encountered.
-
-                // 1. Get the most recent score.
-                int firstPrevious = s.top();
-                s.pop(); // Remove it temporarily to access the second previous.
-
-                // 2. Get the second most recent score.
-                int secondPrevious = s.top();
+                // '+' operation: Record a new score that is the sum of the previous two scores.
+                // We need the top two elements.
+                // Constraints guarantee there are always at least two scores for '+'.
                 
-                // 3. Push the first previous score back onto the stack.
-                // This restores the stack to its state before we popped 'firstPrevious'.
-                // It's crucial because the problem implies the previous scores remain valid
-                // after being used for the sum, they are not removed.
-                s.push(firstPrevious);
-
-                // 4. Calculate the sum and push it as the new score.
-                s.push(firstPrevious + secondPrevious);
+                // 1. Get the most recent score (first previous score).
+                int first = s.top();
+                s.pop(); // Temporarily remove it to access the second previous score.
+                
+                // 2. Get the second most recent score (second previous score).
+                int second = s.top();
+                
+                // 3. Push the 'first' score back onto the stack.
+                // This restores the stack to its state before we temporarily removed 'first'.
+                s.push(first);
+                
+                // 4. Push the sum of 'first' and 'second' as the new score.
+                s.push(first + second);
             }
             else{
                 // If it's not 'C', 'D', or '+', it must be an integer string.
-                // Convert the string to an integer using std::stoi and push it onto the stack.
+                // Convert the string to an integer and push it onto the stack.
                 s.push(std::stoi(operations[i]));
             }
         }
         
         // After processing all operations, calculate the total sum of scores remaining in the record.
-        int totalSum = 0;
+        int ans = 0;
         while(!s.empty()){
-            // Add the top score to the total sum.
-            totalSum += s.top();
-            // Remove the score from the stack as we've processed it for the sum.
+            // Pop each score from the stack and add it to the total sum.
+            ans += s.top();
             s.pop();
         }
         
         // Return the final total sum.
-        return totalSum;
+        return ans;
     }
 };
 
@@ -170,8 +145,8 @@ public:
 ## ⏱️ Complexity Analysis
 | | Complexity | Reason |
 |---|---|---|
-| **Time** | O(N) | We iterate through the `operations` vector once. Each stack operation (`push`, `pop`, `top`) takes O(1) time. String to integer conversion (`stoi`) is effectively O(1) for small fixed-length strings. Finally, summing elements from the stack also takes O(N) in the worst case. |
-| **Space** | O(N) | In the worst case, if all operations are additions (numbers, 'D', or '+'), the stack could store up to `N` scores. Each score is an integer. |
+| **Time** | O(N) | We iterate through the `operations` vector once. Each stack operation (push, pop, top) takes O(1) time. String to integer conversion (`stoi`) also takes time proportional to the length of the number string, but since numbers are bounded and string length is small, it's effectively O(1) for practical purposes. Finally, summing elements from the stack takes O(N) in the worst case (if all operations added numbers). Thus, the total time complexity is linear with respect to the number of operations. |
+| **Space** | O(N) | In the worst case, if all operations are additions of numbers or `D`/`+` operations, the stack could store up to N elements (where N is the number of operations). For example, if all operations are just adding numbers, the stack will grow to size N. |
 
 ## 🔗 Related Problems
 - 20. Valid Parentheses
