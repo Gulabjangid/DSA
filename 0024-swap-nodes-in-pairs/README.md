@@ -1,15 +1,16 @@
 # 0024-swap-nodes-in-pairs
 
 ## 📋 Problem Description
-Given the `head` of a singly linked list, the task is to swap every two adjacent nodes and return the head of the modified list. The problem explicitly states that you must solve it without modifying the values within the nodes; only the nodes themselves (their `next` pointers) may be changed.
+Given the `head` of a singly-linked list, the task is to swap every two adjacent nodes and return the head of the modified list. The solution must not modify the values within the nodes; instead, only the nodes themselves (their `next` pointers) should be changed.
 
-The function `swapPairs` receives a `ListNode* head` as input, representing the head of the linked list. It must return a `ListNode*`, which is the head of the linked list after all adjacent pairs have been swapped.
+**Input:** A pointer to the `head` of a singly-linked list.
+**Output:** A pointer to the `head` of the linked list after swapping every two adjacent nodes.
 
 ## 🔍 Examples
 ```
 Input: head = [1,2,3,4]
 Output: [2,1,4,3]
-Explanation: The pair (1,2) is swapped to (2,1), and (3,4) is swapped to (4,3).
+Explanation: The first pair (1,2) swaps to (2,1). The second pair (3,4) swaps to (4,3).
 
 Input: head = []
 Output: []
@@ -17,11 +18,11 @@ Explanation: An empty list remains empty.
 
 Input: head = [1]
 Output: [1]
-Explanation: A list with a single node has no pairs to swap.
+Explanation: A list with a single node has no pairs to swap, so it remains unchanged.
 
 Input: head = [1,2,3]
 Output: [2,1,3]
-Explanation: The pair (1,2) is swapped to (2,1). Node 3 remains in its position as it doesn't have a pair.
+Explanation: The first pair (1,2) swaps to (2,1). Node 3 remains as it is not part of a pair.
 ```
 
 ## 📌 Constraints
@@ -29,34 +30,40 @@ Explanation: The pair (1,2) is swapped to (2,1). Node 3 remains in its position 
 *   `0 <= Node.val <= 100`
 
 ## 🤔 Understanding the Problem
-The problem asks us to rearrange a linked list by swapping nodes in groups of two. This means if we have `A -> B -> C -> D`, it should become `B -> A -> D -> C`. A crucial detail is that we cannot change node values; we must manipulate the `next` pointers. Edge cases include an empty list, a list with a single node (no pairs to swap), and a list with an odd number of nodes (the last node remains in place). The core challenge lies in correctly updating pointers to perform the swaps and link the swapped segments together.
+The problem asks us to rearrange a linked list by swapping adjacent pairs of nodes. For instance, `(A -> B -> C -> D)` should become `(B -> A -> D -> C)`. A crucial constraint is that we cannot simply swap the `val` fields; we must manipulate the `next` pointers to physically reorder the nodes. Edge cases include an empty list, a list with a single node (where no swaps are possible), and a list with an odd number of nodes (where the last node remains in its original position).
 
 ## 💡 Core Idea
-The problem can be broken down into smaller, identical subproblems: swapping the first pair of nodes and then recursively solving the problem for the rest of the list. The key is to correctly link the swapped pair to the result of the recursive call.
+The problem can be solved by recursively processing the linked list in segments of `k` nodes (where `k=2` for pairs). For each segment, we first determine the head of the *next* segment by making a recursive call, and then we reverse the current `k`-node segment, connecting its tail to the head of the next segment.
 
-## 🧠 Approach — Recursion
-This problem is well-suited for a recursive approach. We can define the problem for a linked list as "swap pairs in this list and return the new head." If the list has at least two nodes, we can swap the first two, then recursively call the same function on the rest of the list (starting from the third node). The result of this recursive call (the head of the swapped sublist) is then linked to the first node of our current swapped pair. This pattern naturally handles the linking of segments and base cases (empty list or single node).
+## 🧠 Approach — Recursion with K-Group Reversal
+This problem is a specific instance of the "Reverse Nodes in K-Group" pattern, with `k=2`. The solution leverages recursion by:
+1.  Identifying the `k`-th node (or checking if `k` nodes exist).
+2.  Making a recursive call to handle the subproblem starting from the `(k+1)`-th node. This call returns the new head of the processed sublist.
+3.  Then, iteratively reversing the current `k` nodes.
+4.  Connecting the original `head` (which becomes the tail of the reversed `k`-group) to the result of the recursive call.
+5.  Returning the new head of the reversed `k`-group. This recursive decomposition allows for elegant manipulation of linked list segments.
 
 ## 📝 Step-by-Step Algorithm
-1.  **Base Case Check**:
-    *   Initialize a temporary pointer, `temp`, to the current `head` of the list segment we are considering.
-    *   Iterate `k=2` times (for pairs) using `temp` to check if there are at least two nodes in the current segment.
-    *   If `temp` becomes `NULL` at any point during this check (meaning there are fewer than `k` nodes), it implies no pair can be formed. In this scenario, return the original `head` of this segment as no swapping is needed.
-
-2.  **Recursive Call**:
-    *   If `k` nodes were found, `temp` now points to the `(k+1)`-th node (or `NULL` if the list ends exactly after `k` nodes).
-    *   Make a recursive call to `swapPairs` with this `temp` as the new `head`. This call will handle swapping pairs in the remainder of the list and return the new head of that *already swapped* sublist. Store this result in a `prev` pointer.
-
-3.  **Reverse Current `k` Nodes (Swap the Pair)**:
-    *   Reset `temp` back to the original `head` of the current `k`-node segment (the first node of the pair).
-    *   Iterate `k=2` times to reverse this current pair:
-        *   Store the `next` node of `temp` in a temporary variable `next_node` to avoid losing the reference.
-        *   Set `temp->next` to `prev`. This links the current node (`temp`) to the `prev` pointer, which holds either the result of the recursive call (the head of the swapped subsequent list) or the previously processed node within the current `k`-segment reversal.
-        *   Update `prev` to `temp`. `prev` now points to the head of the *growing* reversed segment (e.g., after processing `1`, `prev` becomes `1`).
-        *   Move `temp` to `next_node` to continue processing the next node in the original list.
-
-4.  **Return New Head**:
-    *   After the loop, `prev` will point to the new head of the `k`-node segment that has just been reversed (e.g., for `1->2`, `prev` will be `2`). Return `prev`.
+1.  **Define `k`**: Set `k = 2` since we need to swap every *two* adjacent nodes.
+2.  **Check for Base Cases / Insufficient Nodes**:
+    *   Initialize a temporary pointer, `temp`, to the current `head`.
+    *   Iterate `k` times, moving `temp` forward.
+    *   If `temp` becomes `NULL` at any point during this iteration (meaning there are fewer than `k` nodes remaining), then there's nothing to swap in this segment. Return the current `head` as is.
+3.  **Recursive Call**:
+    *   If there are at least `k` nodes, `temp` will now point to the `(k+1)`-th node (the node immediately after the current `k`-group).
+    *   Make a recursive call `swapPairs(temp)`. This call will handle swapping pairs in the rest of the list starting from the `(k+1)`-th node. Store its result (the new head of the recursively processed sublist) in a pointer, say `prev`.
+4.  **Reverse Current `k`-Group**:
+    *   Reset `temp` back to the original `head` of the current `k`-group.
+    *   Initialize a `count` to 0.
+    *   Loop `k` times:
+        *   Store the `next` node of `temp` (i.e., `temp->next`) in a temporary pointer, `next_node`, to avoid losing the reference to the rest of the original list.
+        *   Set `temp->next = prev`. This is the crucial step:
+            *   For the first node of the `k`-group, it connects to the result of the recursive call (`prev` from step 3).
+            *   For subsequent nodes in the `k`-group, it connects to the *previously processed* node within the current `k`-group, effectively reversing the links.
+        *   Update `prev = temp`. `prev` now points to the node that was just processed, which will become the new "next" for the subsequent node in the reversal.
+        *   Move `temp = next_node` to advance to the next node in the original list.
+        *   Increment `count`.
+5.  **Return New Head**: After the loop, `prev` will point to the `k`-th node of the original group (which is now the new head of this swapped `k`-group). Return `prev`.
 
 ## 💻 Solution
 
@@ -74,61 +81,65 @@ This problem is well-suited for a recursive approach. We can define the problem 
 class Solution {
 public:
     ListNode* swapPairs(ListNode* head) {
-        // 'temp' will be used to traverse the list and find the k-th node.
-        ListNode* temp = head;
-        // 'k' is fixed to 2 for swapping pairs.
+        // Define k, the number of nodes in each group to be processed/reversed.
+        // For this problem, we swap pairs, so k = 2.
         int k = 2;
 
+        // --- Step 1: Check if there are at least 'k' nodes remaining ---
+        // Use a temporary pointer to traverse 'k' steps from the current head.
+        ListNode* temp = head;
         int count = 0;
-        // Step 1: Check if there are at least 'k' nodes remaining in the current segment.
-        // This loop advances 'temp' to the (k+1)-th node (or NULL if fewer than k nodes).
+
         while (count < k) {
-            // If 'temp' becomes NULL before 'k' nodes are counted,
-            // it means there aren't enough nodes to form a full pair.
+            // If we encounter NULL before completing 'k' steps,
+            // it means there are fewer than 'k' nodes.
+            // In this case, we cannot form a complete pair/group,
+            // so we return the head as is (no changes needed for this segment).
             if (temp == NULL) {
-                // In this case, no swapping is needed for this segment,
-                // so return the original head of this segment.
                 return head;
             }
-            temp = temp->next; // Move 'temp' to the next node.
-            count++;           // Increment count of nodes found.
+            temp = temp->next; // Move to the next node
+            count++;           // Increment count
         }
 
-        // At this point:
-        // - 'head' points to the first node of the current 'k' segment.
-        // - 'temp' points to the (k+1)-th node (or NULL if list ends exactly after k nodes).
-
-        // Step 2: Recursively call swapPairs for the rest of the list,
-        // starting from the (k+1)-th node ('temp').
-        // 'prev' will store the new head of the *already swapped* sublist
-        // that follows the current 'k' nodes.
+        // --- Step 2: Recursive Call ---
+        // If we reached here, it means there are at least 'k' nodes.
+        // 'temp' now points to the (k+1)-th node (the node *after* the current k-group).
+        // Recursively call swapPairs on the rest of the list starting from 'temp'.
+        // 'prev' will store the new head of the sublist that has been recursively processed and swapped.
         ListNode* prev = swapPairs(temp);
 
-        // Step 3: Reverse the current 'k' nodes (which is a pair for k=2).
-        // 'temp' is reset to the beginning of the current 'k' segment ('head').
+        // --- Step 3: Reverse the current 'k' nodes and connect them ---
+        // Reset 'temp' back to the original 'head' of the current k-group.
         temp = head;
         count = 0; // Reset count for the reversal loop.
 
-        // This loop performs the reversal of the current 'k' nodes.
+        // Iterate 'k' times to reverse the links for the current k-group.
         while (count < k) {
-            // Store the next node before modifying 'temp->next'.
+            // Store the next node in the original list to avoid losing it.
             ListNode* next_node = temp->next;
-            // Link the current node ('temp') to 'prev'.
-            // 'prev' initially holds the result of the recursive call (swapped tail),
-            // and then progressively becomes the head of the *growing* reversed segment.
+
+            // This is the core reversal step:
+            // The current node's 'next' pointer is set to 'prev'.
+            // - For the first node of the group (e.g., '1' in [1,2,3,4]),
+            //   its 'next' will point to the result of the recursive call (which is the new head of [4,3]).
+            // - For subsequent nodes in the group (e.g., '2' in [1,2,3,4]),
+            //   its 'next' will point to the node that was just processed ('1'),
+            //   effectively building the reversed segment.
             temp->next = prev;
-            // Move 'prev' to the current node ('temp').
-            // 'prev' now points to the new head of the reversed segment being built.
+
+            // 'prev' is updated to the current node. This makes 'temp' the new 'head'
+            // of the reversed segment being built so far.
             prev = temp;
+
             // Move 'temp' to the next node in the original list.
             temp = next_node;
-            count++; // Increment count.
+            count++;
         }
-        // After this loop, 'prev' will be the new head of the reversed 'k' segment.
-        // For k=2, if head was 1->2, after this loop, prev will be 2, and the segment is 2->1.
-        // The 1->next would be linked to the result of the recursive call.
 
-        // Step 4: Return the new head of the reversed 'k' segment.
+        // --- Step 4: Return the new head of the current k-group ---
+        // After the loop, 'prev' will point to the k-th node of the original group
+        // (e.g., '2' in [1,2]), which is now the new head of this swapped k-group.
         return prev;
     }
 };
@@ -137,10 +148,10 @@ public:
 ## ⏱️ Complexity Analysis
 | | Complexity | Reason |
 |---|---|---|
-| **Time** | O(N) | Each node in the linked list is visited a constant number of times: once in the initial `while` loop to check for `k` nodes, once as part of a recursive call, and once in the second `while` loop to perform the reversal. Since `k` is a constant (2), these operations are constant per node. |
-| **Space** | O(N) | The recursive calls consume stack space. In the worst case, for a list of N nodes, there will be approximately N/k recursive calls on the stack. Since `k` is a constant (2), the depth of the recursion stack is proportional to N, leading to O(N) space complexity. |
+| **Time** | O(N) | Each node in the linked list is visited and processed a constant number of times (once in the initial `k`-step check, and once in the `k`-step reversal loop). Therefore, the time complexity is directly proportional to the number of nodes, N. |
+| **Space** | O(N) | Due to the recursive calls, the call stack will grow. In the worst case, for a list of N nodes, there will be approximately N/2 recursive calls (one for each pair). Each call adds a frame to the stack. Thus, the space complexity is proportional to the number of nodes, N. |
 
 ## 🔗 Related Problems
-- 25. Reverse Nodes in k-Group
 - 206. Reverse Linked List
-- 92. Reverse Linked List II
+- 25. Reverse Nodes in k-Group
+- 19. Remove Nth Node From End of List
