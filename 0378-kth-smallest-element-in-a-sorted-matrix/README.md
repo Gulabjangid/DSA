@@ -1,17 +1,17 @@
 # 0378-kth-smallest-element-in-a-sorted-matrix
 
 ## 📋 Problem Description
-Given an `n x n` integer matrix, where every row and every column is sorted in ascending order, the task is to find and return the `k`-th smallest element in the entire matrix.
+Given an `n x n` matrix where each row and each column is sorted in ascending order, the task is to find and return the `k`-th smallest element in the entire matrix. It's important to note that we are looking for the `k`-th smallest element in the sorted order of all elements, not the `k`-th distinct element.
 
-It's important to note that we are looking for the `k`-th smallest element in the sorted order of all elements, not the `k`-th distinct element.
+The function receives a `vector<vector<int>> matrix` (the `n x n` matrix) and an integer `k`. It must return an integer, which is the `k`-th smallest element.
 
-The solution must have a memory complexity better than `O(n^2)`.
+A crucial requirement is to find a solution with a memory complexity better than `O(n^2)`.
 
 ## 🔍 Examples
 ```
 Input: matrix = [[1,5,9],[10,11,13],[12,13,15]], k = 8
 Output: 13
-Explanation: The elements in the matrix, when sorted, are [1, 5, 9, 10, 11, 12, 13, 13, 15]. The 8th smallest number is 13.
+Explanation: The elements in the matrix, when sorted, are [1,5,9,10,11,12,13,13,15]. The 8th smallest number is 13.
 
 Input: matrix = [[-5]], k = 1
 Output: -5
@@ -26,64 +26,70 @@ Explanation: The only element is -5, which is the 1st smallest.
 *   `1 <= k <= n^2`
 
 ## 🤔 Understanding the Problem
-The problem asks us to find an element by its rank (the `k`-th smallest) within a special kind of 2D array. The key property is that both rows and columns are individually sorted. This means the smallest element is always `matrix[0][0]` and the largest is `matrix[n-1][n-1]`. The challenge is that simply merging rows or columns isn't straightforward due to the 2D nature. We need a way to efficiently find the `k`-th element without explicitly sorting all `n^2` elements if possible, especially considering the memory constraint.
+The problem asks us to find the `k`-th smallest element in a special kind of matrix: one where both its rows and columns are sorted. This property is key, as it suggests we don't necessarily need to flatten and sort the entire matrix. The challenge lies in efficiently finding this `k`-th element without using excessive memory, specifically better than `O(n^2)`. Simply extracting all elements into a list and sorting it would work, but might not meet the memory or time constraints for larger `n`.
 
 ## 💡 Core Idea
-The most straightforward way to find the `k`-th smallest element from a collection of numbers is to gather all numbers and then use a data structure that can efficiently maintain order or extract ranked elements. A priority queue (heap) is a natural fit for this task.
+The provided solution's core idea is to collect all elements from the matrix into a data structure that can efficiently keep track of the largest elements seen so far, and then extract the `k`-th smallest element from this collection. A max-priority queue (max-heap) is used for this purpose.
 
-## 🧠 Approach — Priority Queue (Max-Heap)
-This solution utilizes a **Priority Queue**, specifically a **Max-Heap**.
-A max-heap is a data structure that always keeps the largest element at its root (top). This property makes it suitable for finding the `k`-th smallest element. The approach is to insert all elements from the matrix into the max-heap. Once all elements are in the heap, we can repeatedly extract the largest element until only `k` elements remain. The element at the top of the heap will then be the `k`-th smallest element from the original set. This works because by removing the largest elements, we are effectively "counting down" from the largest to the `k`-th smallest.
+## 🧠 Approach — Heap / Priority Queue
+This approach utilizes a **Max-Priority Queue (Max-Heap)**. A priority queue is a data structure that allows efficient retrieval of the maximum (or minimum) element. In C++, `std::priority_queue` by default implements a max-heap.
+
+The reason this pattern fits is that we need to find the `k`-th smallest element. A common strategy for finding the `k`-th smallest/largest element in a collection is to use a heap. If we want the `k`-th smallest, we can use a max-heap. If we want the `k`-th largest, we can use a min-heap. The provided solution, however, uses a max-heap to store *all* elements, then repeatedly pops the largest until `k` elements remain, at which point the top of the heap is the `k`-th smallest.
 
 ## 📝 Step-by-Step Algorithm
-1.  **Initialize a Max-Priority Queue**: Create an empty `std::priority_queue` (which is a max-heap by default in C++).
-2.  **Populate the Priority Queue**: Iterate through each row of the `matrix` from `i = 0` to `n-1`. For each row, iterate through each element `matrix[i][j]` from `j = 0` to `n-1`. Push every element encountered into the priority queue.
-3.  **Extract `k`-th Smallest**: After all `n*n` elements have been inserted, the priority queue will contain all elements from the matrix. To find the `k`-th smallest, we need to remove the `n*n - k` largest elements.
-    *   While the size of the priority queue is greater than `k`, repeatedly remove the top element (which is the largest element currently in the heap) using `pq.pop()`.
-4.  **Return Result**: Once the loop finishes, the priority queue will contain exactly `k` elements, and the element at its top (`pq.top()`) will be the `k`-th smallest element from the original matrix. Return this value.
+1.  **Initialize a Max-Priority Queue**: Create an empty max-priority queue (a max-heap). This priority queue will store integers.
+2.  **Iterate and Populate**: Traverse through each element of the `n x n` matrix. For every element `matrix[i][j]`, push it into the max-priority queue.
+3.  **Reduce to K Elements**: After all `n*n` elements have been pushed into the priority queue, it now contains all elements from the matrix. The priority queue is ordered such that the largest element is always at the top. To find the `k`-th smallest element, we need to remove the largest elements until only `k` elements remain.
+    *   Repeatedly pop (remove the top element from) the priority queue as long as its size is greater than `k`.
+4.  **Retrieve Result**: Once the priority queue contains exactly `k` elements, the element at the top of the priority queue (which is the largest among the remaining `k` elements) will be the `k`-th smallest element from the original matrix. Return this element.
 
 ## 💻 Solution
 ```cpp
 class Solution {
 public:
     int kthSmallest(vector<vector<int>>& matrix, int k) {
-        // A max-priority queue is used. By default, std::priority_queue in C++
-        // is a max-heap, meaning the largest element is always at the top.
+
+        // Initialize a max-priority queue. By default, std::priority_queue is a max-heap.
+        // It will store integers.
         priority_queue<int> pq;
 
-        int n = matrix.size(); // Get the dimension of the square matrix
+        // Get the size of the matrix (n x n).
+        int n = matrix.size();
 
-        // Iterate through all elements in the matrix
+        // Iterate through each row of the matrix.
         for (int i = 0; i < n; i++) {
+            // Iterate through each column in the current row.
             for (int j = 0; j < n; j++) {
-                // Push each element into the max-priority queue.
-                // This operation takes O(log P) time, where P is the current size of the PQ.
+                // Push the current matrix element into the priority queue.
+                // This will add all n*n elements to the priority queue.
                 pq.push(matrix[i][j]);
             }
         }
 
-        // After the loops, the priority queue contains all n*n elements.
-        // To find the k-th smallest, we need to remove the (n*n - k) largest elements.
-        // The loop continues as long as the priority queue has more than 'k' elements.
+        // After pushing all elements, the priority queue contains all n*n elements.
+        // To find the k-th smallest, we need to remove the largest elements
+        // until only k elements remain. The top of the max-heap will then be
+        // the largest among the k smallest, which is the k-th smallest element.
+        // We keep popping as long as the priority queue size is greater than k.
         while (k < pq.size()) {
-            // Remove the largest element (top of the max-heap).
-            // This operation also takes O(log P) time.
-            pq.pop();
+            pq.pop(); // Remove the largest element (top of the max-heap).
         }
 
-        // After removing (n*n - k) elements, the priority queue will have exactly 'k' elements.
-        // The element at the top of the max-heap will be the k-th smallest element overall.
+        // The priority queue now contains exactly k elements.
+        // The top element is the largest among these k elements,
+        // which corresponds to the k-th smallest element in the original matrix.
         return pq.top();
     }
 };
-
 ```
 
 ## ⏱️ Complexity Analysis
 | | Complexity | Reason |
 |---|---|---|
-| **Time** | O(N^2 log N) | Each of the `N^2` elements is pushed into the priority queue. Each push operation takes `O(log P)` time, where `P` is the current size of the priority queue (up to `N^2`). Summing these up gives `O(N^2 log(N^2)) = O(N^2 log N)`. Subsequently, `N^2 - k` elements are popped, each taking `O(log N)` time. |
-| **Space** | O(N^2) | The priority queue stores all `N^2` elements from the matrix in the worst case. This solution **does not** meet the problem's explicit memory constraint of "better than `O(n^2)`". An optimized approach using a min-heap of size `k` or binary search on the answer could achieve `O(k)` or `O(1)` space respectively. |
+| **Time** | O(N^2 log(N^2)) | The algorithm iterates through all `N^2` elements of the matrix. Each element is pushed into a priority queue. In the worst case, the priority queue can grow to `N^2` elements. A push operation on a priority queue of size `P` takes `O(log P)` time. Thus, `N^2` pushes take `O(N^2 log(N^2))` time. After populating, `N^2 - k` elements are popped, each taking `O(log(N^2))` time. The dominant factor is `N^2 log(N^2)`. |
+| **Space** | O(N^2) | The priority queue stores all `N^2` elements from the matrix. In the worst case, `k` could be `N^2`, requiring all elements to be stored. |
+
+**Important Note on Constraints:** The problem statement explicitly requires a solution with "memory complexity better than `O(n^2)`". The provided solution uses `O(n^2)` space, which does not meet this specific requirement. A more optimal heap-based solution would maintain a max-heap of size `k` throughout the iteration, leading to `O(N^2 log k)` time and `O(k)` space, which would satisfy the memory constraint. Other approaches like binary search on the answer space can achieve `O(N log(max_val - min_val))` time and `O(1)` space.
 
 ## 🔗 Related Problems
 - 215. Kth Largest Element in an Array
