@@ -9,145 +9,137 @@ Specifically, you need to implement the following methods:
 *   `int top()`: Returns the element currently at the top of the stack without removing it.
 *   `boolean empty()`: Returns `true` if the stack is empty, `false` otherwise.
 
-You are restricted to using only standard queue operations: `push to back`, `peek/pop from front`, `size`, and `is empty`.
+You are restricted to using only standard queue operations: `push to back` (enqueue), `peek/pop from front` (dequeue), `size`, and `is empty`.
 
 ## 🔍 Examples
-**Example 1:**
 ```
 Input:
 ["MyStack", "push", "push", "top", "pop", "empty"]
 [[], [1], [2], [], [], []]
 Output:
 [null, null, null, 2, 2, false]
+
 Explanation:
 MyStack myStack = new MyStack();
 myStack.push(1);   // Stack: [1]
-myStack.push(2);   // Stack: [1, 2] (2 is the top element)
+myStack.push(2);   // Stack: [1, 2] (2 is top)
 myStack.top();     // return 2
-myStack.pop();     // return 2, Stack becomes: [1]
-myStack.empty();   // return false
-```
-
-**Example 2:**
-```
-Input:
-["MyStack", "push", "empty", "pop", "empty"]
-[[], [5], [], [], []]
-Output:
-[null, null, false, 5, true]
-Explanation:
-MyStack myStack = new MyStack();
-myStack.push(5);   // Stack: [5]
-myStack.empty();   // return false
-myStack.pop();     // return 5, Stack becomes: []
-myStack.empty();   // return true
+myStack.pop();     // return 2, Stack: [1]
+myStack.empty();   // return False
 ```
 
 ## 📌 Constraints
 *   `1 <= x <= 9`
 *   At most `100` calls will be made to `push`, `pop`, `top`, and `empty`.
-*   All calls to `pop` and `top` are valid (i.e., the stack will not be empty when `pop` or `top` is called).
+*   All calls to `pop` and `top` are guaranteed to be valid (i.e., the stack will not be empty when these operations are called).
 
 ## 🤔 Understanding the Problem
-The problem asks us to simulate a Last-In-First-Out (LIFO) data structure, a stack, using only the operations available for a First-In-First-Out (FIFO) data structure, a queue. The core challenge is that queues naturally expose the *oldest* element first, while stacks need to expose the *newest* element first. We need to devise a strategy to reorder elements within queues to always make the most recently added item accessible as the "front" of a queue.
+The core challenge here is to simulate a Last-In-First-Out (LIFO) data structure, a stack, using only First-In-First-Out (FIFO) data structures, queues. This is non-trivial because a queue naturally processes elements in the order they arrive, while a stack needs to process the most recently added element first. We need to devise a strategy to make the "last-in" element always accessible at the "front" of our primary queue, effectively reversing the natural queue order for the top element.
 
 ## 💡 Core Idea
-The central idea is to always maintain the stack's top element at the front of one of our queues. This can be achieved by using an auxiliary queue to temporarily store elements, allowing us to reorder them during the `push` operation so that the newly added element becomes the primary queue's front.
+The key insight is to maintain the invariant that the "top" element of the stack is always at the front of one of our queues. When a new element is pushed, it must become the new "top," meaning it needs to be moved to the front of the primary queue, effectively reordering all existing elements behind it.
 
 ## 🧠 Approach — Data Structure Design / Queue Manipulation
-This problem falls under the "Data Structure Design" pattern, specifically focusing on "Queue Manipulation". We utilize two queues to mimic the LIFO behavior of a stack. One queue (`q1`) is designated as the primary storage, always ensuring its front element is the current stack top. The second queue (`q2`) serves as a temporary buffer to facilitate the reordering of elements. This approach is necessary because queues inherently provide FIFO access, so to achieve LIFO, we must strategically move elements to ensure the "last-in" element is always made the "first-out" (front) of our primary queue.
+This problem falls under the "Data Structure Design" pattern, specifically focusing on "Queue Manipulation." We use two queues to achieve the stack's LIFO behavior. The reason this pattern fits is that queues inherently operate on a FIFO principle, which is opposite to a stack's LIFO. To overcome this, we leverage a second auxiliary queue to temporarily store elements, allowing us to reorder them such that the most recently added element always ends up at the front of our primary queue, thus simulating the stack's top.
 
 ## 📝 Step-by-Step Algorithm
 
-We will use two `std::queue<int>` objects, `q1` and `q2`. `q1` will be our main queue, where its front element will always represent the top of our simulated stack. `q2` will serve as a temporary helper queue.
+1.  **Initialization (`MyStack()`):**
+    *   Create two empty queues, `q1` and `q2`. `q1` will primarily hold our stack elements, with its front representing the stack's top. `q2` will serve as an auxiliary queue for reordering elements during `push` operations.
 
-1.  **`MyStack()` Constructor**:
-    *   Initialize both `q1` and `q2` as empty queues. No explicit code is needed as `std::queue` objects are empty by default upon construction.
+2.  **Push Operation (`push(int x)`):**
+    *   To make the new element `x` the "top" of the stack (i.e., the front of `q1`), we need to move all existing elements from `q1` to `q2`.
+    *   While `q1` is not empty, dequeue an element from `q1` and enqueue it into `q2`.
+    *   Now, `q1` is empty. Enqueue the new element `x` into `q1`. This makes `x` the very first element in `q1`.
+    *   Finally, move all elements back from `q2` to `q1`. While `q2` is not empty, dequeue an element from `q2` and enqueue it into `q1`.
+    *   After these steps, `q1` contains `x` at its front, followed by all the elements that were originally in `q1`, preserving their relative order. This ensures `x` is the new "top."
 
-2.  **`push(int x)` Operation**:
-    *   **Step 1**: Transfer all elements from `q1` to `q2`.
-        *   While `q1` is not empty, take the element from `q1.front()`, push it into `q2`, and then `q1.pop()`.
-        *   After this loop, `q1` will be empty, and `q2` will contain all the previous stack elements in their original relative order.
-    *   **Step 2**: Push the new element `x` into `q1`.
-        *   Since `q1` is now empty, `x` becomes the first and only element in `q1`, effectively placing it at the front. This `x` is the new stack top.
-    *   **Step 3**: Transfer all elements back from `q2` to `q1`.
-        *   While `q2` is not empty, take the element from `q2.front()`, push it into `q1`, and then `q2.pop()`.
-        *   These elements will be added to the back of `q1`, behind `x`.
-    *   After these three steps, `q1` will contain `x` at its front, followed by all the elements that were previously in the stack, maintaining their relative order.
+3.  **Pop Operation (`pop()`):**
+    *   Since the `push` operation ensures the stack's top element is always at the front of `q1`, simply dequeue and return the element from `q1`.
 
-3.  **`pop()` Operation**:
-    *   Since the `push` operation ensures that the stack's top element is always at `q1.front()`, simply retrieve this element using `q1.front()`, then remove it using `q1.pop()`, and return the retrieved value.
+4.  **Top Operation (`top()`):**
+    *   Similar to `pop`, the stack's top element is at the front of `q1`. Simply peek at (return) the element at the front of `q1` without removing it.
 
-4.  **`top()` Operation**:
-    *   Similar to `pop()`, the stack's top element is always at `q1.front()`. Simply return `q1.front()` without removing it.
-
-5.  **`empty()` Operation**:
-    *   The stack is considered empty if and only if `q1` contains no elements. Return the result of `q1.empty()`.
+5.  **Empty Operation (`empty()`):**
+    *   The stack is empty if and only if `q1` is empty. Return `true` if `q1` is empty, `false` otherwise.
 
 ## 💻 Solution
+
 ```cpp
 #include <queue> // Required for using std::queue
 
 class MyStack {
 public:
-    // Declare two queues.
-    // q1 will be our primary queue, always holding the stack's top element at its front.
-    // q2 will serve as an auxiliary queue for temporarily holding elements during push operations.
+    // q1 will be our primary queue, where the front always represents the stack's top.
+    // q2 will be an auxiliary queue used for reordering elements during push operations.
     std::queue<int> q1;
     std::queue<int> q2;
 
     // Constructor: Initializes the MyStack object.
-    // Queues are default-constructed as empty, so no explicit action is needed here.
+    // No specific actions needed as queues are default-constructed empty.
     MyStack() {
-        // No specific initialization logic required as queues are empty by default.
+        
     }
     
     // Pushes element x to the top of the stack.
-    // This operation is O(N) because it involves moving all existing elements.
+    // This operation is O(N) because it involves reordering all existing elements.
     void push(int x) {
         // Step 1: Move all existing elements from q1 to q2.
-        // This effectively empties q1 and preserves the relative order of elements in q2.
-        // After this loop, q1 is empty, and q2 contains all previous stack elements.
-        while (!q1.empty()) {
-            q2.push(q1.front()); // Add element from q1's front to q2's back
-            q1.pop();            // Remove element from q1's front
+        // After this loop, q1 will be empty, and q2 will hold all previous stack elements.
+        while(!q1.empty()){
+            q2.push(q1.front()); // Enqueue element from q1's front to q2's back
+            q1.pop();            // Dequeue element from q1's front
         }
         
-        // Step 2: Push the new element x into q1.
-        // Since q1 was just emptied, x becomes the first and only element in q1.
-        // This means x is now at the front of q1, making it the new stack top.
+        // Step 2: Push the new element x to q1.
+        // This makes x the new front of q1, which will be our stack's top.
         q1.push(x);
         
         // Step 3: Move all elements back from q2 to q1.
-        // These elements will be pushed to the back of q1, behind 'x'.
-        // This restores the original elements to q1, but now 'x' is at the very front.
-        while (!q2.empty()) {
-            q1.push(q2.front()); // Add element from q2's front to q1's back
-            q2.pop();            // Remove element from q2's front
+        // These elements will now be behind x in q1, maintaining LIFO order.
+        while(!q2.empty()){
+            q1.push(q2.front()); // Enqueue element from q2's front to q1's back
+            q2.pop();            // Dequeue element from q2's front
         }
+        // After these steps, q1's front is 'x', followed by the elements that were previously in q1.
+        // Example trace:
+        // Initial: q1=[], q2=[]
+        // push(1): q1=[], q2=[] -> q1.push(1) -> q1=[1], q2=[]
+        // push(2): q1=[1], q2=[] -> q2.push(1), q1.pop() -> q1=[], q2=[1]
+        //          q1.push(2) -> q1=[2], q2=[1]
+        //          q1.push(1), q2.pop() -> q1=[2,1], q2=[]
+        //          Stack state: [1, 2] (2 is top)
+        // push(3): q1=[2,1], q2=[] -> q2.push(2), q1.pop() -> q1=[1], q2=[2]
+        //          q2.push(1), q1.pop() -> q1=[], q2=[2,1]
+        //          q1.push(3) -> q1=[3], q2=[2,1]
+        //          q1.push(2), q2.pop() -> q1=[3,2], q2=[1]
+        //          q1.push(1), q2.pop() -> q1=[3,2,1], q2=[]
+        //          Stack state: [1, 2, 3] (3 is top)
     }
     
     // Removes the element on the top of the stack and returns it.
     // This operation is O(1) because the top element is always at q1's front.
     int pop() {
-       // The stack's top element is always at the front of q1.
-       int ans = q1.front(); // Get the top element
-       q1.pop();             // Remove the top element
-       return ans;           // Return the removed element
+       // Get the element at the front of q1 (which is the stack's top).
+       int ans = q1.front();
+       // Remove the element from q1.
+       q1.pop();
+       // Return the removed element.
+       return ans;
     }
     
-    // Returns the element on the top of the stack.
+    // Returns the element on the top of the stack without removing it.
     // This operation is O(1) because the top element is always at q1's front.
     int top() {
-        // The stack's top element is always at the front of q1.
-        return q1.front(); // Return the top element without removing it
+        // Simply return the element at the front of q1.
+        return q1.front();
     }
     
     // Returns true if the stack is empty, false otherwise.
-    // This operation is O(1) as it only checks the size of q1.
+    // This operation is O(1).
     bool empty() {
-        // The stack is empty if and only if q1 is empty.
-        // The expression `true?q1.empty():false` is equivalent to simply `q1.empty()`.
+        // The stack is empty if our primary queue q1 is empty.
+        // The expression `true?q1.empty():false` is functionally equivalent to just `q1.empty()`.
         return q1.empty(); 
     }
 };
@@ -163,15 +155,16 @@ public:
 ```
 
 ## ⏱️ Complexity Analysis
+
 | | Complexity | Reason |
 |---|---|---|
-| **Time - `push`** | O(N) | In the worst case, all `N` existing elements are moved from `q1` to `q2` and then back to `q1`. |
-| **Time - `pop`** | O(1) | Only involves a single `front()` and `pop()` operation on `q1`. |
-| **Time - `top`** | O(1) | Only involves a single `front()` operation on `q1`. |
-| **Time - `empty`** | O(1) | Only involves checking if `q1` is empty. |
-| **Space** | O(N) | Two queues are used to store up to `N` elements, where `N` is the current number of elements in the stack. |
+| **Time (push)** | O(N) | In the worst case, all `N` existing elements are moved from `q1` to `q2`, then the new element is added, then all `N` elements are moved back from `q2` to `q1`. Each move involves a dequeue and an enqueue operation. |
+| **Time (pop)** | O(1) | Directly dequeues the front element from `q1`, which is a constant time operation for standard queues. |
+| **Time (top)** | O(1) | Directly peeks at the front element of `q1`, which is a constant time operation. |
+| **Time (empty)** | O(1) | Checks if `q1` is empty, which is a constant time operation. |
+| **Space** | O(N) | Stores all `N` elements in the queues. In the worst case, all elements reside in `q1`. |
 
 ## 🔗 Related Problems
-- 232. Implement Queue using Stacks
-- 155. Min Stack
-- 716. Max Stack (Premium)
+*   232. Implement Queue using Stacks
+*   155. Min Stack
+*   716. Max Stack
