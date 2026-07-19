@@ -1,13 +1,9 @@
 # 0122-best-time-to-buy-and-sell-stock-ii
 
 ## 📋 Problem Description
-You are given an array of integers called `prices`, where `prices[i]` represents the price of a given stock on the `i`-th day.
+You are given an array of integers `prices`, where `prices[i]` represents the price of a given stock on the `i`-th day.
 
-Your goal is to find and return the maximum total profit you can achieve.
-
-You are allowed to perform multiple transactions. On any given day, you can decide to buy, sell, or do nothing. However, there are two important rules:
-1. You can only hold at most one share of the stock at any time. This means you must sell any stock you currently hold before you can buy another one.
-2. You can sell and buy the stock multiple times on the same day. This implies that if you sell a stock, you are immediately free to buy another one on the very same day if it's profitable.
+Your goal is to find and return the maximum profit you can achieve. You are allowed to perform multiple transactions. On any given day, you may decide to buy and/or sell the stock. However, you can only hold at most one share of the stock at any time. This means you must sell any stock you hold before buying another. You can even sell and buy on the same day if it's profitable, as long as you never hold more than one share simultaneously.
 
 ## 🔍 Examples
 ```
@@ -24,8 +20,7 @@ Input: prices = [1,2,3,4,5]
 Output: 4
 Explanation: 
 Buy on day 1 (price = 1) and sell on day 5 (price = 5), profit = 5 - 1 = 4.
-Total profit is 4.
-(Alternatively, you could buy on day 1, sell on day 2 (profit 1); buy on day 2, sell on day 3 (profit 1); etc. The sum of these individual profits would also be 4.)
+Total profit is 4. (Note: This is equivalent to summing up (2-1) + (3-2) + (4-3) + (5-4) = 1+1+1+1 = 4)
 ```
 
 ```
@@ -39,23 +34,23 @@ Explanation: There is no way to make a positive profit, so we never buy the stoc
 *   `0 <= prices[i] <= 10^4`
 
 ## 🤔 Understanding the Problem
-This problem asks us to maximize profit by buying and selling a stock, with the key difference from "Best Time to Buy and Sell Stock I" being that we can perform *multiple* transactions. The constraint of holding "at most one share" means we must sell before we can buy again. The ability to sell and buy on the same day simplifies things, essentially meaning a transaction pair (buy then sell) can be completed instantly, freeing us up for another. The core challenge is to figure out how to leverage these multiple transactions to get the highest possible total profit.
+The problem asks us to find the maximum profit by buying and selling a stock multiple times. The key rule is that we can only hold one share at a time, meaning we must sell before buying again. Crucially, there are no limits on the number of transactions, and no transaction fees. This implies that we can complete a transaction (buy and sell) and immediately start another one on the very next day, or even on the same day if the price allows. The goal is to maximize the *total* accumulated profit from all transactions.
 
 ## 💡 Core Idea
-Since we can make as many transactions as we want, we can capture every single price increase. If the stock price goes up from one day to the next, we can "buy" on the lower-priced day and "sell" on the higher-priced day to make a profit.
+The core insight is that since we can perform as many transactions as we want without fees, we should capture every single positive price increase. If the price goes up from one day to the next, we can make a profit by buying on the lower-priced day and selling on the higher-priced day.
 
-## 🧠 Approach — Greedy
-The algorithm used here is a **Greedy** approach.
-This pattern fits because the ability to make unlimited transactions means that any positive profit, no matter how small or short-lived, can be added to our total profit without negatively impacting future opportunities. If the price increases from day `i-1` to day `i`, we can always make `prices[i] - prices[i-1]` profit. This local optimal choice (taking every immediate profit) contributes directly to the global optimal solution because a larger upward trend (e.g., `A < B < C`) can be broken down into smaller, consecutive upward trends (`(B-A) + (C-B)`), yielding the same total profit as a single transaction (`C-A`).
+## 🧠 Approach — Greedy Algorithm
+This problem can be efficiently solved using a **Greedy Algorithm**.
+The greedy approach works here because each local optimal decision (taking an immediate profit from a price increase) contributes directly to the global optimal solution. Since there are no transaction limits or fees, we don't need to "save" a stock for a potentially larger future profit if there's a dip in between. We can simply sell, take the profit, and then buy again later if the price rises. Summing up all positive differences between consecutive days' prices will yield the maximum total profit.
 
 ## 📝 Step-by-Step Algorithm
-1.  Initialize a variable `totalProfit` to `0`. This variable will store the accumulated maximum profit.
+1.  Initialize a variable `totalProfit` to `0`. This variable will store the maximum profit accumulated from all transactions.
 2.  Iterate through the `prices` array starting from the second day (index `1`) up to the last day. We need to compare each day's price with the previous day's price.
-3.  For each day `i` (from `1` to `prices.size() - 1`):
-    a.  Compare the current day's price (`prices[i]`) with the previous day's price (`prices[i-1]`).
-    b.  If `prices[i]` is strictly greater than `prices[i-1]`, it means there was an increase in price. We can imagine buying on day `i-1` and selling on day `i` to capture this profit.
-    c.  Add this positive difference (`prices[i] - prices[i-1]`) to `totalProfit`.
-4.  After the loop finishes, `totalProfit` will contain the maximum profit achievable by summing up all positive price differences.
+3.  For each day `i` (where `i` ranges from `1` to `prices.size() - 1`):
+    a.  Compare `prices[i]` (current day's price) with `prices[i-1]` (previous day's price).
+    b.  If `prices[i]` is strictly greater than `prices[i-1]`, it means there's an opportunity to make a profit by buying on day `i-1` and selling on day `i`.
+    c.  In this case, add the difference `prices[i] - prices[i-1]` to `totalProfit`.
+4.  After the loop finishes, `totalProfit` will contain the maximum profit achievable by summing up all positive price increments.
 5.  Return `totalProfit`.
 
 ## 💻 Solution
@@ -63,35 +58,43 @@ This pattern fits because the ability to make unlimited transactions means that 
 class Solution {
 public:
     int maxProfit(vector<int>& prices) {
-        // Initialize total profit to 0. This variable will accumulate all positive profits
-        // obtained from individual buy-sell transactions.
+        // Initialize total profit to 0. This variable will accumulate all positive profits.
         int profit = 0;
 
         // Iterate through the prices array starting from the second day (index 1).
-        // We compare each day's price with the previous day's price to identify upward trends.
-        for (int i = 1; i < prices.size(); i++) {
+        // We compare each day's price with the previous day's price.
+        // The loop runs from i = 1 up to prices.size() - 1.
+        for (int i = 1; i < prices.size(); ++i) {
             // If the current day's price (prices[i]) is higher than the previous day's price (prices[i-1]),
             // it means there's an opportunity to make a profit.
-            // We can conceptually "buy" on day i-1 and "sell" on day i.
+            // Since we can perform multiple transactions and there are no transaction fees,
+            // we can capture every such positive price difference.
             if (prices[i] > prices[i-1]) {
-                // Add this positive difference (profit) to our total profit.
-                // This greedy strategy works because we can perform unlimited transactions;
-                // any upward movement contributes to the maximum total profit.
+                // Add this immediate profit (prices[i] - prices[i-1]) to our total profit.
+                // This greedy approach works because any upward trend can be broken down
+                // into a sum of consecutive daily increases. For example, if prices go from 1 to 5,
+                // then 3, then 6:
+                // [1, 5, 3, 6]
+                // Day 1 (price 1) -> Day 2 (price 5): profit += (5 - 1) = 4.
+                // Day 2 (price 5) -> Day 3 (price 3): prices[i] is not > prices[i-1], so no profit added.
+                // Day 3 (price 3) -> Day 4 (price 6): profit += (6 - 3) = 3.
+                // Total profit = 4 + 3 = 7.
+                // This is equivalent to buying at 1 and selling at 5, then buying at 3 and selling at 6.
                 profit += prices[i] - prices[i-1];
             }
         }
-        // After iterating through all consecutive days, 'profit' will hold the maximum total profit
-        // achievable by summing all positive price differences.
+        // Return the accumulated maximum profit.
         return profit;
     }
 };
+
 ```
 
 ## ⏱️ Complexity Analysis
 | | Complexity | Reason |
 |---|---|---|
-| **Time** | O(N) | We iterate through the `prices` array exactly once, where N is the number of days. |
-| **Space** | O(1) | We only use a single integer variable (`profit`) to store the accumulated profit, regardless of the input size. |
+| **Time** | O(N) | We iterate through the `prices` array once, performing a constant number of operations for each element. `N` is the number of days (length of the `prices` array). |
+| **Space** | O(1) | We only use a single integer variable (`profit`) to store the accumulated profit, regardless of the input array size. No additional data structures are allocated. |
 
 ## 🔗 Related Problems
 - 121. Best Time to Buy and Sell Stock
