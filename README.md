@@ -4,6 +4,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 ## Two Pointers
 |  |
 | ------- |
+| [0011-container-with-most-water](https://github.com/Gulabjangid/DSA/tree/master/0011-container-with-most-water) |
 | [0015-3sum](https://github.com/Gulabjangid/DSA/tree/master/0015-3sum) |
 | [0026-remove-duplicates-from-sorted-array](https://github.com/Gulabjangid/DSA/tree/master/0026-remove-duplicates-from-sorted-array) |
 | [0027-remove-element](https://github.com/Gulabjangid/DSA/tree/master/0027-remove-element) |
@@ -42,6 +43,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 |  |
 | ------- |
 | [0001-two-sum](https://github.com/Gulabjangid/DSA/tree/master/0001-two-sum) |
+| [0011-container-with-most-water](https://github.com/Gulabjangid/DSA/tree/master/0011-container-with-most-water) |
 | [0015-3sum](https://github.com/Gulabjangid/DSA/tree/master/0015-3sum) |
 | [0026-remove-duplicates-from-sorted-array](https://github.com/Gulabjangid/DSA/tree/master/0026-remove-duplicates-from-sorted-array) |
 | [0027-remove-element](https://github.com/Gulabjangid/DSA/tree/master/0027-remove-element) |
@@ -235,6 +237,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 ## Greedy
 |  |
 | ------- |
+| [0011-container-with-most-water](https://github.com/Gulabjangid/DSA/tree/master/0011-container-with-most-water) |
 | [0122-best-time-to-buy-and-sell-stock-ii](https://github.com/Gulabjangid/DSA/tree/master/0122-best-time-to-buy-and-sell-stock-ii) |
 | [0134-gas-station](https://github.com/Gulabjangid/DSA/tree/master/0134-gas-station) |
 | [0324-wiggle-sort-ii](https://github.com/Gulabjangid/DSA/tree/master/0324-wiggle-sort-ii) |
