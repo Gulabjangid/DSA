@@ -68,6 +68,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0167-two-sum-ii-input-array-is-sorted](https://github.com/Gulabjangid/DSA/tree/master/0167-two-sum-ii-input-array-is-sorted) |
 | [0169-majority-element](https://github.com/Gulabjangid/DSA/tree/master/0169-majority-element) |
 | [0189-rotate-array](https://github.com/Gulabjangid/DSA/tree/master/0189-rotate-array) |
+| [0204-count-primes](https://github.com/Gulabjangid/DSA/tree/master/0204-count-primes) |
 | [0238-product-of-array-except-self](https://github.com/Gulabjangid/DSA/tree/master/0238-product-of-array-except-self) |
 | [0240-search-a-2d-matrix-ii](https://github.com/Gulabjangid/DSA/tree/master/0240-search-a-2d-matrix-ii) |
 | [0283-move-zeroes](https://github.com/Gulabjangid/DSA/tree/master/0283-move-zeroes) |
@@ -102,6 +103,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0013-roman-to-integer](https://github.com/Gulabjangid/DSA/tree/master/0013-roman-to-integer) |
 | [0048-rotate-image](https://github.com/Gulabjangid/DSA/tree/master/0048-rotate-image) |
 | [0189-rotate-array](https://github.com/Gulabjangid/DSA/tree/master/0189-rotate-array) |
+| [0204-count-primes](https://github.com/Gulabjangid/DSA/tree/master/0204-count-primes) |
 | [0445-add-two-numbers-ii](https://github.com/Gulabjangid/DSA/tree/master/0445-add-two-numbers-ii) |
 ## Hash Table
 |  |
@@ -313,4 +315,12 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 |  |
 | ------- |
 | [0028-find-the-index-of-the-first-occurrence-in-a-string](https://github.com/Gulabjangid/DSA/tree/master/0028-find-the-index-of-the-first-occurrence-in-a-string) |
+## Enumeration
+|  |
+| ------- |
+| [0204-count-primes](https://github.com/Gulabjangid/DSA/tree/master/0204-count-primes) |
+## Number Theory
+|  |
+| ------- |
+| [0204-count-primes](https://github.com/Gulabjangid/DSA/tree/master/0204-count-primes) |
 <!---LeetCode Topics End-->
