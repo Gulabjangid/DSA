@@ -55,6 +55,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0042-trapping-rain-water](https://github.com/Gulabjangid/DSA/tree/master/0042-trapping-rain-water) |
 | [0048-rotate-image](https://github.com/Gulabjangid/DSA/tree/master/0048-rotate-image) |
 | [0049-group-anagrams](https://github.com/Gulabjangid/DSA/tree/master/0049-group-anagrams) |
+| [0053-maximum-subarray](https://github.com/Gulabjangid/DSA/tree/master/0053-maximum-subarray) |
 | [0054-spiral-matrix](https://github.com/Gulabjangid/DSA/tree/master/0054-spiral-matrix) |
 | [0073-set-matrix-zeroes](https://github.com/Gulabjangid/DSA/tree/master/0073-set-matrix-zeroes) |
 | [0074-search-a-2d-matrix](https://github.com/Gulabjangid/DSA/tree/master/0074-search-a-2d-matrix) |
@@ -124,6 +125,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 ## Divide and Conquer
 |  |
 | ------- |
+| [0053-maximum-subarray](https://github.com/Gulabjangid/DSA/tree/master/0053-maximum-subarray) |
 | [0169-majority-element](https://github.com/Gulabjangid/DSA/tree/master/0169-majority-element) |
 | [0240-search-a-2d-matrix-ii](https://github.com/Gulabjangid/DSA/tree/master/0240-search-a-2d-matrix-ii) |
 | [0324-wiggle-sort-ii](https://github.com/Gulabjangid/DSA/tree/master/0324-wiggle-sort-ii) |
@@ -166,6 +168,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 |  |
 | ------- |
 | [0042-trapping-rain-water](https://github.com/Gulabjangid/DSA/tree/master/0042-trapping-rain-water) |
+| [0053-maximum-subarray](https://github.com/Gulabjangid/DSA/tree/master/0053-maximum-subarray) |
 | [0118-pascals-triangle](https://github.com/Gulabjangid/DSA/tree/master/0118-pascals-triangle) |
 | [0119-pascals-triangle-ii](https://github.com/Gulabjangid/DSA/tree/master/0119-pascals-triangle-ii) |
 | [0122-best-time-to-buy-and-sell-stock-ii](https://github.com/Gulabjangid/DSA/tree/master/0122-best-time-to-buy-and-sell-stock-ii) |
