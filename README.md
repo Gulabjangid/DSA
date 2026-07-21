@@ -61,6 +61,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0075-sort-colors](https://github.com/Gulabjangid/DSA/tree/master/0075-sort-colors) |
 | [0088-merge-sorted-array](https://github.com/Gulabjangid/DSA/tree/master/0088-merge-sorted-array) |
 | [0118-pascals-triangle](https://github.com/Gulabjangid/DSA/tree/master/0118-pascals-triangle) |
+| [0119-pascals-triangle-ii](https://github.com/Gulabjangid/DSA/tree/master/0119-pascals-triangle-ii) |
 | [0122-best-time-to-buy-and-sell-stock-ii](https://github.com/Gulabjangid/DSA/tree/master/0122-best-time-to-buy-and-sell-stock-ii) |
 | [0134-gas-station](https://github.com/Gulabjangid/DSA/tree/master/0134-gas-station) |
 | [0136-single-number](https://github.com/Gulabjangid/DSA/tree/master/0136-single-number) |
@@ -166,6 +167,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | ------- |
 | [0042-trapping-rain-water](https://github.com/Gulabjangid/DSA/tree/master/0042-trapping-rain-water) |
 | [0118-pascals-triangle](https://github.com/Gulabjangid/DSA/tree/master/0118-pascals-triangle) |
+| [0119-pascals-triangle-ii](https://github.com/Gulabjangid/DSA/tree/master/0119-pascals-triangle-ii) |
 | [0122-best-time-to-buy-and-sell-stock-ii](https://github.com/Gulabjangid/DSA/tree/master/0122-best-time-to-buy-and-sell-stock-ii) |
 | [0131-palindrome-partitioning](https://github.com/Gulabjangid/DSA/tree/master/0131-palindrome-partitioning) |
 | [0918-maximum-sum-circular-subarray](https://github.com/Gulabjangid/DSA/tree/master/0918-maximum-sum-circular-subarray) |
