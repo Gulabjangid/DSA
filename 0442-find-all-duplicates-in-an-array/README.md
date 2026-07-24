@@ -1,9 +1,9 @@
 # 0442-find-all-duplicates-in-an-array
 
 ## 📋 Problem Description
-Given an integer array `nums` of length `n`, where all the integers are guaranteed to be in the range `[1, n]`. Each integer in `nums` appears either once or twice. The goal is to identify and return an array containing all the integers that appear exactly twice.
+Given an integer array `nums` of length `n`. All integers in `nums` are guaranteed to be within the range `[1, n]`, and each integer appears at most twice. The task is to find and return an array containing all integers that appear exactly twice.
 
-The solution must adhere to specific performance requirements: it must run in `O(n)` time complexity and use only `O(1)` auxiliary space (excluding the space required for the output array itself).
+The algorithm must run in `O(n)` time complexity and use only `O(1)` auxiliary space, excluding the space needed to store the output array.
 
 ## 🔍 Examples
 ```
@@ -19,7 +19,7 @@ Explanation: The number 1 appears twice in the input array.
 ```
 Input: nums = [1]
 Output: []
-Explanation: No numbers appear twice in the input array.
+Explanation: No number appears twice in the input array.
 ```
 
 ## 📌 Constraints
@@ -29,22 +29,22 @@ Explanation: No numbers appear twice in the input array.
 *   Each element in `nums` appears **once** or **twice**.
 
 ## 🤔 Understanding the Problem
-The problem asks us to find all numbers that are present exactly two times in a given array. A crucial piece of information is that all numbers are positive and fall within the range `[1, n]`, where `n` is the length of the array. This specific range often suggests solutions that might leverage array indices for tracking. The most challenging aspect is the strict requirement for `O(n)` time and `O(1)` auxiliary space. This means we cannot use additional data structures like hash sets or frequency arrays that grow with `n` to store visited elements, as these would typically consume `O(n)` space. The provided solution, while correct in logic, does not meet the `O(1)` auxiliary space constraint.
+The problem asks us to identify all numbers that appear exactly two times within a given array. A crucial piece of information is that all numbers are positive and fall within the range `[1, n]`, where `n` is the length of the array. This specific range often hints at solutions that can use the array indices themselves for tracking, potentially allowing for `O(1)` auxiliary space. The problem explicitly states a requirement for `O(n)` time and `O(1)` auxiliary space (excluding the output array), making it a non-trivial challenge to meet both constraints simultaneously without modifying the input array or using clever index-based tricks. The provided solution prioritizes `O(n)` time complexity using a common data structure.
 
 ## 💡 Core Idea
-The core idea behind the provided solution is to use a hash set to efficiently keep track of numbers encountered so far. As we iterate through the array, if a number is already present in our hash set, it signifies that we have seen it once before, making the current encounter its second appearance (a duplicate).
+The core idea of the provided solution is to use a hash set to efficiently keep track of numbers that have been encountered. By checking if a number is already in the set before adding it, we can determine if it's a duplicate.
 
-## 🧠 Approach — Hashing / Hash Set
-This solution employs the Hashing pattern, specifically using a hash set (`unordered_set` in C++). This pattern is highly effective when the primary operations needed are fast lookups (checking if an element exists) and insertions (adding an element). For this problem, we iterate through each number in the input array. For each number, we check if it's already in our `visited` hash set. If it is, we've found a duplicate. Regardless, we then add the current number to the `visited` set to mark it as seen. This approach provides average `O(1)` time complexity for these operations, leading to an overall `O(n)` time complexity for the algorithm.
+## 🧠 Approach — Hash Set / Frequency Counting
+This problem can be solved using a Hash Set (specifically, `unordered_set` in C++). This pattern is suitable because we need to efficiently check if an element has been seen before. A hash set provides average `O(1)` time complexity for insertion and lookup operations. By iterating through the array and adding each number to the set, we can quickly determine if a number is a duplicate: if `num` is already in the set, it means we've seen it once before, and this current encounter makes it the second time.
 
 ## 📝 Step-by-Step Algorithm
-1.  Initialize an empty `unordered_set` named `visited`. This set will store all unique numbers encountered as we iterate through the input array.
-2.  Initialize an empty `vector` named `ans`. This vector will store the numbers that are identified as duplicates.
-3.  Iterate through each `num` in the input array `nums` from beginning to end:
-    a.  For the current `num`, check if it is already present in the `visited` set using the `count()` method.
-    b.  If `visited.count(num)` returns `true` (meaning `num` is already in the set), it indicates that this is the second time we are encountering `num`. Therefore, `num` is a duplicate. Add `num` to the `ans` vector.
-    c.  After checking for duplication, add the current `num` to the `visited` set using the `insert()` method. This ensures that if we encounter `num` again later, we will correctly identify it as a duplicate.
-4.  Once the iteration through all numbers in `nums` is complete, return the `ans` vector, which now contains all the integers that appeared twice.
+1.  Initialize an empty `unordered_set` called `visited`. This set will store all unique numbers encountered so far.
+2.  Initialize an empty `vector` called `ans`. This vector will store the numbers that are found to be duplicates.
+3.  Iterate through each `num` in the input array `nums`:
+    a.  For the current `num`, check if it is already present in the `visited` set using `visited.count(num)`.
+    b.  If `num` is found in `visited`, it means this is the second time we are seeing this number. Therefore, `num` is a duplicate. Add `num` to the `ans` vector.
+    c.  After checking for duplication, add the current `num` to the `visited` set. This marks it as an encountered number for subsequent iterations.
+4.  After the loop finishes iterating through all numbers in `nums`, the `ans` vector will contain all the integers that appeared twice. Return `ans`.
 
 ## 💻 Solution
 ```cpp
@@ -52,8 +52,8 @@ class Solution {
 public:
     vector<int> findDuplicates(vector<int>& nums) {
         // Initialize an unordered_set to keep track of numbers we have encountered.
-        // An unordered_set provides O(1) average time complexity for insertion and lookup,
-        // which is crucial for achieving O(n) overall time complexity.
+        // This data structure provides average O(1) time complexity for insertion and lookup,
+        // making it efficient for checking if an element has been seen before.
         unordered_set<int> visited;
         
         // Initialize a vector to store the duplicate numbers found.
@@ -61,21 +61,22 @@ public:
         vector<int> ans;
         
         // Iterate through each number in the input array 'nums'.
-        // This loop runs 'n' times, where 'n' is the length of 'nums'.
-        for(int num : nums){
+        // This loop processes each element exactly once.
+        for(int num : nums) {
             // Check if the current number 'num' is already present in the 'visited' set.
-            // If 'visited.count(num)' returns true, it means we have seen this number before.
-            // Since each number appears at most twice, this second encounter confirms it's a duplicate.
-            if (visited.count(num)){
-                // Add the duplicate number to our 'ans' vector.
+            // If 'visited.count(num)' returns true, it means 'num' has been seen before.
+            // Since each number appears at most twice, this must be its second occurrence.
+            if (visited.count(num)) {
+                // If it's a duplicate, add it to our 'ans' vector.
                 ans.push_back(num);
             }
-            // After checking for duplication, add the current number 'num' to the 'visited' set.
-            // This marks it as encountered for any subsequent checks.
+            // Regardless of whether it was a duplicate or not, add the current number 'num'
+            // to the 'visited' set. This marks it as seen for any future iterations.
             visited.insert(num);
         }
         
-        // Return the vector containing all numbers that appeared twice.
+        // After iterating through all numbers, return the 'ans' vector
+        // containing all numbers that appeared exactly twice.
         return ans;
     }
 };
@@ -84,8 +85,8 @@ public:
 ## ⏱️ Complexity Analysis
 | | Complexity | Reason |
 |---|---|---|
-| **Time** | O(n) | Each number in the input array `nums` is processed exactly once. Hash set operations (insertion and lookup using `count()`) take O(1) time on average. |
-| **Space** | O(n) | In the worst-case scenario (e.g., all numbers are unique), the `visited` hash set will store `n` distinct elements, requiring O(n) auxiliary space. This does not meet the problem's strict O(1) auxiliary space requirement. |
+| **Time** | O(N) | Each number in `nums` is processed exactly once. Hash set operations (`insert`, `count`) take O(1) time on average. |
+| **Space** | O(N) | In the worst case, the `visited` hash set stores up to N distinct elements (e.g., if all numbers are unique or appear once before a duplicate). This solution does not meet the problem's strict `O(1)` auxiliary space requirement. |
 
 ## 🔗 Related Problems
 - 217. Contains Duplicate
