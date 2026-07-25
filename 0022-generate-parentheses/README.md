@@ -1,84 +1,88 @@
 # 0022-generate-parentheses
 
 ## 📋 Problem Description
-Given an integer `n`, representing `n` pairs of parentheses, the task is to write a function that generates all possible combinations of well-formed parentheses. A "well-formed" parentheses string means that every opening parenthesis has a corresponding closing parenthesis, and the parentheses are properly nested (e.g., `()` is well-formed, `)(` is not).
+Given an integer `n`, representing `n` pairs of parentheses, the task is to generate all possible combinations of well-formed parentheses. A "well-formed" parenthesis string means that:
+1. Every opening parenthesis has a corresponding closing parenthesis.
+2. The parentheses are properly nested (e.g., `(()())` is well-formed, but `)(` is not).
 
-The function receives a single integer `n` as input.
-It must return a `vector` of `string`s, where each string is a unique combination of `n` pairs of well-formed parentheses.
+The function should receive an integer `n` as input and return a `vector` of strings, where each string is a unique well-formed combination of `n` pairs of parentheses.
 
 ## 🔍 Examples
 ```
 Input: n = 3
 Output: ["((()))","(()())","(())()","()(())","()()()"]
-Explanation: For n=3, there are 5 unique combinations of 3 pairs of well-formed parentheses.
-```
+Explanation: For n=3, there are 5 unique ways to form well-formed parentheses using 3 opening and 3 closing parentheses.
 
-```
 Input: n = 1
 Output: ["()"]
-Explanation: For n=1, there is only 1 combination: one opening and one closing parenthesis.
+Explanation: For n=1, there is only 1 way to form well-formed parentheses using 1 opening and 1 closing parenthesis.
 ```
 
 ## 📌 Constraints
 *   `1 <= n <= 8`
 
 ## 🤔 Understanding the Problem
-The problem asks us to generate all valid arrangements of `n` opening parentheses and `n` closing parentheses. The "well-formed" condition is crucial: at any point while building a string, the number of closing parentheses cannot exceed the number of opening parentheses, and the total count of opening parentheses must equal the total count of closing parentheses at the end. This problem is non-trivial because the order matters, and we need to explore all valid combinations without duplicates.
+The problem asks us to find all distinct sequences of `n` opening and `n` closing parentheses such that the sequence is "well-formed". This means that at any point while reading the string from left to right, the count of opening parentheses must be greater than or equal to the count of closing parentheses, and the total count of opening parentheses must equal the total count of closing parentheses at the end. The non-trivial aspect is systematically generating all such combinations without duplicates and ensuring correctness.
 
 ## 💡 Core Idea
-The core idea is to use a recursive backtracking approach. We build the parenthesis string character by character, making choices at each step (either add an opening parenthesis or a closing parenthesis) and ensuring that these choices maintain the "well-formed" property.
+The core idea is to use a recursive backtracking approach. We build the parenthesis string character by character, making decisions at each step: either add an opening parenthesis or a closing parenthesis. We prune invalid paths early by enforcing the well-formedness rules during construction.
 
 ## 🧠 Approach — Backtracking / Recursion
-This problem is a classic example of **Backtracking** (which is a form of recursion). Backtracking is suitable here because we need to explore all possible combinations by making a sequence of choices. If a choice leads to an invalid state, we "backtrack" (undo the choice) and try another path. In this problem, we build a string incrementally, and at each step, we have options (add '(' or add ')') that are constrained by the rules of well-formed parentheses. When a valid string of the correct length is formed, we add it to our results.
+This problem is a classic example of **Backtracking** (which is a form of recursion). Backtracking is suitable here because we need to explore all possible combinations (a search space) and build a solution step-by-step. At each step, we make a choice (add '(' or ')'), and if that choice leads to an invalid state, we "backtrack" (undo the choice) and try another option. This systematic exploration ensures we find all valid solutions without redundant computations or duplicates. The constraints on `n` (up to 8) also suggest that an exponential time complexity (typical for backtracking) will be acceptable.
 
 ## 📝 Step-by-Step Algorithm
-1.  **Initialization**:
-    *   Create an empty `vector<string>` called `ans` to store all the valid parenthesis combinations.
-    *   Initialize an empty string `curr` to build each combination.
-    *   Start the recursive helper function with `n` (total pairs), `open = 0` (count of open parentheses used so far), `close = 0` (count of close parentheses used so far), and the `curr` string.
 
-2.  **Base Case**:
-    *   In the recursive helper function, check if the length of `curr` string is equal to `2 * n` (meaning we have used all `n` open and `n` close parentheses).
-    *   If it is, this `curr` string is a complete, well-formed combination. Add it to the `ans` vector and return.
+1.  **Initialize**: Create an empty `vector<string>` called `ans` to store all the valid parenthesis combinations.
+2.  **Recursive Helper Function**: Define a recursive helper function, let's call it `solve`, which takes the following parameters:
+    *   `n`: The total number of parenthesis pairs required.
+    *   `open`: The current count of opening parentheses added to the string.
+    *   `close`: The current count of closing parentheses added to the string.
+    *   `curr`: The current string being built (passed by reference to allow modifications).
 
-3.  **Recursive Steps**:
+3.  **Base Case**: Inside `solve`:
+    *   If the length of `curr` becomes `2 * n` (meaning we have added `n` opening and `n` closing parentheses), it implies we have successfully formed a complete string. Add `curr` to the `ans` vector and return.
+
+4.  **Recursive Steps (Choices and Pruning)**:
     *   **Option 1: Add an opening parenthesis `(`**:
-        *   We can add an opening parenthesis if the number of open parentheses used so far (`open`) is less than the total allowed `n`.
+        *   We can add an opening parenthesis if the current count of `open` parentheses is less than `n` (we haven't used all `n` opening parentheses yet).
         *   If `open < n`, append `(` to `curr`.
-        *   Recursively call the helper function with `n`, `open + 1`, `close`, and the modified `curr`.
-        *   **Backtrack**: After the recursive call returns, remove the `(` from `curr` (using `pop_back()`) to explore other possibilities.
+        *   Recursively call `solve(n, open + 1, close, curr)` to explore this path.
+        *   **Backtrack**: After the recursive call returns, remove the `(` from `curr` (using `pop_back()`) to undo the choice and allow exploration of other paths.
 
     *   **Option 2: Add a closing parenthesis `)`**:
-        *   We can add a closing parenthesis if the number of closing parentheses used so far (`close`) is less than the number of opening parentheses used so far (`open`). This condition ensures that the parentheses remain well-formed at every step (we never have more `)` than `(`).
+        *   We can add a closing parenthesis if the current count of `close` parentheses is less than the current count of `open` parentheses. This condition `close < open` is crucial for ensuring well-formedness: a closing parenthesis can only be added if there's an unmatched opening parenthesis available.
         *   If `close < open`, append `)` to `curr`.
-        *   Recursively call the helper function with `n`, `open`, `close + 1`, and the modified `curr`.
-        *   **Backtrack**: After the recursive call returns, remove the `)` from `curr` (using `pop_back()`) to explore other possibilities.
+        *   Recursively call `solve(n, open, close + 1, curr)` to explore this path.
+        *   **Backtrack**: After the recursive call returns, remove the `)` from `curr` (using `pop_back()`) to undo the choice.
 
-4.  **Return**: After the initial call to the helper function completes, the `ans` vector will contain all valid combinations, which is then returned by the `generateParenthesis` function.
+5.  **Initial Call**: In the main `generateParenthesis` function, initialize an empty string `curr = ""`. Then, call the `solve` helper function with `solve(n, 0, 0, curr)` to start the process.
+
+6.  **Return Result**: Finally, return the `ans` vector containing all generated well-formed parenthesis strings.
 
 ## 💻 Solution
 ```cpp
 class Solution {
 public:
-    // This vector will store all the generated well-formed parenthesis strings.
+    // This vector will store all the valid combinations of parentheses.
     vector<string> ans;
 
-    // Recursive helper function to generate parenthesis combinations.
-    // n: The total number of pairs of parentheses required.
-    // open: The current count of opening parentheses '(' used in 'curr'.
-    // close: The current count of closing parentheses ')' used in 'curr'.
-    // curr: The string representing the current combination being built.
+    // Recursive helper function to generate well-formed parentheses.
+    // n: Total number of parenthesis pairs required.
+    // open: Current count of opening parentheses added to 'curr'.
+    // close: Current count of closing parentheses added to 'curr'.
+    // curr: The string being built, passed by reference to allow modifications.
     void solve(int n, int open, int close, string &curr) {
 
-        // Base case: If the current string 'curr' has reached the target length (2*n),
-        // it means we have successfully formed a well-formed parenthesis combination.
+        // Base Case: If the current string length equals 2 * n,
+        // it means we have successfully added 'n' opening and 'n' closing parentheses.
+        // This string is a complete, well-formed combination.
         if (curr.length() == 2 * n) {
             ans.push_back(curr); // Add it to our results.
             return;              // Stop this recursive path.
         }
 
-        // Recursive Step 1: Try adding an opening parenthesis '('.
-        // We can add an opening parenthesis if we haven't used all 'n' allowed opening parentheses yet.
+        // Option 1: Try adding an opening parenthesis '('
+        // We can add an opening parenthesis if we haven't used all 'n' opening parentheses yet.
         if (open < n) {
             curr.push_back('('); // Add '(' to the current string.
             // Recursively call solve, incrementing the 'open' count.
@@ -86,11 +90,10 @@ public:
             curr.pop_back();     // Backtrack: Remove '(' to explore other possibilities.
         }
 
-        // Recursive Step 2: Try adding a closing parenthesis ')'.
+        // Option 2: Try adding a closing parenthesis ')'
         // We can add a closing parenthesis only if the number of closing parentheses
-        // is strictly less than the number of opening parentheses.
-        // This ensures that the parentheses remain well-formed at every step
-        // (i.e., we don't close a parenthesis that hasn't been opened).
+        // is less than the number of opening parentheses. This ensures well-formedness
+        // (i.e., we don't close a parenthesis that hasn't been opened yet).
         if (close < open) {
             curr.push_back(')'); // Add ')' to the current string.
             // Recursively call solve, incrementing the 'close' count.
@@ -104,16 +107,18 @@ public:
         string curr = ""; // Initialize an empty string to start building combinations.
         // Start the recursive process with 0 open and 0 close parentheses.
         solve(n, 0, 0, curr);
-        return ans; // Return the vector containing all generated combinations.
+        return ans; // Return the collected valid combinations.
     }
 };
+
 ```
 
 ## ⏱️ Complexity Analysis
+
 | | Complexity | Reason |
 |---|---|---|
-| **Time** | O(C_n * 2n) | There are C_n (the nth Catalan number) valid parenthesis sequences. Each sequence has a length of 2n. Generating each sequence involves O(2n) operations (appending/popping characters). C_n grows approximately as 4^n / (n^(3/2) * sqrt(pi)). |
-| **Space** | O(C_n * 2n) | The `ans` vector stores C_n strings, each of length 2n. Additionally, the maximum depth of the recursion stack is 2n (for building a string of length 2n). |
+| **Time** | O( (4^n) / (n * sqrt(n)) ) or O(C_n * 2n) | The number of valid parenthesis sequences of length `2n` is given by the `n`-th Catalan number, `C_n = (1/(n+1)) * (2n choose n)`. The algorithm generates all `C_n` sequences. For each sequence, building it involves `2n` character appends/removals. So, the total time is proportional to `C_n * 2n`. `C_n` grows exponentially, roughly as `4^n / (n^(3/2))`. |
+| **Space** | O( (4^n) / (n * sqrt(n)) * 2n ) | The space complexity is dominated by storing the `C_n` result strings, each of length `2n`. Additionally, the recursion stack depth can go up to `2n`, contributing `O(2n)` space. |
 
 ## 🔗 Related Problems
 - 17. Letter Combinations of a Phone Number
