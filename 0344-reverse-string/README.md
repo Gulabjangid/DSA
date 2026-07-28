@@ -1,17 +1,22 @@
 # 0344-reverse-string
 
 ## 📋 Problem Description
-You are tasked with writing a function that takes a string as input, represented as an array of characters. Your goal is to reverse this string. The crucial requirement is that you must modify the input array directly (in-place) and use only a constant amount of extra memory (O(1) space complexity).
+Write a function that takes a character array, representing a string, and reverses it. The modification must be done directly on the input array (in-place) and should use only a constant amount of extra memory (O(1) space complexity).
 
-The function `reverseString` receives a `vector<char>& s` (a reference to a vector of characters) and should modify `s` such that its characters are in reverse order. It does not need to return anything explicitly, as the modification happens directly on the input vector.
+**Input**: A `vector<char>& s`, which is a reference to a character array.
+**Output**: The function should not return anything. Instead, it should modify the input `s` directly to contain the reversed string.
 
 ## 🔍 Examples
 ```
 Input:  s = ["h","e","l","l","o"]
 Output: ["o","l","l","e","h"]
+Explanation: The original string "hello" is reversed to "olleh".
+```
 
+```
 Input:  s = ["H","a","n","n","a","h"]
 Output: ["h","a","n","n","a","H"]
+Explanation: The original string "Hannah" is reversed to "hannaH".
 ```
 
 ## 📌 Constraints
@@ -19,70 +24,67 @@ Output: ["h","a","n","n","a","H"]
 *   `s[i]` is a printable ASCII character.
 
 ## 🤔 Understanding the Problem
-The problem asks us to reverse the order of characters in a given string, which is provided as a character array. The main challenge isn't just reversing the string, but doing so *in-place* and with *O(1) extra memory*. This means we cannot create a new string or array to store the reversed characters and then copy it back. We must manipulate the existing character array directly, using only a few temporary variables. This constraint is common in competitive programming to test understanding of efficient memory usage.
+The problem asks us to reverse a given string, which is provided as a character array. The crucial part is the requirement to perform this reversal "in-place" and with "O(1) extra memory". This means we cannot create a new array to store the reversed string and then copy it back. Instead, we must modify the existing character array directly, using only a fixed, minimal amount of additional storage (like a few variables for pointers or temporary storage for a swap). This makes it a classic problem for demonstrating efficient in-place array manipulation.
 
 ## 💡 Core Idea
-The most intuitive way to reverse a sequence in-place is to swap elements from opposite ends of the sequence until the middle is reached.
+To reverse a string in-place, we can swap characters from the beginning with characters from the end, progressively moving towards the center of the string until all necessary swaps have been made.
 
 ## 🧠 Approach — Two Pointers
-This problem is a classic application of the **Two Pointers** pattern. This pattern is ideal when you need to process elements from both ends of a sequence (like an array or string) simultaneously, often moving towards the center, or when you need to maintain two distinct positions within a sequence. It fits this problem perfectly because reversing a string involves pairing the first character with the last, the second with the second-to-last, and so on, and swapping them. The two pointers help us keep track of these corresponding positions efficiently.
+This problem is perfectly suited for the **Two Pointers** pattern. This pattern involves using two pointers (or indices) that traverse a data structure (like an array or string) from different positions, often towards each other or in the same direction, to achieve a specific goal. In this case, one pointer starts at the beginning of the string, and the other starts at the end. They move towards the middle, swapping the characters they point to. This approach is ideal for in-place modifications where elements at opposite ends need to interact, and it naturally satisfies the O(1) extra space constraint.
 
 ## 📝 Step-by-Step Algorithm
-1.  Initialize two pointers: `left` at the beginning of the character array (index 0) and `right` at the end of the character array (index `s.size() - 1`).
-2.  Enter a loop that continues as long as the `left` pointer is less than the `right` pointer. This ensures we process pairs of characters without overwriting already swapped characters or swapping an element with itself.
-3.  Inside the loop, swap the characters at the `left` pointer's position and the `right` pointer's position.
-4.  After each swap, move the `left` pointer one step to the right (`left++`) and the `right` pointer one step to the left (`right--`). This brings the pointers closer to the center of the array.
-5.  Once the loop terminates (when `left` is no longer less than `right`), the entire string will be reversed in-place.
-
-*Note: The provided solution uses `std::reverse`, which is a C++ standard library function that internally implements this very two-pointer swapping logic for random-access iterators.*
+1.  **Initialize Pointers**: Create two integer pointers, `left` and `right`.
+    *   Set `left` to `0`, pointing to the first character of the string.
+    *   Set `right` to `s.size() - 1`, pointing to the last character of the string.
+2.  **Iterate and Swap**: Begin a loop that continues as long as `left` is less than `right`. This condition ensures that we only process distinct pairs of characters and stop when the pointers meet or cross in the middle.
+3.  **Perform Swap**: Inside the loop, swap the characters at the positions pointed to by `left` and `right`. That is, `s[left]` is swapped with `s[right]`.
+4.  **Move Pointers**: After each swap:
+    *   Increment `left` by 1, moving it one step to the right.
+    *   Decrement `right` by 1, moving it one step to the left.
+5.  **Termination**: The loop terminates when `left` is no longer less than `right`. At this point, all characters will have been swapped with their counterparts from the opposite end, and the string `s` will be fully reversed.
 
 ## 💻 Solution
 ```cpp
-#include <vector> // Required for std::vector
-#include <algorithm> // Required for std::reverse and std::swap
-
 class Solution {
 public:
-    void reverseString(std::vector<char>& s) {
-        // The problem asks for an in-place reversal with O(1) extra memory.
-        // C++'s Standard Library provides a highly optimized function for this: std::reverse.
-        // It works by taking two iterators (pointers to the beginning and end of the range)
-        // and swaps elements from opposite ends until the range is reversed.
-        // This operation is inherently O(N) time complexity and O(1) space complexity.
-        std::reverse(s.begin(), s.end());
+    void reverseString(vector<char>& s) {
+        // Initialize a pointer 'left' to the beginning of the character array.
+        // This pointer will move from left to right.
+        int left = 0;
 
-        // Alternatively, one could implement the two-pointer approach manually,
-        // which std::reverse essentially does under the hood for random-access iterators.
-        // This commented-out code demonstrates that manual implementation:
+        // Initialize a pointer 'right' to the end of the character array.
+        // This pointer will move from right to left.
+        int right = s.size() - 1;
 
-        /*
-        int left = 0; // Pointer starting from the beginning of the string
-        int right = s.size() - 1; // Pointer starting from the end of the string
-
-        // Continue swapping as long as the left pointer is before the right pointer.
-        // When left >= right, all necessary swaps have been performed.
+        // Continue swapping characters as long as the 'left' pointer is
+        // to the left of the 'right' pointer. This ensures we process
+        // each pair of characters exactly once and stop when the middle
+        // is reached (for odd length strings) or crossed (for even length strings).
         while (left < right) {
-            // Swap the characters at the left and right pointers
-            std::swap(s[left], s[right]);
+            // Swap the character at the 'left' pointer's position with
+            // the character at the 'right' pointer's position.
+            // For example, in ["h","e","l","l","o"], first swap 'h' and 'o'.
+            std::swap(s[left], s[right]); // Using std::swap for clarity and robustness
 
-            // Move the left pointer one step to the right
+            // Move the 'left' pointer one step to the right, towards the center.
             left++;
-            // Move the right pointer one step to the left
+
+            // Move the 'right' pointer one step to the left, towards the center.
             right--;
         }
-        */
+        // After the loop, the string 's' will be reversed in-place.
+        // No explicit return is needed as the input vector 's' is modified by reference.
     }
 };
-
 ```
 
 ## ⏱️ Complexity Analysis
 | | Complexity | Reason |
 |---|---|---|
-| **Time** | O(N) | The `std::reverse` function (or the manual two-pointer approach) iterates through approximately half of the N characters in the string, performing a constant number of operations (swaps) for each pair. |
-| **Space** | O(1) | The reversal is done in-place. Only a constant amount of extra memory is used for variables (like iterators or the `left`/`right` pointers and a temporary variable for swapping). |
+| **Time** | O(N) | We iterate through approximately half of the string's elements (N/2 swaps), performing a constant number of operations (swap, increment, decrement) for each pair. |
+| **Space** | O(1) | We only use a few integer variables (`left`, `right`) for pointers, regardless of the input string's size. No additional data structures are allocated proportional to the input size. |
 
 ## 🔗 Related Problems
 - 125. Valid Palindrome
 - 345. Reverse Vowels of a String
-- 167. Two Sum II - Input Array Is Sorted
+- 11. Container With Most Water
