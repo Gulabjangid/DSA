@@ -1,51 +1,55 @@
 # 0237-delete-node-in-a-linked-list
 
 ## 📋 Problem Description
-The problem asks us to delete a specific `node` from a singly-linked list. We are given a pointer directly to the `node` that needs to be deleted. Crucially, we are **not given access to the `head`** of the linked list.
+You are given a node `node` from a singly-linked list. Your task is to delete this given `node` from the list.
 
-All values in the linked list are guaranteed to be unique. It is also guaranteed that the given `node` to be deleted is **not the last node** in the linked list.
+Crucially, you will **not** be given access to the `head` of the linked list. This means you cannot traverse the list from the beginning to find the node's predecessor.
 
-The definition of "deleting" the node means:
-*   The value of the given node should no longer exist in the linked list.
-*   The total number of nodes in the linked list should decrease by one.
-*   The relative order of all nodes before the deleted node must remain the same.
-*   The relative order of all nodes after the deleted node must remain the same.
+You are guaranteed that:
+*   The values in the linked list are unique.
+*   The given `node` to be deleted is **not** the last node (tail) of the linked list.
 
-The function `deleteNode` receives a `ListNode* node` (a pointer to the node to be deleted) and modifies the linked list in place. It does not return any value.
+"Deleting" the node means:
+1.  The value of the given `node` should no longer exist in the list.
+2.  The total number of nodes in the list should decrease by one.
+3.  The relative order of nodes before the deleted node must remain the same.
+4.  The relative order of nodes after the deleted node must remain the same.
+
+The function `deleteNode` receives a pointer to the `ListNode` to be deleted and does not return anything (it modifies the list in-place).
 
 ## 🔍 Examples
 ```
-Input: head = [4,5,1,9], node = 5
+Input:  head = [4,5,1,9], node = 5 (the node with value 5)
 Output: [4,1,9]
-Explanation: You are given the second node with value 5. After calling the function, the linked list becomes 4 -> 1 -> 9.
+Explanation: The node with value 5 is deleted. The list becomes 4 -> 1 -> 9.
 ```
 
 ```
-Input: head = [4,5,1,9], node = 1
+Input:  head = [4,5,1,9], node = 1 (the node with value 1)
 Output: [4,5,9]
-Explanation: You are given the third node with value 1. After calling the function, the linked list becomes 4 -> 5 -> 9.
+Explanation: The node with value 1 is deleted. The list becomes 4 -> 5 -> 9.
 ```
 
 ## 📌 Constraints
 *   The number of nodes in the given list is in the range `[2, 1000]`.
-*   `-1000 <= Node.val <= 1000`.
+*   `-1000 <= Node.val <= 1000`
 *   The value of each node in the list is **unique**.
-*   The `node` to be deleted is **in the list** and is **not a tail node**.
+*   The `node` to be deleted is **in the list** and is **not a tail** node.
 
 ## 🤔 Understanding the Problem
-This problem presents a unique challenge in linked list manipulation. In a typical singly-linked list deletion scenario, to remove a node, you need a pointer to its *predecessor* so you can update the predecessor's `next` pointer to bypass the node being deleted. However, here we are only given a pointer to the `node` itself, and crucially, **not the `head` of the list**. This means we cannot traverse from the beginning to find the node *before* the one we want to delete. The problem becomes non-trivial because we cannot directly modify the `next` pointer of the node that points to our target node.
+This problem presents a classic linked list manipulation challenge with a twist: we're given direct access to the node to be deleted, but *not* to the head of the list. In a singly linked list, deleting a node usually requires knowing its *predecessor* so that the predecessor's `next` pointer can be updated to skip the node being deleted. Since we don't have access to the head, we cannot find the predecessor by traversing from the beginning. The problem's constraints (unique values, not a tail node) are crucial hints.
 
 ## 💡 Core Idea
-Since we cannot modify the `next` pointer of the *previous* node (because we don't have access to it), the only way to effectively "delete" the given `node` is to overwrite its content with the content of its *successor*, and then delete the successor node. This makes the given `node` conceptually disappear by replacing its data with the next node's data, and then physically removing the next node.
+Since we cannot modify the `next` pointer of the *previous* node, the only way to "delete" the given `node` is to effectively overwrite its data with the data of its *successor*, and then delete the successor node instead. This makes the current node "disappear" conceptually by taking on the identity of its successor.
 
-## 🧠 Approach — Linked List In-Place Deletion Trick
-This problem requires a specific trick for linked list manipulation due to the constraint that we are only given the node to be deleted and *not* the head of the list. This prevents us from traversing the list to find the node *preceding* the target node, which is the standard way to delete a node by updating the `next` pointer of its predecessor. The trick involves effectively "shifting" the values from the next node backwards into the current node, and then deleting the next node, thereby achieving the desired deletion without needing the head. This is an in-place modification technique.
+## 🧠 Approach — Linked List Manipulation
+This problem is a specific case of **Linked List Manipulation**. The pattern fits because we are directly modifying the structure of a linked list by changing `val` and `next` pointers. We use this approach because the problem constraints explicitly prevent the standard way of deleting a node (which involves finding its predecessor). By overwriting the current node with its successor's data and then deleting the successor, we achieve the effect of deleting the current node without needing its predecessor. The guarantee that the node is *not* the tail is essential, as it ensures `node->next` always exists.
 
 ## 📝 Step-by-Step Algorithm
-1.  **Copy Value**: Take the value (`val`) from the node *immediately following* the given `node` (i.e., `node->next`) and copy this value into the `val` field of the given `node`. At this point, the given `node` effectively holds the value that was originally in `node->next`.
-2.  **Store Next Node**: Create a temporary pointer (e.g., `temp`) and make it point to `node->next`. This `temp` pointer now points to the node that we conceptually "moved" into the current `node` and which we will physically remove from the list.
-3.  **Bypass Next Node**: Update the `next` pointer of the given `node` (which now contains the copied value) to point to the node *after* the one `temp` is pointing to (i.e., `node->next->next`). This effectively removes the original `node->next` from the linked list's chain, as `node` now directly links to the node after `temp`.
-4.  **Delete Memory**: Free the memory occupied by the node pointed to by the temporary pointer (`temp`). This ensures that the number of nodes in the list decreases by one and prevents memory leaks.
+1.  **Copy Value**: Take the value from the node immediately following the given `node` (i.e., `node->next->val`) and copy it into the `val` field of the `node` to be deleted. This effectively makes the current `node` "become" its successor in terms of value.
+2.  **Store Successor**: Create a temporary pointer, `temp`, and make it point to the node immediately following the given `node` (i.e., `node->next`). This is the node we will actually remove from memory.
+3.  **Bypass Successor**: Update the `next` pointer of the given `node` to point to the node *after* its successor (i.e., `node->next->next`). This effectively removes the successor node from the linked list's chain.
+4.  **Delete Successor**: Free the memory occupied by the `temp` node (which was the original successor). This completes the deletion, ensuring the number of nodes decreases by one and memory is managed.
 
 ## 💻 Solution
 ```cpp
@@ -60,43 +64,38 @@ This problem requires a specific trick for linked list manipulation due to the c
 class Solution {
 public:
     void deleteNode(ListNode* node) {
-        // The core idea is to overwrite the current node's value with the next node's value,
-        // and then delete the next node. This effectively "deletes" the current node
-        // without needing access to its predecessor (which we don't have).
-        // This approach is valid because the problem guarantees 'node' is not the tail.
-        
-        // Step 1: Copy the value of the next node into the current node.
-        // For example, if list is 4->5->1->9 and 'node' is 5,
-        // 'node->next' is 1. We copy 1 into 'node->val'.
-        // Conceptually, the list becomes 4->1(old 5)->1(old 1)->9.
+        // Step 1: Copy the value of the next node into this node.
+        // Since we cannot access the previous node to change its 'next' pointer,
+        // we effectively "overwrite" the current node with the data of its successor.
+        // This makes the current node conceptually disappear by taking on the identity
+        // of the node after it.
         node->val = node->next->val;
         
         // Step 2: Keep a temporary pointer to the next node.
-        // This is the node that we conceptually "moved" its value from,
-        // and it's the node we will physically remove from the list and memory.
-        // In our example, 'temp' now points to the node that originally held value 1.
+        // This is the node that originally held the value we just copied.
+        // We need to store a pointer to it so we can delete it from memory later.
         ListNode* temp = node->next;
         
-        // Step 3: Link the current node to skip over the 'temp' node.
-        // The 'next' pointer of the current 'node' (which now holds the copied value)
-        // should point to the node *after* 'temp'.
-        // In our example, 'node' (which now has value 1) will point to '9'.
-        // The list effectively becomes 4->1->9. The node 'temp' (original 1) is bypassed.
-        node->next = node->next->next; // This is equivalent to node->next = temp->next;
+        // Step 3: Link the current node to skip over the next node.
+        // The current node's 'next' pointer is now updated to point to the node
+        // that was originally *after* 'node->next'. This effectively removes
+        // 'node->next' from the linked list chain.
+        node->next = node->next->next;
         
-        // Step 4: Free the memory of the duplicated node (the one 'temp' points to).
-        // This ensures that the number of nodes in the list decreases by one and prevents memory leaks.
-        // The node that originally held value 1 is now deallocated.
+        // Step 4: Free the memory of the duplicated node (the original 'node->next').
+        // This step is crucial for memory management, ensuring that the node
+        // is truly "deleted" and memory is reclaimed.
         delete temp;
     }
 };
+
 ```
 
 ## ⏱️ Complexity Analysis
 | | Complexity | Reason |
 |---|---|---|
-| **Time** | O(1) | The solution performs a constant number of operations: a value copy, two pointer assignments, and one memory deallocation. These operations do not depend on the size of the linked list. |
-| **Space** | O(1) | The solution uses a single temporary pointer variable (`temp`), which consumes a constant amount of memory regardless of the linked list's size. |
+| **Time** | O(1) | The solution involves a fixed number of pointer manipulations and value assignments, regardless of the list's size. |
+| **Space** | O(1) | Only a single temporary pointer (`temp`) is used, requiring constant extra space. |
 
 ## 🔗 Related Problems
 - 19. Remove Nth Node From End of List
