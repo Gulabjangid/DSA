@@ -3,44 +3,50 @@
 ## 📋 Problem Description
 Given the `head` of a singly linked list, the task is to sort the list in ascending order and return the head of the sorted list.
 
-The function receives a pointer to the `head` node of a linked list. It must return a pointer to the `head` of the same list, but with its nodes reordered such that their values are in non-decreasing order.
+The function receives:
+- `head`: A pointer to the first node of the linked list.
+
+The function must return:
+- A pointer to the head of the sorted linked list.
 
 ## 🔍 Examples
+**Example 1:**
 ```
 Input: head = [4,2,1,3]
 Output: [1,2,3,4]
-Explanation: The original list [4,2,1,3] is sorted to [1,2,3,4].
+```
 
+**Example 2:**
+```
 Input: head = [-1,5,3,4,0]
 Output: [-1,0,3,4,5]
-Explanation: The original list [-1,5,3,4,0] is sorted to [-1,0,3,4,5].
+```
 
+**Example 3:**
+```
 Input: head = []
 Output: []
-Explanation: An empty list remains an empty list after sorting.
 ```
 
 ## 📌 Constraints
-*   The number of nodes in the list is in the range `[0, 5 * 10^4]`.
-*   `-10^5 <= Node.val <= 10^5`
+- The number of nodes in the list is in the range `[0, 5 * 10^4]`.
+- `-10^5 <= Node.val <= 10^5`
 
 ## 🤔 Understanding the Problem
-The problem asks us to sort a linked list. Unlike arrays, linked lists do not allow for direct random access to elements, which makes many standard sorting algorithms (like QuickSort or HeapSort) less efficient or more complex to implement directly. We need to rearrange the nodes or their values such that they are in ascending order. An important edge case is an empty list, which should be returned as is. The problem also includes a "Follow up" asking for an `O(n log n)` time and `O(1)` space solution, which implies that a solution using auxiliary space might be simpler but not optimal in terms of space.
+The problem asks us to sort a linked list. Unlike arrays, linked lists do not allow for direct random access to elements, which makes many standard sorting algorithms (like quicksort or heapsort) less efficient or more complex to implement directly on the list structure. The challenge lies in efficiently rearranging nodes or their values while maintaining the linked list structure. The "Follow up" specifically asks for an `O(n log n)` time and `O(1)` space solution, indicating that a more advanced approach (like merge sort for linked lists) might be expected, but simpler solutions are also possible.
 
 ## 💡 Core Idea
-The core idea behind this solution is to leverage the efficient sorting capabilities of standard library functions designed for arrays. We can extract all node values into a dynamic array (vector), sort this array, and then iterate through the original linked list, updating each node's value with the sorted values from the array.
+The simplest way to sort data is often to transfer it to a data structure that is easy to sort (like an array or vector), use a highly optimized standard library sort function, and then transfer the sorted data back. This approach leverages the efficiency of built-in sorting for arrays.
 
-## 🧠 Approach — Auxiliary Data Structure and Standard Library Sort
-This approach uses an **Auxiliary Data Structure** (specifically, a `std::vector` in C++) combined with a **Standard Library Sort** function. This pattern is suitable when direct manipulation of the original data structure (like a linked list) for sorting is cumbersome or less efficient, but converting it to a more amenable structure (like an array) allows for simpler and often optimized sorting. Here, we convert the linked list to a vector, which allows us to use `std::sort` (an efficient comparison sort), and then map the sorted values back to the linked list.
+## 🧠 Approach — Auxiliary Data Structure & Standard Sort
+This solution uses an **Auxiliary Data Structure** (specifically, a `std::vector` in C++) combined with a **Standard Library Sort**. This pattern is suitable here because linked lists are cumbersome to sort in-place with many common algorithms. By extracting all node values into a vector, we gain the benefits of random access and can use `std::sort`, which is typically an introsort (a hybrid of quicksort, heapsort, and insertion sort) offering `O(N log N)` average-case time complexity. After sorting the values, we simply iterate through the linked list again and update each node's value with the corresponding sorted value from the vector.
 
 ## 📝 Step-by-Step Algorithm
-1.  **Handle Empty List**: Check if the `head` of the list is `nullptr`. If it is, the list is empty, so return `head` immediately.
-2.  **Extract Values**: Initialize an empty `std::vector<int>` to store the values from the linked list.
-3.  **Traverse and Populate**: Iterate through the linked list starting from `head`. For each node encountered, add its `val` to the `std::vector`. Continue until the end of the list is reached.
-4.  **Sort Values**: Use the standard library's sort function (`std::sort` in C++) to sort the `std::vector` in ascending order.
-5.  **Update Linked List**: Reset a temporary pointer to the `head` of the original linked list.
-6.  **Traverse and Update**: Iterate through the linked list again, using the temporary pointer. For each node, assign its `val` to the next value from the sorted `std::vector`. Increment the index for the vector and move the temporary pointer to the next node in the list.
-7.  **Return Head**: After updating all node values, return the original `head` of the linked list, which now contains the sorted values.
+1.  **Handle Empty List**: If the input `head` is `nullptr` (an empty list), return `nullptr` immediately as there's nothing to sort.
+2.  **Extract Values**: Initialize an empty `std::vector<int>` named `ans`. Traverse the input linked list starting from `head`. For each node encountered, append its `val` to the `ans` vector.
+3.  **Sort Values**: Once all values are extracted into `ans`, use the standard library sort function (`std::sort` in C++) to sort the elements of `ans` in ascending order.
+4.  **Update Linked List**: Traverse the linked list again, starting from `head`. Simultaneously, iterate through the sorted `ans` vector. For each node in the linked list, update its `val` with the corresponding value from the `ans` vector.
+5.  **Return Head**: After updating all node values, return the original `head` of the linked list, which now contains the sorted values.
 
 ## 💻 Solution
 ```cpp
@@ -58,38 +64,38 @@ class Solution {
 public:
     ListNode* sortList(ListNode* head) {
         // Step 1: Handle the edge case of an empty list.
-        // If the list is empty, there's nothing to sort, so return it as is.
-        if (head == nullptr) {
+        // If the list is empty, there's nothing to sort, so return head (which is nullptr).
+        if (!head) {
             return head;
         }
 
-        // Step 2: Create an auxiliary data structure (vector) to store node values.
-        vector<int> ans;
+        // Step 2: Create a vector to store all node values.
+        std::vector<int> ans;
+        // Use a temporary pointer to traverse the linked list.
+        ListNode* temp = head;
 
-        // Step 3: Traverse the linked list and populate the vector with node values.
-        ListNode* temp = head; // Use a temporary pointer to traverse the list
-        while (temp) {         // Loop until the end of the list (temp becomes nullptr)
-            ans.push_back(temp->val); // Add the current node's value to the vector
-            temp = temp->next;         // Move to the next node
+        // Iterate through the linked list and push each node's value into the vector.
+        while (temp) {
+            ans.push_back(temp->val);
+            temp = temp->next;
         }
 
-        // Step 4: Sort the vector containing all node values.
-        // std::sort uses an efficient algorithm (typically IntroSort, a hybrid)
-        // which provides O(N log N) average time complexity.
-        sort(ans.begin(), ans.end());
+        // Step 3: Sort the vector containing all node values.
+        // std::sort uses an optimized hybrid algorithm (introsort) for efficient sorting.
+        std::sort(ans.begin(), ans.end());
 
-        // Step 5: Reset a temporary pointer to the head of the original linked list.
+        // Step 4: Traverse the linked list again and update node values from the sorted vector.
+        // Reset the temporary pointer to the head of the list.
         ListNode* temp2 = head;
-
-        // Step 6: Traverse the linked list again and update node values
-        // with the sorted values from the vector.
+        // Iterate through the sorted vector and the linked list simultaneously.
         for (int i = 0; i < ans.size(); i++) {
-            temp2->val = ans[i]; // Assign the sorted value from the vector to the current node
-            temp2 = temp2->next; // Move to the next node in the linked list
+            // Update the current linked list node's value with the sorted value from the vector.
+            temp2->val = ans[i];
+            // Move to the next node in the linked list.
+            temp2 = temp2->next;
         }
 
-        // Step 7: Return the head of the linked list.
-        // The list's nodes now contain the sorted values.
+        // Step 5: Return the head of the linked list, which now contains the sorted values.
         return head;
     }
 };
@@ -99,7 +105,7 @@ public:
 ## ⏱️ Complexity Analysis
 | | Complexity | Reason |
 |---|---|---|
-| **Time** | O(N log N) | Traversing the list takes O(N). Sorting the vector takes O(N log N). Updating the list takes O(N). The dominant factor is sorting. |
+| **Time** | O(N log N) | O(N) to traverse the list and copy values to the vector, O(N log N) for `std::sort` on N elements, and O(N) to traverse the list again and update values. The dominant factor is O(N log N). |
 | **Space** | O(N) | An auxiliary `std::vector` is used to store all N node values, requiring O(N) space. |
 
 ## 🔗 Related Problems
