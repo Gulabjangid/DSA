@@ -1,30 +1,29 @@
 # 0692-top-k-frequent-words
 
 ## 📋 Problem Description
-Given an array of strings `words` and an integer `k`, the task is to find the `k` most frequent strings. The result should be returned as a list of strings, sorted first by their frequency in descending order (highest frequency first). If two words have the same frequency, they should be sorted by their lexicographical order (alphabetical order) in ascending fashion.
+Given an array of strings `words` and an integer `k`, the task is to find the `k` most frequent strings. The result should be returned as a list of strings.
 
-The function `topKFrequent` receives:
-*   `words`: A `vector` of strings.
-*   `k`: An integer representing the number of most frequent words to return.
+The output must be sorted according to two criteria:
+1.  **Primary Sort**: By frequency, from highest to lowest.
+2.  **Secondary Sort**: If two words have the same frequency, they should be sorted in lexicographical (alphabetical) order, from smallest to largest.
 
-It must return:
-*   A `vector` of strings containing the `k` most frequent words, sorted according to the specified criteria.
+The function `topKFrequent` receives `words` (a `vector<string>`) and `k` (an `int`) as input, and it must return a `vector<string>` containing the `k` most frequent words, sorted as specified.
 
 ## 🔍 Examples
 ```
-Input:  words = ["i","love","leetcode","i","love","coding"], k = 2
+Input: words = ["i","love","leetcode","i","love","coding"], k = 2
 Output: ["i","love"]
 Explanation: "i" appears 2 times, "love" appears 2 times, "leetcode" appears 1 time, "coding" appears 1 time.
-The two most frequent words are "i" and "love".
-They both have a frequency of 2. According to lexicographical order, "i" comes before "love".
-```
+The two most frequent are "i" and "love". Since they have the same frequency (2), they are sorted lexicographically: "i" comes before "love".
 
-```
-Input:  words = ["the","day","is","sunny","the","the","the","sunny","is","is"], k = 4
+Input: words = ["the","day","is","sunny","the","the","the","sunny","is","is"], k = 4
 Output: ["the","is","sunny","day"]
-Explanation: Frequencies: "the": 4, "is": 3, "sunny": 2, "day": 1.
-Sorted by frequency (descending): "the", "is", "sunny", "day".
-All frequencies are distinct, so lexicographical order is not needed for ties here.
+Explanation:
+"the": 4 times
+"is": 3 times
+"sunny": 2 times
+"day": 1 time
+The four most frequent words are "the", "is", "sunny", and "day", sorted by frequency descending.
 ```
 
 ## 📌 Constraints
@@ -34,62 +33,46 @@ All frequencies are distinct, so lexicographical order is not needed for ties he
 *   `k` is in the range `[1, The number of unique words[i]]`
 
 ## 🤔 Understanding the Problem
-This problem asks us to identify the most common words from a given list and present them in a specific sorted order. The core challenge lies in accurately counting word frequencies and then applying a custom sorting logic: primary sort by frequency (descending) and secondary sort by alphabetical order (ascending) for ties. This means we can't just use a standard sort; we need a way to define our own comparison rules.
+This problem asks us to identify the most frequently occurring words in a given list and then return a specific number (`k`) of them. The key challenge lies in the sorting requirements: not only do we need to sort by frequency (descending), but we also need a secondary sort by lexicographical order (ascending) for words with identical frequencies. This means a simple frequency count followed by a standard sort won't work directly; we need a custom sorting mechanism.
 
 ## 💡 Core Idea
-The fundamental idea is to first count the occurrences of each unique word. Once we have these frequencies, we can then sort all unique words based on the given criteria (frequency first, then lexicographical order) and pick the top `k` entries.
+The core idea is to first count the occurrences of each word, then store these word-frequency pairs in a structure that can be sorted using a custom comparison function that incorporates both frequency and lexicographical order, and finally extract the top `k` elements.
 
-## 🧠 Approach — Frequency Counting and Custom Sorting
-This problem perfectly fits the "Frequency Counting and Custom Sorting" pattern. We need to count how many times each word appears, which is a classic use case for a hash map (or `unordered_map` in C++). After counting, we have pairs of (word, frequency). The problem's specific sorting requirements (descending frequency, then ascending lexicographical for ties) necessitate a custom comparison function when sorting these pairs. This pattern is effective because it breaks down the problem into two manageable steps: aggregation (counting) and ordering (sorting with custom rules).
+## 🧠 Approach — Sorting with Custom Comparator
+This problem can be effectively solved using a **Sorting with Custom Comparator** approach.
+First, we need to determine the frequency of each word. A hash map (like `unordered_map` in C++) is ideal for this, as it allows efficient counting of occurrences for each unique string. Once we have all word-frequency pairs, we can transfer them into a sortable data structure, such as a `vector` of pairs. The crucial step is then to sort this vector using a custom comparison function. This function will implement the specific sorting rules: higher frequency first, and for ties, lexicographically smaller word first. After sorting, the first `k` elements in the vector will be our answer.
 
 ## 📝 Step-by-Step Algorithm
-
-1.  **Count Frequencies**:
-    *   Initialize an `unordered_map` (hash map) where keys are strings (words) and values are integers (their frequencies).
-    *   Iterate through the input `words` array. For each word encountered, increment its corresponding count in the hash map.
-
-2.  **Transfer to a Sortable Structure**:
-    *   Create a `vector` of `pair<string, int>`.
-    *   Iterate through all key-value pairs in the hash map. For each `(word, frequency)` pair, add it to this vector. This converts the map's data into a structure that can be easily sorted.
-
-3.  **Define Custom Comparison Logic**:
-    *   Implement a custom comparison function (e.g., `cmp` in C++). This function will take two `pair<string, int>` objects and return `true` if the first should come before the second in the sorted order.
-    *   Inside the comparison function:
-        *   First, compare their frequencies: If `frequency_a` is greater than `frequency_b`, `a` should come before `b`.
-        *   If frequencies are equal (`frequency_a == frequency_b`), then compare their words lexicographically: If `word_a` is lexicographically smaller than `word_b`, `a` should come before `b`.
-        *   Otherwise, `a` should not come before `b`.
-
-4.  **Sort the Words**:
-    *   Use a standard sorting algorithm (like `std::sort` in C++) on the vector of `pair<string, int>`, passing the custom comparison function. This will arrange all unique words according to the problem's criteria.
-
-5.  **Extract Top K Words**:
-    *   Initialize an empty `vector` of strings to store the final answer.
-    *   Iterate from `i = 0` up to `k-1` (or until the end of the sorted vector if it has fewer than `k` elements).
-    *   For each `i`, take the word (the `first` element of the pair) from the `i`-th position in the sorted vector and add it to the answer vector.
-
-6.  **Return Result**:
-    *   Return the `vector` containing the `k` most frequent words.
+1.  **Count Frequencies**: Initialize an `unordered_map` (hash map) where keys are strings (words) and values are integers (their frequencies). Iterate through the input `words` array. For each word, increment its count in the map.
+2.  **Transfer to Sortable Structure**: Create a `vector` of `pair<string, int>`. Iterate through the `unordered_map` and add each word-frequency pair into this vector. This converts the map's contents into a structure that can be easily sorted.
+3.  **Define Custom Comparator**: Implement a static comparison function (e.g., `cmp`) that takes two `pair<string, int>` objects.
+    *   If the frequencies (`second` element of the pair) are equal, compare the words (`first` element of the pair) lexicographically. Return `true` if the first word is lexicographically smaller than the second word (for ascending order).
+    *   If the frequencies are not equal, compare the frequencies. Return `true` if the first pair's frequency is greater than the second pair's frequency (for descending order).
+4.  **Sort**: Use `std::sort` to sort the `vector` of pairs, passing the custom comparator function. This will arrange all word-frequency pairs according to the specified rules.
+5.  **Extract Top K**: Create a new `vector<string>` to store the final answer. Iterate from `i = 0` to `k-1` (or until the end of the sorted vector if it has fewer than `k` unique words). For each iteration, add the word (the `first` element of the pair) from the sorted vector to the answer vector.
+6.  **Return Result**: Return the `vector<string>` containing the top `k` frequent words.
 
 ## 💻 Solution
-
 ```cpp
-#include <vector>     // Required for std::vector
-#include <string>     // Required for std::string
-#include <unordered_map> // Required for std::unordered_map
-#include <algorithm>  // Required for std::sort
-#include <utility>    // Required for std::pair
+#include <vector>
+#include <string>
+#include <unordered_map>
+#include <algorithm> // Required for std::sort
+#include <utility>   // Required for std::pair
 
 class Solution {
 public:
     // Custom comparison function for sorting pairs of (word, frequency).
-    // It defines the order: higher frequency first, then lexicographically smaller word first.
+    // This function defines the sorting order:
+    // 1. Higher frequency first.
+    // 2. If frequencies are equal, lexicographically smaller word first.
     static bool cmp(pair<string, int> &a, pair<string, int> &b) {
-        // If frequencies are the same, sort by lexicographical order (ascending).
+        // If frequencies are the same, sort by word lexicographically (ascending).
         if (a.second == b.second) {
-            return a.first < b.first; // 'a' comes before 'b' if 'a' is alphabetically smaller
+            return a.first < b.first; // 'a' comes before 'b' if 'a' is lexicographically smaller
         }
-        // Otherwise, sort by frequency in descending order (higher frequency first).
-        return a.second > b.second; // 'a' comes before 'b' if 'a' has higher frequency
+        // Otherwise, sort by frequency (descending).
+        return a.second > b.second;   // 'a' comes before 'b' if 'a' has higher frequency
     }
 
     vector<string> topKFrequent(vector<string>& words, int k) {
@@ -100,43 +83,40 @@ public:
             mp[s]++; // Increment count for the current word
         }
 
-        // Step 2: Transfer map entries into a vector of pairs.
-        // This allows us to sort them easily.
+        // Step 2: Transfer word-frequency pairs from the map to a vector.
+        // This vector will then be sorted.
         vector<pair<string, int>> v;
         for (pair<string, int> p : mp) {
-            v.push_back(p); // Add each (word, frequency) pair to the vector
+            v.push_back(p);
         }
 
-        // Step 3 & 4: Sort the vector of pairs using our custom comparison function.
-        // std::sort uses an efficient algorithm (typically IntroSort)
-        // and applies our 'cmp' logic to determine the order.
+        // Step 3: Sort the vector using the custom comparison function 'cmp'.
+        // This arranges the pairs according to the problem's sorting criteria.
         sort(v.begin(), v.end(), cmp);
 
-        // Step 5: Extract the top k frequent words from the sorted vector.
+        // Step 4: Extract the top 'k' words from the sorted vector.
         vector<string> ans;
         for (int i = 0; i < k; i++) {
             // Add the word (first element of the pair) to the result vector.
             ans.push_back(v[i].first);
         }
 
-        // Step 6: Return the final list of top k frequent words.
+        // Step 5: Return the vector containing the top 'k' frequent words.
         return ans;
     }
 };
+
 ```
 
 ## ⏱️ Complexity Analysis
-
-Let `N` be the total number of words in the input `words` array (`words.length`).
-Let `L` be the maximum length of a word (`words[i].length`).
-Let `U` be the number of unique words in the input array (`U <= N`).
+Let `N` be the number of words in the input array (`words.length`), `L` be the maximum length of a word (`words[i].length`), and `U` be the number of unique words in the input array (`U <= N`).
 
 | | Complexity | Reason |
 |---|---|---|
-| **Time** | O(N * L + U * L * log U) | **1. Counting Frequencies:** Iterating `N` words, each `unordered_map` operation (hashing + insertion/update) takes O(L) on average. Total: O(N * L).<br>**2. Transfer to Vector:** Iterating `U` unique words, each `push_back` copies a string of length O(L). Total: O(U * L).<br>**3. Sorting:** Sorting `U` pairs. Each comparison in `cmp` takes O(L) in the worst case (string comparison). Sorting `U` elements takes O(U log U) comparisons. Total: O(U * L * log U).<br>**4. Extracting Top K:** Iterating `k` times, each `push_back` copies a string of length O(L). Total: O(k * L).<br>Combining these, the dominant term is O(N * L + U * L * log U). Since `U <= N`, this can be simplified to O(N * L + N * L * log N) which is O(N * L * log N). |
-| **Space** | O(U * L) | **1. Hash Map:** Stores `U` unique words, each of max length `L`, plus an integer count. Total: O(U * L).<br>**2. Vector of Pairs:** Stores `U` pairs, each containing a string of max length `L` and an integer. Total: O(U * L).<br>**3. Result Vector:** Stores `k` strings, each of max length `L`. Total: O(k * L).<br>Since `k <= U`, the overall space is dominated by the hash map and vector of pairs, resulting in O(U * L). Since `U <= N`, this is O(N * L). |
+| **Time** | O(N * L + U log U * L) | **1. Counting Frequencies:** Iterating `N` words. Hashing and insertion/access for each word takes O(L) on average (due to string operations). Total: O(N * L). <br> **2. Transfer to Vector:** Iterating `U` unique words and copying them. Total: O(U * L). <br> **3. Sorting:** `std::sort` on `U` elements takes O(U log U) comparisons. Each comparison (`cmp` function) involves O(1) for integer comparison and O(L) for string comparison in the worst case. Total: O(U log U * L). <br> **4. Extracting Top K:** Iterating `K` times and copying strings. Total: O(K * L). <br> Overall, the dominant term is O(U log U * L), which can be approximated as O(N log N * L) in the worst case where all words are unique. |
+| **Space** | O(U * L) | **1. `unordered_map`:** Stores up to `U` unique words, each of length `L`. Total: O(U * L). <br> **2. `vector<pair>`:** Stores `U` pairs, each containing a string of length `L`. Total: O(U * L). <br> **3. `ans` vector:** Stores `K` strings, each of length `L`. Total: O(K * L). <br> Since `K <= U`, the overall space is dominated by O(U * L), which can be approximated as O(N * L) in the worst case. |
 
 ## 🔗 Related Problems
-- 347. Top K Frequent Elements
-- 451. Sort Characters By Frequency
-- 1338. Reduce Array Size to The Half
+-   347. Top K Frequent Elements
+-   215. Kth Largest Element in an Array
+-   703. Kth Largest Element in a Stream
