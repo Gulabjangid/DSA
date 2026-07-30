@@ -47,6 +47,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0345-reverse-vowels-of-a-string](https://github.com/Gulabjangid/DSA/tree/master/0345-reverse-vowels-of-a-string) |
 | [0383-ransom-note](https://github.com/Gulabjangid/DSA/tree/master/0383-ransom-note) |
 | [0443-string-compression](https://github.com/Gulabjangid/DSA/tree/master/0443-string-compression) |
+| [0692-top-k-frequent-words](https://github.com/Gulabjangid/DSA/tree/master/0692-top-k-frequent-words) |
 | [1910-remove-all-occurrences-of-a-substring](https://github.com/Gulabjangid/DSA/tree/master/1910-remove-all-occurrences-of-a-substring) |
 ## Array
 |  |
@@ -95,6 +96,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0643-maximum-average-subarray-i](https://github.com/Gulabjangid/DSA/tree/master/0643-maximum-average-subarray-i) |
 | [0658-find-k-closest-elements](https://github.com/Gulabjangid/DSA/tree/master/0658-find-k-closest-elements) |
 | [0682-baseball-game](https://github.com/Gulabjangid/DSA/tree/master/0682-baseball-game) |
+| [0692-top-k-frequent-words](https://github.com/Gulabjangid/DSA/tree/master/0692-top-k-frequent-words) |
 | [0713-subarray-product-less-than-k](https://github.com/Gulabjangid/DSA/tree/master/0713-subarray-product-less-than-k) |
 | [0867-transpose-matrix](https://github.com/Gulabjangid/DSA/tree/master/0867-transpose-matrix) |
 | [0918-maximum-sum-circular-subarray](https://github.com/Gulabjangid/DSA/tree/master/0918-maximum-sum-circular-subarray) |
@@ -143,6 +145,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0442-find-all-duplicates-in-an-array](https://github.com/Gulabjangid/DSA/tree/master/0442-find-all-duplicates-in-an-array) |
 | [0496-next-greater-element-i](https://github.com/Gulabjangid/DSA/tree/master/0496-next-greater-element-i) |
 | [0532-k-diff-pairs-in-an-array](https://github.com/Gulabjangid/DSA/tree/master/0532-k-diff-pairs-in-an-array) |
+| [0692-top-k-frequent-words](https://github.com/Gulabjangid/DSA/tree/master/0692-top-k-frequent-words) |
 ## Divide and Conquer
 |  |
 | ------- |
@@ -171,12 +174,14 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0442-find-all-duplicates-in-an-array](https://github.com/Gulabjangid/DSA/tree/master/0442-find-all-duplicates-in-an-array) |
 | [0532-k-diff-pairs-in-an-array](https://github.com/Gulabjangid/DSA/tree/master/0532-k-diff-pairs-in-an-array) |
 | [0658-find-k-closest-elements](https://github.com/Gulabjangid/DSA/tree/master/0658-find-k-closest-elements) |
+| [0692-top-k-frequent-words](https://github.com/Gulabjangid/DSA/tree/master/0692-top-k-frequent-words) |
 | [0977-squares-of-a-sorted-array](https://github.com/Gulabjangid/DSA/tree/master/0977-squares-of-a-sorted-array) |
 ## Counting
 |  |
 | ------- |
 | [0169-majority-element](https://github.com/Gulabjangid/DSA/tree/master/0169-majority-element) |
 | [0383-ransom-note](https://github.com/Gulabjangid/DSA/tree/master/0383-ransom-note) |
+| [0692-top-k-frequent-words](https://github.com/Gulabjangid/DSA/tree/master/0692-top-k-frequent-words) |
 ## Design
 |  |
 | ------- |
@@ -359,6 +364,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0373-find-k-pairs-with-smallest-sums](https://github.com/Gulabjangid/DSA/tree/master/0373-find-k-pairs-with-smallest-sums) |
 | [0378-kth-smallest-element-in-a-sorted-matrix](https://github.com/Gulabjangid/DSA/tree/master/0378-kth-smallest-element-in-a-sorted-matrix) |
 | [0658-find-k-closest-elements](https://github.com/Gulabjangid/DSA/tree/master/0658-find-k-closest-elements) |
+| [0692-top-k-frequent-words](https://github.com/Gulabjangid/DSA/tree/master/0692-top-k-frequent-words) |
 ## String Matching
 |  |
 | ------- |
@@ -387,4 +393,12 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 |  |
 | ------- |
 | [0148-sort-list](https://github.com/Gulabjangid/DSA/tree/master/0148-sort-list) |
+## Trie
+|  |
+| ------- |
+| [0692-top-k-frequent-words](https://github.com/Gulabjangid/DSA/tree/master/0692-top-k-frequent-words) |
+## Bucket Sort
+|  |
+| ------- |
+| [0692-top-k-frequent-words](https://github.com/Gulabjangid/DSA/tree/master/0692-top-k-frequent-words) |
 <!---LeetCode Topics End-->
