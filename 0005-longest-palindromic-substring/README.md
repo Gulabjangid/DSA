@@ -1,18 +1,19 @@
 # 0005-longest-palindromic-substring
 
 ## 📋 Problem Description
-Given a string `s`, the task is to find and return the longest substring within `s` that is also a palindrome. A palindromic substring is a sequence of characters that reads the same forwards and backwards. If there are multiple palindromic substrings of the maximum length, any one of them is considered a valid answer.
+Given a string `s`, the task is to find and return the longest substring within `s` that is a palindrome. A palindrome is a sequence of characters that reads the same forwards and backwards (e.g., "madam", "racecar"). The input `s` will consist only of digits and English letters.
 
 ## 🔍 Examples
 ```
 Input: s = "babad"
 Output: "bab"
-Explanation: "aba" is also a valid answer.
+Explanation: "aba" is also a valid answer, but "bab" is chosen as one of the longest.
 ```
 
 ```
 Input: s = "cbbd"
 Output: "bb"
+Explanation: "bb" is the longest palindromic substring.
 ```
 
 ## 📌 Constraints
@@ -20,85 +21,103 @@ Output: "bb"
 *   `s` consists of only digits and English letters.
 
 ## 🤔 Understanding the Problem
-The problem asks us to identify the longest continuous sequence of characters within a given string `s` that exhibits palindromic properties. This means we need to examine various substrings, check if they are palindromes, and keep track of the longest one found. A key consideration is handling both odd-length palindromes (like "racecar") and even-length palindromes (like "madam"). Strings of length 1 are always palindromes, which is an important edge case. The challenge lies in efficiently checking all potential palindromic substrings without excessive redundant computations.
+The problem asks us to identify the longest continuous sequence of characters within a given string `s` that forms a palindrome. This means we need to examine all possible substrings of `s`, check if each one is a palindrome, and keep track of the longest one we encounter. The challenge lies in doing this efficiently, as a naive approach of checking every substring for palindromicity would be too slow for strings up to 1000 characters long. Edge cases include very short strings (length 1 or 2), where the string itself might be the longest palindrome.
 
 ## 💡 Core Idea
-The central insight is that every palindrome expands outwards from a "center." This center can be a single character (for odd-length palindromes) or two adjacent characters (for even-length palindromes). By iterating through all possible centers and expanding from them, we can efficiently find all palindromes and, consequently, the longest one.
+The fundamental insight is that every palindrome expands outwards from a central point. This center can either be a single character (for odd-length palindromes like "aba") or two adjacent characters (for even-length palindromes like "abba").
 
 ## 🧠 Approach — Expand Around Center
-This problem is optimally solved using the "Expand Around Center" pattern. This pattern is highly effective for palindrome-related problems because palindromes inherently possess a symmetrical structure. Instead of generating all possible substrings (which is O(N^2)) and then checking each for palindromic properties (O(N) for each check, leading to an O(N^3) naive solution), we can significantly optimize. The "Expand Around Center" approach iterates through every potential center point in the string. For each center, it expands outwards in both directions, comparing characters, until the palindrome property is broken or the string boundaries are reached. This method directly leverages the symmetrical nature of palindromes to find them efficiently.
+This problem is efficiently solved using the "Expand Around Center" pattern. This pattern is particularly well-suited for problems involving palindromes because it leverages their inherent symmetry. The approach systematically considers every possible character and every possible pair of adjacent characters in the string as potential centers of a palindrome. From each potential center, it expands outwards in both directions, checking if the characters at the expanding pointers are equal. This process continues until the pointers go out of bounds or the characters no longer match, at which point the longest palindrome centered at that point has been found. By doing this for all possible centers, we guarantee that we will find the overall longest palindromic substring.
 
 ## 📝 Step-by-Step Algorithm
-1.  **Initialize Tracking Variables**: Declare `start` to store the starting index of the longest palindrome found so far, initialized to `0`. Declare `maxLen` to store the length of the longest palindrome, initialized to `1`.
-2.  **Handle Base Cases**: If the input string `s` has a length of 0 or 1, it is already a palindrome. In this case, return `s` directly.
-3.  **Iterate Through Potential Centers**: Loop through the string `s` using an index `i` from `0` to `n-1` (where `n` is the length of `s`). For each `i`, consider two scenarios for potential palindrome centers:
-    *   **Odd Length Palindromes**: Assume `s[i]` is the center of an odd-length palindrome. Call a helper function (e.g., `expand`) with `left = i` and `right = i`.
-    *   **Even Length Palindromes**: Assume the space between `s[i]` and `s[i+1]` is the center of an even-length palindrome. Call the `expand` helper function with `left = i` and `right = i + 1`.
+1.  **Initialization**:
+    *   Initialize `maxLen` to 1 (the minimum possible length for a palindrome, as a single character is a palindrome).
+    *   Initialize `start` to 0 (the starting index of the longest palindrome found so far).
+    *   Get the length of the input string `s`, let's call it `n`.
+
+2.  **Base Case Handling**:
+    *   If `n` is 0 or 1, the string itself is the longest palindrome. Return `s`.
+
+3.  **Iterate Through Potential Centers**:
+    *   Loop through the string using an index `i` from `0` to `n-1`. For each `i`, we consider two types of centers:
+        *   **Odd Length Palindromes**: Treat `s[i]` as the single center. Call a helper function `expand(s, i, i, start, maxLen)`.
+        *   **Even Length Palindromes**: Treat the space between `s[i]` and `s[i+1]` as the center. Call a helper function `expand(s, i, i + 1, start, maxLen)`.
+
 4.  **`expand` Helper Function Logic**:
-    *   This function takes the string `s`, two pointers `left` and `right` (representing the current expansion boundaries), and references to `start` and `maxLen` (to update the global longest palindrome).
-    *   It enters a `while` loop that continues as long as:
-        *   `left` is a valid index (greater than or equal to 0).
-        *   `right` is a valid index (less than `n`).
-        *   The characters at `s[left]` and `s[right]` are equal.
+    *   The `expand` function takes the string `s`, two pointers `left` and `right` (representing the initial center(s)), and references to `start` and `maxLen` (to update the global longest palindrome).
+    *   It enters a `while` loop that continues as long as these conditions are met:
+        *   `left` is within the string bounds (`left >= 0`).
+        *   `right` is within the string bounds (`right < n`).
+        *   The characters at `s[left]` and `s[right]` are equal (`s[left] == s[right]`).
     *   Inside the loop:
-        *   Calculate the `currLen` of the palindrome: `right - left + 1`.
-        *   If `currLen` is greater than `maxLen`, update `maxLen` to `currLen` and `start` to `left`.
-        *   Decrement `left` and increment `right` to continue expanding outwards.
-5.  **Return Result**: After the loop finishes iterating through all possible centers, `start` and `maxLen` will correctly point to the beginning and length of the longest palindromic substring. Use `s.substr(start, maxLen)` to extract and return this substring.
+        *   Calculate the current palindrome's length: `currLen = right - left + 1`.
+        *   If `currLen` is greater than `maxLen`:
+            *   Update `maxLen` to `currLen`.
+            *   Update `start` to `left` (as this is the new starting index of the longest palindrome).
+        *   Decrement `left` by 1 (move inwards).
+        *   Increment `right` by 1 (move outwards).
+
+5.  **Return Result**:
+    *   After the loop finishes iterating through all possible centers, `start` and `maxLen` will hold the starting index and length of the longest palindromic substring found.
+    *   Use `s.substr(start, maxLen)` to extract and return the final substring.
 
 ## 💻 Solution
 ```cpp
 class Solution {
 public:
-    // Helper function to expand around a center and update the longest palindrome found
+    // Helper function to expand outwards from a given center (left, right)
+    // and update the global longest palindrome's start index and length.
     void expand(string &s, int left, int right, int &start, int &maxLen) {
-        int n = s.size(); // Get the length of the string
+        int n = s.size(); // Get the total length of the string for boundary checks
 
-        // Expand outwards as long as:
-        // 1. 'left' pointer is within string bounds (>= 0)
-        // 2. 'right' pointer is within string bounds (< n)
-        // 3. Characters at 'left' and 'right' are equal (maintaining palindrome property)
+        // Continue expanding as long as:
+        // 1. The left pointer is within string bounds (>= 0)
+        // 2. The right pointer is within string bounds (< n)
+        // 3. The characters at the left and right pointers match
         while (left >= 0 && right < n && s[left] == s[right]) {
-            // Calculate the current length of the palindrome
+            // Calculate the length of the current palindrome
             int currLen = right - left + 1;
 
-            // If this palindrome is longer than the current longest, update maxLen and start
+            // If this palindrome is longer than the longest one found so far
             if (currLen > maxLen) {
-                maxLen = currLen; // Update maximum length
-                start = left;     // Update starting index of the longest palindrome
+                maxLen = currLen; // Update the maximum length
+                start = left;     // Update the starting index of the longest palindrome
             }
 
-            left--;  // Move left pointer inwards
-            right++; // Move right pointer outwards
+            left--;  // Move the left pointer one step to the left (inwards)
+            right++; // Move the right pointer one step to the right (outwards)
         }
     }
 
     string longestPalindrome(string s) {
-        int n = s.size(); // Get the length of the input string
+        int n = s.size(); // Get the total length of the string
 
-        // Base case: if string has 0 or 1 character, it's already a palindrome
+        // Base case: If the string has 0 or 1 character, it is already a palindrome.
+        // Return the string itself.
         if (n <= 1)
             return s;
 
-        int start = 0;    // Stores the starting index of the longest palindrome found
-        int maxLen = 1;   // Stores the maximum length of the longest palindrome found
-                          // Initialized to 1 because a single character is always a palindrome
+        int start = 0;    // This will store the starting index of the longest palindrome found
+        int maxLen = 1;   // This will store the maximum length of a palindrome found.
+                          // Initialize to 1 because a single character is always a palindrome.
 
-        // Iterate through each character of the string
+        // Iterate through each character of the string.
+        // Each character 'i' can be a potential center for a palindrome.
         for (int i = 0; i < n; i++) {
             // Case 1: Palindromes with odd length (e.g., "aba", "racecar")
-            // 'i' is the center character. Expand from s[i] itself.
-            expand(s, i, i, start, maxLen);      
+            // The center is a single character at index 'i'.
+            // We start expanding with left = i and right = i.
+            expand(s, i, i, start, maxLen);
 
-            // Case 2: Palindromes with even length (e.g., "abba", "noon")
-            // 'i' and 'i+1' are the two center characters. Expand from s[i] and s[i+1].
-            // We need to ensure i+1 is within bounds before calling expand.
-            // The loop condition 'i < n' ensures i+1 won't go out of bounds for the last iteration.
-            expand(s, i, i + 1, start, maxLen);  
+            // Case 2: Palindromes with even length (e.g., "bb", "abba")
+            // The center is between two characters at indices 'i' and 'i+1'.
+            // We start expanding with left = i and right = i + 1.
+            expand(s, i, i + 1, start, maxLen);
         }
 
-        // After checking all possible centers, extract the longest palindromic substring
-        // using the stored 'start' index and 'maxLen'.
+        // After checking all possible centers, 'start' and 'maxLen' hold the
+        // information for the longest palindromic substring.
+        // Use substr(start_index, length) to extract and return it.
         return s.substr(start, maxLen);
     }
 };
@@ -107,10 +126,10 @@ public:
 ## ⏱️ Complexity Analysis
 | | Complexity | Reason |
 |---|---|---|
-| **Time** | O(N^2) | We iterate through `N` possible center points. For each center, the `expand` function can, in the worst case (e.g., a string like "aaaaa"), traverse up to `N/2` characters in each direction. This results in `N` centers * `O(N)` expansion = `O(N^2)`. |
-| **Space** | O(1) | The solution uses a constant amount of extra space for variables like `start`, `maxLen`, `left`, `right`, and `currLen`. No auxiliary data structures are created that scale with the input string's size. |
+| **Time** | O(N^2) | We iterate through `N` possible centers. For each center, the `expand` function can, in the worst case (e.g., "aaaaa"), expand up to `N/2` times. This results in `N * N/2` operations, which simplifies to O(N^2). |
+| **Space** | O(1) | We only use a few constant extra variables (`start`, `maxLen`, `left`, `right`, `currLen`) to store state, regardless of the input string's size. |
 
 ## 🔗 Related Problems
 - 647. Palindromic Substrings
-- 131. Palindrome Partitioning
 - 516. Longest Palindromic Subsequence
+- 131. Palindrome Partitioning
