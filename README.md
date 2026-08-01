@@ -130,6 +130,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0204-count-primes](https://github.com/Gulabjangid/DSA/tree/master/0204-count-primes) |
 | [0231-power-of-two](https://github.com/Gulabjangid/DSA/tree/master/0231-power-of-two) |
 | [0326-power-of-three](https://github.com/Gulabjangid/DSA/tree/master/0326-power-of-three) |
+| [0342-power-of-four](https://github.com/Gulabjangid/DSA/tree/master/0342-power-of-four) |
 | [0445-add-two-numbers-ii](https://github.com/Gulabjangid/DSA/tree/master/0445-add-two-numbers-ii) |
 ## Hash Table
 |  |
@@ -321,6 +322,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0206-reverse-linked-list](https://github.com/Gulabjangid/DSA/tree/master/0206-reverse-linked-list) |
 | [0231-power-of-two](https://github.com/Gulabjangid/DSA/tree/master/0231-power-of-two) |
 | [0326-power-of-three](https://github.com/Gulabjangid/DSA/tree/master/0326-power-of-three) |
+| [0342-power-of-four](https://github.com/Gulabjangid/DSA/tree/master/0342-power-of-four) |
 ## Stack
 |  |
 | ------- |
@@ -360,6 +362,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0187-repeated-dna-sequences](https://github.com/Gulabjangid/DSA/tree/master/0187-repeated-dna-sequences) |
 | [0231-power-of-two](https://github.com/Gulabjangid/DSA/tree/master/0231-power-of-two) |
 | [0287-find-the-duplicate-number](https://github.com/Gulabjangid/DSA/tree/master/0287-find-the-duplicate-number) |
+| [0342-power-of-four](https://github.com/Gulabjangid/DSA/tree/master/0342-power-of-four) |
 ## Monotonic Stack
 |  |
 | ------- |
