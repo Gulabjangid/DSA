@@ -129,6 +129,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0189-rotate-array](https://github.com/Gulabjangid/DSA/tree/master/0189-rotate-array) |
 | [0204-count-primes](https://github.com/Gulabjangid/DSA/tree/master/0204-count-primes) |
 | [0231-power-of-two](https://github.com/Gulabjangid/DSA/tree/master/0231-power-of-two) |
+| [0326-power-of-three](https://github.com/Gulabjangid/DSA/tree/master/0326-power-of-three) |
 | [0445-add-two-numbers-ii](https://github.com/Gulabjangid/DSA/tree/master/0445-add-two-numbers-ii) |
 ## Hash Table
 |  |
@@ -319,6 +320,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0203-remove-linked-list-elements](https://github.com/Gulabjangid/DSA/tree/master/0203-remove-linked-list-elements) |
 | [0206-reverse-linked-list](https://github.com/Gulabjangid/DSA/tree/master/0206-reverse-linked-list) |
 | [0231-power-of-two](https://github.com/Gulabjangid/DSA/tree/master/0231-power-of-two) |
+| [0326-power-of-three](https://github.com/Gulabjangid/DSA/tree/master/0326-power-of-three) |
 ## Stack
 |  |
 | ------- |
