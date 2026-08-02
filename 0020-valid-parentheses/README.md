@@ -1,11 +1,11 @@
 # 0020-valid-parentheses
 
 ## 📋 Problem Description
-Given a string `s` consisting only of the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+Given a string `s` consisting only of the characters `'('`, `')'`, `'{'`, `'}'`, `'['`, and `']'`, determine if the input string is "valid".
 
 An input string is considered valid if it satisfies the following three conditions:
-1.  **Matching Types**: Every open bracket must be closed by the *same type* of bracket. For example, '(' must be closed by ')', not ']' or '}'.
-2.  **Correct Order**: Open brackets must be closed in the *correct order*. For instance, `([)]` is invalid because the `(` is closed by `)` before the `[` is closed by `]`.
+1.  **Matching Types**: Every open bracket must be closed by the same type of bracket. For example, `'('` must be closed by `')'`, not `']'` or `'}'`.
+2.  **Correct Order**: Open brackets must be closed in the correct order. For instance, `([)]` is invalid because the `(` is closed by `)` before the `[` is closed by `]`.
 3.  **Correspondence**: Every close bracket must have a corresponding open bracket of the same type.
 
 The function should return `true` if the string is valid, and `false` otherwise.
@@ -14,122 +14,122 @@ The function should return `true` if the string is valid, and `false` otherwise.
 ```
 Input:  s = "()"
 Output: true
-Explanation: The opening parenthesis is correctly closed by a matching closing parenthesis.
-```
-
-```
-Input:  s = "()[]{}"
-Output: true
-Explanation: All opening brackets are correctly closed by their matching types in the correct order.
+Explanation: The single pair of parentheses is correctly matched and ordered.
 ```
 
 ```
 Input:  s = "(]"
 Output: false
-Explanation: The open bracket '(' is not closed by the same type of bracket; it's closed by ']'.
+Explanation: An opening parenthesis '(' is closed by a square bracket ']', which is a mismatch in type.
 ```
 
 ```
 Input:  s = "([)]"
 Output: false
-Explanation: The open bracket '[' is closed by ')' before the open bracket '(' is closed by ']'. The order is incorrect.
+Explanation: Although all brackets have corresponding types, the order is incorrect. The '(' is closed by ')' before the '[' is closed by ']'.
 ```
 
 ## 📌 Constraints
 *   `1 <= s.length <= 10^4`
-*   `s` consists of parentheses only `'()[]{}'`.
+*   `s` consists only of parentheses characters: `'('`, `')'`, `'{'`, `'}'`, `'['`, `']'`.
 
 ## 🤔 Understanding the Problem
-This problem asks us to validate the structure of a string composed solely of various types of parentheses. It's not enough to simply count opening and closing brackets; their nesting and sequence are crucial. We need to ensure that every opening bracket has a corresponding closing bracket of the *same type*, and that these pairs are properly nested, meaning the most recently opened bracket must be the first one closed.
+This problem asks us to validate the structure of a string composed solely of various types of brackets. It's not just about counting matching pairs; the crucial aspect is the *order* and *nesting* of these brackets. A valid string implies that every opening bracket has a corresponding closing bracket of the same type, and they are closed in the correct sequence, respecting the nesting hierarchy. This means the most recently opened bracket must be the first one to be closed.
 
 ## 💡 Core Idea
-The core idea is that when an opening bracket is encountered, its corresponding closing bracket must appear *later*, and any brackets opened *after* it must be closed *before* it. This Last-In, First-Out (LIFO) behavior is a classic indicator for using a Stack data structure.
+The key insight is that when we encounter an opening bracket, we expect its corresponding closing bracket to appear *later*. When we encounter a closing bracket, it must match the *most recently opened* and *still unclosed* bracket. This "last-in, first-out" (LIFO) behavior is a classic indicator for using a stack data structure.
 
 ## 🧠 Approach — Stack
-A Stack is the ideal data structure for solving this problem because it perfectly models the Last-In, First-Out (LIFO) nature of correctly matched parentheses. When we encounter an opening bracket, we push it onto the stack, signifying that we expect to see its corresponding closing bracket later. When a closing bracket is encountered, we check if the most recently opened (top of the stack) bracket is its matching pair. If they match, they form a valid pair, and we pop the opening bracket from the stack. If they don't match, or if the stack is empty, the string is invalid.
+The algorithm pattern used here is a **Stack**.
+A stack is a perfect fit for this problem because it naturally handles the "last-in, first-out" requirement for matching parentheses. When we encounter an opening bracket, we push it onto the stack, essentially marking it as "awaiting closure." When we encounter a closing bracket, we need to check if it correctly closes the *most recently opened* bracket. The stack's `top()` operation allows us to inspect this most recent opening bracket, and `pop()` allows us to remove it once it's successfully matched, simulating its closure.
 
 ## 📝 Step-by-Step Algorithm
-1.  **Initialize Stack**: Create an empty stack of characters. This stack will store all encountered opening brackets that are yet to be closed.
-2.  **Iterate Through String**: Go through each character `c` in the input string `s` from left to right.
-3.  **Handle Opening Brackets**: If `c` is an opening bracket ('(', '{', or '['), push it onto the stack. This signifies that we've opened a bracket and are waiting for its corresponding closing bracket.
-4.  **Handle Closing Brackets**: If `c` is a closing bracket (')', '}', or ']'):
-    *   **Check for Empty Stack**: First, check if the stack is empty. If it is, it means we've encountered a closing bracket without any corresponding open bracket. This makes the string invalid, so immediately return `false`.
-    *   **Check for Match**: If the stack is not empty, look at the character at the top of the stack (without removing it). This character represents the most recently opened, unclosed bracket.
-        *   If `c` is ')' and the stack top is '(', they form a valid pair. Pop the top element from the stack.
-        *   If `c` is ']' and the stack top is '[', they form a valid pair. Pop the top element from the stack.
-        *   If `c` is '}' and the stack top is '{', they form a valid pair. Pop the top element from the stack.
-    *   **Handle Mismatch**: If `c` is a closing bracket but it does not match the type of the opening bracket at the stack top (e.g., `c` is ')' but stack top is '['), then the brackets are mismatched or out of order. The string is invalid, so immediately return `false`.
-5.  **Final Check**: After processing all characters in the string:
+1.  **Initialize an empty stack**: Create a stack (e.g., `std::stack<char>` in C++) to store opening brackets.
+2.  **Iterate through the string**: Process each character `c` in the input string `s` from left to right.
+3.  **Handle opening brackets**: If `c` is an opening bracket (`(`, `{`, or `[`):
+    *   Push `c` onto the stack. This signifies that we've encountered an open bracket that needs to be closed later.
+4.  **Handle closing brackets**: If `c` is a closing bracket (`)`, `}`, or `]`):
+    *   **Check for empty stack**: First, check if the stack is empty. If it is, it means we've found a closing bracket without any corresponding open bracket. In this case, the string is invalid, so immediately return `false`.
+    *   **Check for match**: If the stack is not empty, look at the character at the `top()` of the stack (this is the most recently opened, unclosed bracket).
+        *   If `c` is `)` and `s.top()` is `(`, they form a valid pair.
+        *   If `c` is `]` and `s.top()` is `[`, they form a valid pair.
+        *   If `c` is `}` and `s.top()` is `{`, they form a valid pair.
+        *   If any of these conditions are met, pop the top element from the stack. This signifies that the opening bracket has found its match and is now closed.
+    *   **Handle mismatch**: If `c` does not match the `s.top()` character (e.g., `s.top()` is `(` but `c` is `]` or `}`), it means there's a type mismatch or incorrect order. The string is invalid, so immediately return `false`.
+5.  **Final check**: After iterating through all characters in the string:
     *   If the stack is empty, it means every opening bracket found its corresponding closing bracket in the correct order. The string is valid, so return `true`.
-    *   If the stack is not empty, it means there are one or more unmatched opening brackets left (e.g., `"{["`). The string is invalid, so return `false`.
+    *   If the stack is not empty, it means there are one or more opening brackets that were never closed. The string is invalid, so return `false`.
 
 ## 💻 Solution
-
 ```cpp
 #include <string> // Required for std::string
 #include <stack>  // Required for std::stack
 
 class Solution {
 public:
-    bool isValid(std::string s_input) { // Renamed parameter to avoid shadowing std::string
-        // Declare a stack locally within the function.
-        // This ensures that the stack is fresh for each call to isValid,
-        // preventing state from previous calls from affecting current results.
-        std::stack<char> s; 
-        
-        // Iterate through each character in the input string
-        for (int i = 0; i < s_input.length(); i++) {
-            char current_char = s_input[i];
+    // Declare a stack as a member variable of the class.
+    // This stack will be used to keep track of open brackets encountered so far.
+    // Note: If the Solution object were reused across multiple test cases without re-initialization,
+    // this stack would retain its state. For typical LeetCode execution, a new Solution object
+    // is often created per test case, or the stack is cleared implicitly.
+    // Declaring it inside the isValid function would ensure it's always fresh.
+    std::stack<char> s;
 
+    bool isValid(std::string input_string) { // Renamed parameter from 'string' to 'input_string' for clarity
+                                             // to avoid conflict with std::string type name in comments.
+                                             // The original code used 'string' as the parameter name.
+        // Iterate through each character in the input string.
+        for (int i = 0; i < input_string.length(); i++) {
             // If the current character is an opening bracket, push it onto the stack.
-            // These are the brackets we expect to close later.
-            if (current_char == '(' || current_char == '{' || current_char == '[') {
-                s.push(current_char);
-            } 
-            // If the current character is a closing bracket
+            // This marks it as an unclosed bracket that we expect to see closed later.
+            if (input_string[i] == '(' || input_string[i] == '{' || input_string[i] == '[') {
+                s.push(input_string[i]);
+            }
+            // If the current character is a closing bracket.
             else {
-                // If the stack is empty, it means we encountered a closing bracket
-                // without any corresponding open bracket. This is an invalid scenario.
-                if (s.empty()) {
+                // First, check if the stack is empty.
+                // If it is, we've encountered a closing bracket without any corresponding
+                // open bracket to match it. This makes the string invalid.
+                if (s.empty()) { // Using s.empty() is equivalent to s.size() == 0
                     return false;
                 }
 
-                // Check if the current closing bracket matches the top of the stack.
-                // The stack's top element is the most recently opened, unmatched bracket.
-                // We check for type match: '(' with ')', '[' with ']', '{' with '}'.
-                if ((s.top() == '(' && current_char == ')') ||
-                    (s.top() == '[' && current_char == ']') ||
-                    (s.top() == '{' && current_char == '}')) {
-                    // If they match, it means the pair is valid and correctly ordered.
-                    // Pop the opening bracket from the stack as it has now been closed.
+                // If the stack is not empty, check if the current closing bracket
+                // matches the most recently opened bracket (which is at the top of the stack).
+                if ((s.top() == '(' && input_string[i] == ')') || // Check for '()' pair
+                    (s.top() == '[' && input_string[i] == ']') || // Check for '[]' pair
+                    (s.top() == '{' && input_string[i] == '}')) { // Check for '{}' pair
+                    // If they match, pop the opening bracket from the stack.
+                    // This signifies that the opening bracket has been successfully closed.
                     s.pop();
-                } 
-                // If the current closing bracket does not match the type of the
-                // opening bracket at the stack's top, then the parentheses are
-                // mismatched or out of order (e.g., '([)]'). This is invalid.
+                }
+                // If the closing bracket does not match the top of the stack,
+                // it means there's either a type mismatch (e.g., '{]') or incorrect order.
+                // In either case, the string is invalid.
                 else {
                     return false;
                 }
             }
         }
 
-        // After iterating through the entire string:
+        // After iterating through the entire string, perform a final check.
         // If the stack is empty, it means all opening brackets found their
-        // corresponding closing brackets in the correct order. The string is valid.
-        // If the stack is not empty, it means there are unmatched opening brackets left
-        // (e.g., "({"). The string is invalid.
-        return s.empty();
+        // corresponding closing brackets and were popped. The string is valid.
+        // If the stack is not empty, it means there are unclosed opening brackets
+        // remaining on the stack. The string is invalid.
+        return s.empty(); // Using s.empty() is equivalent to s.size() == 0
     }
 };
+
 ```
 
 ## ⏱️ Complexity Analysis
 | | Complexity | Reason |
 |---|---|---|
-| **Time** | O(N) | We iterate through the input string once. Each character is processed with constant-time stack operations (push, pop, top, empty). N is the length of the string. |
-| **Space** | O(N) | In the worst-case scenario (e.g., a string like "(((((" or "((()))"), all opening brackets might be pushed onto the stack. The maximum size of the stack can be N/2, which is proportional to N. |
+| **Time** | O(N) | We iterate through the input string once. Each stack operation (push, pop, top, empty) takes O(1) time. |
+| **Space** | O(N) | In the worst-case scenario (e.g., a string like `(((((((((`), the stack could store all N opening brackets. |
 
 ## 🔗 Related Problems
-- 150. Evaluate Reverse Polish Notation
-- 739. Daily Temperatures
-- 496. Next Greater Element I
+-   22. Generate Parentheses
+-   150. Evaluate Reverse Polish Notation
+-   71. Simplify Path
