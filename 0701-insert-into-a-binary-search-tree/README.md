@@ -1,26 +1,36 @@
 # 0701-insert-into-a-binary-search-tree
 
 ## 📋 Problem Description
-You are given the `root` node of a binary search tree (BST) and an integer `value` to insert into the tree. Your task is to return the root node of the BST after the insertion. It is guaranteed that the new value does not already exist in the original BST.
+You are given the `root` node of a binary search tree (BST) and an integer `value` to insert into the tree. Your task is to insert this `value` while maintaining the properties of a BST. After the insertion, you must return the `root` node of the modified BST.
 
-Note that there may be multiple valid ways to insert the value while maintaining the BST properties. You can return any one of these valid resulting trees.
+It is guaranteed that the `value` to be inserted does not already exist in the original BST. Additionally, there might be multiple valid ways to insert the value while preserving the BST properties; you can return any one of them.
 
-The function receives two arguments:
-1.  `root`: A pointer to the root node of the binary search tree.
-2.  `val`: An integer representing the value to be inserted.
+**Input:**
+*   `root`: A pointer to the root node of the binary search tree. Can be `nullptr` if the tree is empty.
+*   `val`: An integer value to be inserted.
 
-It must return a `TreeNode*` representing the root of the modified BST.
+**Output:**
+*   A pointer to the root node of the BST after the insertion.
 
 ## 🔍 Examples
+
 ```
 Input: root = [4,2,7,1,3], val = 5
 Output: [4,2,7,1,3,5]
-Explanation: The value 5 is inserted as the left child of 7, maintaining BST properties.
-Another accepted tree could have 5 as the right child of 4.
+Explanation: The value 5 is inserted as the left child of 7.
+Another accepted tree is shown in the problem, where 5 could be the right child of 4.
+```
 
+```
 Input: root = [40,20,60,10,30,50,70], val = 25
 Output: [40,20,60,10,30,50,70,null,null,25]
-Explanation: The value 25 is inserted as the right child of 20, which is the left child of 30.
+Explanation: The value 25 is inserted as the right child of 20.
+```
+
+```
+Input: root = [], val = 10
+Output: [10]
+Explanation: An empty tree becomes a tree with a single node, 10.
 ```
 
 ## 📌 Constraints
@@ -31,25 +41,36 @@ Explanation: The value 25 is inserted as the right child of 20, which is the lef
 *   It's **guaranteed** that `val` does not exist in the original BST.
 
 ## 🤔 Understanding the Problem
-The problem asks us to add a new node with a given value (`val`) into an existing Binary Search Tree (BST) while preserving the fundamental BST property: for any given node, all values in its left subtree are smaller than its own value, and all values in its right subtree are larger. Since we are guaranteed that `val` does not already exist, we don't need to worry about duplicate values. The core challenge is to find the correct position for the new node, which will always be a leaf node (or an empty spot where a leaf node would be).
+The problem asks us to add a new node with a given `val` into an existing Binary Search Tree (BST) without violating the BST properties. A BST has a specific ordering: for any given node, all values in its left subtree are smaller than the node's value, and all values in its right subtree are larger. Since the new `val` is guaranteed not to exist, we just need to find the correct leaf position where it can be inserted. The key is to traverse the tree following the BST rules until we find an empty spot (a `nullptr`) where the new node can be attached.
 
 ## 💡 Core Idea
-The key insight is that the BST property itself dictates the exact path to traverse to find the correct insertion point. If the value to insert (`val`) is less than the current node's value, we must go left; if it's greater, we must go right. This process continues until we reach a `nullptr`, which signifies the empty spot where the new node should be attached.
+The fundamental idea is to simulate the search process for the `val` in the BST. Since `val` is guaranteed not to exist, this search will eventually lead us to a `nullptr` (an empty spot) where the new node can be created and attached as a child of the last visited non-null node.
 
-## 🧠 Approach — Recursion / Tree Traversal
-This problem is perfectly suited for a **Recursive Tree Traversal** approach.
-The reason this pattern fits so well is that the decision-making process at each node is identical: compare `val` with the current node's value and decide whether to proceed to the left or right child. This self-similar structure is the hallmark of problems best solved with recursion. The base case for our recursion will be when we encounter a `nullptr`, indicating that we've found the correct empty slot to place our new node.
+## 🧠 Approach — Recursion / Depth-First Search (DFS)
+This problem is perfectly suited for a **recursive** approach, which inherently performs a Depth-First Search (DFS) traversal. Binary Search Trees are recursive data structures by nature: each subtree is also a BST. This makes recursion a very natural and elegant way to navigate and modify them.
+
+We can define a recursive function that takes the current node and the value to insert.
+1.  If the current node is `nullptr`, it means we've found the correct position to insert the new value, so we create a new `TreeNode` and return it.
+2.  If the `val` is less than the current node's value, we know it must belong in the left subtree. We recursively call the function on the left child and update the current node's `left` pointer with the result of this recursive call.
+3.  If the `val` is greater than the current node's value, it must belong in the right subtree. We recursively call the function on the right child and update the current node's `right` pointer with the result.
+This recursive structure ensures that the new node is correctly placed and the tree structure is updated as the calls unwind.
 
 ## 📝 Step-by-Step Algorithm
-1.  **Base Case**: Check if the current `root` node is `nullptr`.
-    *   If it is, this means we have traversed down to an empty spot where the new value should be inserted. Create a new `TreeNode` with the given `val` and return this new node. This node will become the child of the parent node that initiated this recursive call.
-2.  **Recursive Step**: If the current `root` is not `nullptr`:
-    *   **Compare Values**: Compare `val` with `root->val`.
-    *   **Go Left**: If `val` is less than `root->val`, it means the new value belongs in the left subtree. Recursively call `insertIntoBST` on `root->left` with `val`. The result of this recursive call (which will either be the newly created node or the root of the modified left subtree) should be assigned back to `root->left`.
-    *   **Go Right**: If `val` is greater than `root->val`, it means the new value belongs in the right subtree. Recursively call `insertIntoBST` on `root->right` with `val`. The result of this recursive call should be assigned back to `root->right`.
-3.  **Return Current Root**: After the appropriate recursive call has completed and potentially updated one of its children, return the current `root` node. This ensures that the connections up the call stack are maintained, eventually returning the original (or newly created, if the tree was initially empty) root of the entire BST.
+
+1.  **Base Case**: If the current `root` node is `nullptr` (meaning we've traversed down to an empty spot where a child should be), create a new `TreeNode` with the given `val` and return this new node. This new node will be attached as a child to the parent node that initiated this recursive call.
+
+2.  **Compare and Recurse Left**: If the `val` to be inserted is less than the current `root->val`:
+    *   Recursively call the `insertIntoBST` function on the `root->left` subtree with the same `val`.
+    *   Assign the result of this recursive call back to `root->left`. This step is crucial because if `root->left` was `nullptr`, the base case would create a new node, and this assignment links it to the current `root`.
+
+3.  **Compare and Recurse Right**: If the `val` to be inserted is greater than the current `root->val`:
+    *   Recursively call the `insertIntoBST` function on the `root->right` subtree with the same `val`.
+    *   Assign the result of this recursive call back to `root->right`. Similar to the left side, this links the newly created node (if `root->right` was `nullptr`) to the current `root`.
+
+4.  **Return Current Root**: After potentially modifying one of its children, return the current `root` node. This ensures that the parent of the current `root` (in the call stack) receives the updated subtree.
 
 ## 💻 Solution
+
 ```cpp
 /**
  * Definition for a binary tree node.
@@ -65,32 +86,34 @@ The reason this pattern fits so well is that the decision-making process at each
 class Solution {
 public:
     TreeNode* insertIntoBST(TreeNode* root, int val) {
-        // Base case: If the current node is nullptr, we've found the correct spot
-        // to insert the new value. Create a new TreeNode with 'val' and return it.
-        // This new node will become the child of the parent node that called this function.
-        if (root == nullptr) {
+        
+        // Base case: If the current node is nullptr, it means we've found the
+        // correct empty spot to insert the new value.
+        // Create a new TreeNode with the given 'val' and return it.
+        // This new node will be linked as a child to the parent node that called this function.
+        if(root == nullptr){
             return new TreeNode(val);
         }
-
-        // Recursive step: Traverse the tree based on BST properties.
-        // If 'val' is less than the current node's value, it belongs in the left subtree.
-        if (root->val > val) {
+        
+        // If 'val' is less than the current node's value, it must be inserted
+        // into the left subtree to maintain BST properties.
+        if(root->val > val){
             // Recursively call insertIntoBST on the left child.
-            // The result of this call (either the newly inserted node or the root
-            // of the modified left subtree) is assigned back to root->left.
+            // The result of this call (which could be the original left child,
+            // or a new node if 'root->left' was nullptr) is assigned back to 'root->left'.
             root->left = insertIntoBST(root->left, val);
         }
-        // If 'val' is greater than the current node's value, it belongs in the right subtree.
-        // (We are guaranteed 'val' does not exist, so no need to check for equality).
-        else {
+        // If 'val' is greater than the current node's value, it must be inserted
+        // into the right subtree. (We are guaranteed 'val' does not exist,
+        // so no need to handle equality).
+        else{ // root->val < val
             // Recursively call insertIntoBST on the right child.
-            // The result is assigned back to root->right.
+            // Similar to the left side, the result is assigned back to 'root->right'.
             root->right = insertIntoBST(root->right, val);
         }
-
-        // After the recursive call returns and the appropriate child pointer is updated,
-        // return the current root. This propagates the (potentially modified) subtree
-        // up the call stack, maintaining the tree structure.
+        
+        // After the insertion (if any) in its subtrees, return the current root.
+        // This propagates the (potentially modified) subtree back up to its parent.
         return root;
     }
 };
@@ -98,12 +121,13 @@ public:
 ```
 
 ## ⏱️ Complexity Analysis
+
 | | Complexity | Reason |
 |---|---|---|
-| **Time** | O(H) | In the worst case, we might traverse from the root to a leaf node, where H is the height of the BST. H can be O(log N) for a balanced tree or O(N) for a skewed tree (like a linked list), where N is the number of nodes. |
-| **Space** | O(H) | This is due to the recursion stack. In the worst case (skewed tree), the depth of recursion can be N, leading to O(N) space. For a balanced tree, it's O(log N). |
+| **Time** | O(H) | In the worst case, we traverse from the root to a leaf. H is the height of the tree. For a balanced BST, H = log N. For a skewed BST (like a linked list), H = N, where N is the number of nodes. |
+| **Space** | O(H) | This is due to the recursion stack. In the worst case (skewed tree), the depth of recursion can be N. In the best/average case (balanced tree), it's log N. |
 
 ## 🔗 Related Problems
 - 700. Search in a Binary Search Tree
-- 450. Delete Node in a BST
 - 98. Validate Binary Search Tree
+- 450. Delete Node in a BST
