@@ -246,6 +246,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0257-binary-tree-paths](https://github.com/Gulabjangid/DSA/tree/master/0257-binary-tree-paths) |
 | [0404-sum-of-left-leaves](https://github.com/Gulabjangid/DSA/tree/master/0404-sum-of-left-leaves) |
 | [0637-average-of-levels-in-binary-tree](https://github.com/Gulabjangid/DSA/tree/master/0637-average-of-levels-in-binary-tree) |
+| [0700-search-in-a-binary-search-tree](https://github.com/Gulabjangid/DSA/tree/master/0700-search-in-a-binary-search-tree) |
 ## Depth-First Search
 |  |
 | ------- |
@@ -279,6 +280,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0257-binary-tree-paths](https://github.com/Gulabjangid/DSA/tree/master/0257-binary-tree-paths) |
 | [0404-sum-of-left-leaves](https://github.com/Gulabjangid/DSA/tree/master/0404-sum-of-left-leaves) |
 | [0637-average-of-levels-in-binary-tree](https://github.com/Gulabjangid/DSA/tree/master/0637-average-of-levels-in-binary-tree) |
+| [0700-search-in-a-binary-search-tree](https://github.com/Gulabjangid/DSA/tree/master/0700-search-in-a-binary-search-tree) |
 ## Linked List
 |  |
 | ------- |
@@ -417,4 +419,8 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 |  |
 | ------- |
 | [0692-top-k-frequent-words](https://github.com/Gulabjangid/DSA/tree/master/0692-top-k-frequent-words) |
+## Binary Search Tree
+|  |
+| ------- |
+| [0700-search-in-a-binary-search-tree](https://github.com/Gulabjangid/DSA/tree/master/0700-search-in-a-binary-search-tree) |
 <!---LeetCode Topics End-->
