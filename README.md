@@ -251,6 +251,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0700-search-in-a-binary-search-tree](https://github.com/Gulabjangid/DSA/tree/master/0700-search-in-a-binary-search-tree) |
 | [0701-insert-into-a-binary-search-tree](https://github.com/Gulabjangid/DSA/tree/master/0701-insert-into-a-binary-search-tree) |
 | [0783-minimum-distance-between-bst-nodes](https://github.com/Gulabjangid/DSA/tree/master/0783-minimum-distance-between-bst-nodes) |
+| [0897-increasing-order-search-tree](https://github.com/Gulabjangid/DSA/tree/master/0897-increasing-order-search-tree) |
 ## Depth-First Search
 |  |
 | ------- |
@@ -263,6 +264,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0404-sum-of-left-leaves](https://github.com/Gulabjangid/DSA/tree/master/0404-sum-of-left-leaves) |
 | [0637-average-of-levels-in-binary-tree](https://github.com/Gulabjangid/DSA/tree/master/0637-average-of-levels-in-binary-tree) |
 | [0783-minimum-distance-between-bst-nodes](https://github.com/Gulabjangid/DSA/tree/master/0783-minimum-distance-between-bst-nodes) |
+| [0897-increasing-order-search-tree](https://github.com/Gulabjangid/DSA/tree/master/0897-increasing-order-search-tree) |
 | [2596-check-knight-tour-configuration](https://github.com/Gulabjangid/DSA/tree/master/2596-check-knight-tour-configuration) |
 ## Breadth-First Search
 |  |
@@ -289,6 +291,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0700-search-in-a-binary-search-tree](https://github.com/Gulabjangid/DSA/tree/master/0700-search-in-a-binary-search-tree) |
 | [0701-insert-into-a-binary-search-tree](https://github.com/Gulabjangid/DSA/tree/master/0701-insert-into-a-binary-search-tree) |
 | [0783-minimum-distance-between-bst-nodes](https://github.com/Gulabjangid/DSA/tree/master/0783-minimum-distance-between-bst-nodes) |
+| [0897-increasing-order-search-tree](https://github.com/Gulabjangid/DSA/tree/master/0897-increasing-order-search-tree) |
 ## Linked List
 |  |
 | ------- |
@@ -350,6 +353,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0445-add-two-numbers-ii](https://github.com/Gulabjangid/DSA/tree/master/0445-add-two-numbers-ii) |
 | [0496-next-greater-element-i](https://github.com/Gulabjangid/DSA/tree/master/0496-next-greater-element-i) |
 | [0682-baseball-game](https://github.com/Gulabjangid/DSA/tree/master/0682-baseball-game) |
+| [0897-increasing-order-search-tree](https://github.com/Gulabjangid/DSA/tree/master/0897-increasing-order-search-tree) |
 | [1910-remove-all-occurrences-of-a-substring](https://github.com/Gulabjangid/DSA/tree/master/1910-remove-all-occurrences-of-a-substring) |
 ## Matrix
 |  |
@@ -433,6 +437,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0700-search-in-a-binary-search-tree](https://github.com/Gulabjangid/DSA/tree/master/0700-search-in-a-binary-search-tree) |
 | [0701-insert-into-a-binary-search-tree](https://github.com/Gulabjangid/DSA/tree/master/0701-insert-into-a-binary-search-tree) |
 | [0783-minimum-distance-between-bst-nodes](https://github.com/Gulabjangid/DSA/tree/master/0783-minimum-distance-between-bst-nodes) |
+| [0897-increasing-order-search-tree](https://github.com/Gulabjangid/DSA/tree/master/0897-increasing-order-search-tree) |
 ## Memoization
 |  |
 | ------- |
