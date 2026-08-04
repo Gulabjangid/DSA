@@ -129,6 +129,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0013-roman-to-integer](https://github.com/Gulabjangid/DSA/tree/master/0013-roman-to-integer) |
 | [0048-rotate-image](https://github.com/Gulabjangid/DSA/tree/master/0048-rotate-image) |
 | [0050-powx-n](https://github.com/Gulabjangid/DSA/tree/master/0050-powx-n) |
+| [0070-climbing-stairs](https://github.com/Gulabjangid/DSA/tree/master/0070-climbing-stairs) |
 | [0189-rotate-array](https://github.com/Gulabjangid/DSA/tree/master/0189-rotate-array) |
 | [0204-count-primes](https://github.com/Gulabjangid/DSA/tree/master/0204-count-primes) |
 | [0231-power-of-two](https://github.com/Gulabjangid/DSA/tree/master/0231-power-of-two) |
@@ -218,6 +219,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0042-trapping-rain-water](https://github.com/Gulabjangid/DSA/tree/master/0042-trapping-rain-water) |
 | [0045-jump-game-ii](https://github.com/Gulabjangid/DSA/tree/master/0045-jump-game-ii) |
 | [0053-maximum-subarray](https://github.com/Gulabjangid/DSA/tree/master/0053-maximum-subarray) |
+| [0070-climbing-stairs](https://github.com/Gulabjangid/DSA/tree/master/0070-climbing-stairs) |
 | [0118-pascals-triangle](https://github.com/Gulabjangid/DSA/tree/master/0118-pascals-triangle) |
 | [0119-pascals-triangle-ii](https://github.com/Gulabjangid/DSA/tree/master/0119-pascals-triangle-ii) |
 | [0122-best-time-to-buy-and-sell-stock-ii](https://github.com/Gulabjangid/DSA/tree/master/0122-best-time-to-buy-and-sell-stock-ii) |
@@ -426,4 +428,8 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | ------- |
 | [0700-search-in-a-binary-search-tree](https://github.com/Gulabjangid/DSA/tree/master/0700-search-in-a-binary-search-tree) |
 | [0701-insert-into-a-binary-search-tree](https://github.com/Gulabjangid/DSA/tree/master/0701-insert-into-a-binary-search-tree) |
+## Memoization
+|  |
+| ------- |
+| [0070-climbing-stairs](https://github.com/Gulabjangid/DSA/tree/master/0070-climbing-stairs) |
 <!---LeetCode Topics End-->
