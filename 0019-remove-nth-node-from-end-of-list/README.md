@@ -1,56 +1,55 @@
 # 0019-remove-nth-node-from-end-of-list
 
 ## 📋 Problem Description
-Given the `head` of a singly linked list, the task is to remove the `n`-th node from the *end* of the list and return the `head` of the modified list.
+Given the `head` of a singly linked list and an integer `n`, the task is to remove the `n`-th node from the *end* of the list and return the `head` of the modified list.
 
-The function `removeNthFromEnd` receives two arguments:
-*   `head`: A pointer to the first node of the linked list.
-*   `n`: An integer representing the position of the node to be removed, counting from the end of the list (1-indexed).
+The function receives two arguments:
+- `head`: A pointer to the first node of the linked list.
+- `n`: An integer representing the position from the end of the list of the node to be removed.
 
-It must return a pointer to the `head` of the modified linked list after the specified node has been removed.
+It must return a `ListNode*` representing the head of the modified linked list.
 
 ## 🔍 Examples
 ```
 Input: head = [1,2,3,4,5], n = 2
 Output: [1,2,3,5]
-Explanation: The 2nd node from the end is 4. After removing it, the list becomes 1->2->3->5.
+Explanation: The 2nd node from the end is 4. After removing it, the list becomes [1,2,3,5].
 ```
 
 ```
 Input: head = [1], n = 1
 Output: []
-Explanation: The 1st node from the end is 1 (the head). After removing it, the list is empty.
+Explanation: The 1st node from the end is 1. After removing it, the list becomes empty.
 ```
 
 ```
 Input: head = [1,2], n = 1
 Output: [1]
-Explanation: The 1st node from the end is 2. After removing it, the list becomes 1.
+Explanation: The 1st node from the end is 2. After removing it, the list becomes [1].
 ```
 
 ## 📌 Constraints
 *   The number of nodes in the list (`sz`) is between 1 and 30.
-*   Node values (`Node.val`) are between 0 and 100.
-*   `n` is between 1 and `sz`. This guarantees that `n` will always be a valid position within the list, and we won't be asked to remove a non-existent node.
+*   `0 <= Node.val <= 100`
+*   `1 <= n <= sz`
 
 ## 🤔 Understanding the Problem
-The problem asks us to delete a specific node from a linked list, but its position is given relative to the *end* of the list, not the beginning. This makes it tricky because linked lists are inherently forward-traversal structures; we cannot easily go backward to find a node from the end. A straightforward approach might involve two passes: one to determine the total length of the list, and a second pass to find and remove the `(length - n + 1)`-th node from the beginning. However, the problem's "Follow up" explicitly asks for a one-pass solution, which hints at a more clever approach. An important edge case to consider is when the node to be removed is the head of the list itself.
+The core challenge here is to remove a node based on its position from the *end* of a singly linked list. Unlike arrays, linked lists don't allow direct access to elements by index, and we can only traverse them in one direction (forward). A naive approach might involve two passes: one to count the total number of nodes, and another to find the `(total_nodes - n)`-th node from the beginning and remove it. The problem's "Follow up" explicitly asks for a solution that accomplishes this in a single pass, which is the non-trivial aspect. We also need to consider the edge case where the node to be removed is the head of the list itself.
 
 ## 💡 Core Idea
-To remove the Nth node from the end in a single pass, we can use two pointers, `slow` and `fast`. By maintaining a fixed gap of `n` nodes between `fast` and `slow`, when `fast` reaches the end of the list, `slow` will naturally be positioned just before the node we need to remove.
+To remove the `n`-th node from the end in a single pass, we can use two pointers that maintain a fixed distance of `n` nodes between them. When the faster pointer reaches the end of the list, the slower pointer will be positioned exactly at the node *just before* the one we need to remove.
 
 ## 🧠 Approach — Two Pointers
-This problem is a classic application of the **Two Pointers** pattern, specifically the "fast and slow" pointer variant. This pattern is ideal for linked list problems where you need to find a node relative to another node's position or the end of the list, often in a single pass. Here, we use two pointers to create a "window" of `n` nodes. By moving the `fast` pointer `n` steps ahead initially, we establish this window. Then, both pointers move simultaneously. When the `fast` pointer reaches the end of the list, the `slow` pointer will be at the correct position to perform the deletion.
+This problem is a classic application of the **Two Pointers** pattern, specifically the "fast and slow pointer" variant. This pattern is particularly effective for linked list problems where you need to find a node relative to another node or the end of the list without knowing the total length beforehand. By initializing two pointers and moving one `n` steps ahead of the other, we create a fixed gap. As both pointers then traverse the rest of the list simultaneously, the `slow` pointer will naturally align itself to the correct position for removal when the `fast` pointer reaches the end.
 
 ## 📝 Step-by-Step Algorithm
-1.  **Initialize Pointers**: Create two pointers, `slow` and `fast`, and initialize both to point to the `head` of the linked list.
-2.  **Establish Gap**: Move the `fast` pointer `n` steps forward. This creates a gap of `n` nodes between `slow` and `fast`.
-    *   For example, if `n=2`, `fast` will move two steps ahead.
-3.  **Handle Head Removal Edge Case**: After moving `fast`, check if `fast` is `NULL`. If `fast` is `NULL`, it means the original list had exactly `n` nodes, and thus the `n`-th node from the end is the `head` itself. In this special case, the new head will be `head->next`, so return `head->next`.
-4.  **Advance Both Pointers**: If `fast` is not `NULL`, proceed to move both `slow` and `fast` pointers simultaneously, one step at a time. Continue this process until `fast->next` becomes `NULL`.
-    *   When `fast->next` is `NULL`, it signifies that `fast` is currently at the last node of the list. Due to the initial `n`-step head start, `slow` will now be pointing to the node *just before* the `n`-th node from the end.
-5.  **Perform Deletion**: At this point, `slow` is pointing to the node that precedes the target node to be removed. The target node is `slow->next`. To remove `slow->next`, update `slow->next` to point to `slow->next->next`. This effectively bypasses the target node, removing it from the list.
-6.  **Return Head**: Return the original `head` of the list. If the head itself was removed, this was handled in Step 3. Otherwise, the head remains the same.
+1.  **Initialize Pointers**: Create two pointers, `slow` and `fast`, and set both to point to the `head` of the linked list.
+2.  **Create Gap**: Move the `fast` pointer `n` steps forward. This establishes a gap of `n` nodes between `slow` and `fast`.
+3.  **Handle Head Removal Edge Case**: After moving `fast` `n` steps, check if `fast` is now `nullptr`. If it is, it means the original list had exactly `n` nodes, and thus the `n`-th node from the end is the `head` itself. In this scenario, the new head should be `head->next`. Return `head->next`.
+4.  **Traverse Simultaneously**: If `fast` is not `nullptr`, proceed to move both `slow` and `fast` pointers one step at a time, simultaneously. Continue this process until `fast->next` becomes `nullptr`. This condition signifies that `fast` has reached the very last node of the list.
+5.  **Position for Removal**: When `fast->next` is `nullptr`, the `slow` pointer will be positioned at the node *immediately preceding* the `n`-th node from the end. The node to be removed is `slow->next`.
+6.  **Perform Removal**: To remove the target node (`slow->next`), update the `next` pointer of the `slow` node. Set `slow->next = slow->next->next`. This effectively bypasses the target node, removing it from the list.
+7.  **Return Head**: Finally, return the original `head` of the list. This `head` might have been modified in step 3 if the head itself was removed, or it remains the same if an intermediate node was removed.
 
 ## 💻 Solution
 ```cpp
@@ -69,46 +68,42 @@ public:
     ListNode* removeNthFromEnd(ListNode* head, int n) {
 
         // Initialize two pointers, 'slow' and 'fast', both starting at the head.
-        // The 'slow' pointer will eventually stop at the node *before* the one to be removed.
-        // The 'fast' pointer will be 'n' steps ahead of 'slow'.
+        // These pointers will maintain a gap of 'n' nodes between them.
         ListNode* slow = head;
         ListNode* fast = head;
 
-        // Step 1: Move the 'fast' pointer 'n' steps ahead of 'slow'.
-        // This creates a gap of 'n' nodes between 'slow' and 'fast'.
-        // For example, if n=2, fast will move two steps ahead.
+        // Step 1: Move the 'fast' pointer 'n' steps ahead.
+        // This establishes the required 'n' node gap.
         for (int i = 0; i < n; i++) {
             fast = fast->next;
         }
 
-        // Step 2: Handle the edge case where the node to be removed is the head itself.
-        // This occurs if 'fast' becomes NULL after moving 'n' steps.
-        // For example, if the list is [1,2,3] and n=3, 'fast' moves 3 steps and becomes NULL.
-        // In this scenario, the 3rd node from the end is '1' (the head).
+        // Step 2: Handle the edge case where the 'n'-th node from the end is the head itself.
+        // If 'fast' is now NULL, it means we moved 'n' steps and reached the end,
+        // implying the list had exactly 'n' nodes, and we need to remove the first one.
         if (fast == NULL) {
-            // If 'fast' is NULL, it means the original head needs to be removed.
-            // The new head will be the node that was originally 'head->next'.
+            // The new head will be the second node (or NULL if the list had only one node).
             return head->next;
         }
 
-        // Step 3: Move both 'slow' and 'fast' pointers simultaneously, one step at a time.
-        // Continue this until 'fast' reaches the end of the list (i.e., 'fast->next' is NULL).
-        // When 'fast->next' is NULL, 'fast' is at the last node.
-        // Because 'fast' was initially 'n' steps ahead, 'slow' will now be at the node
-        // *just before* the 'n'-th node from the end.
+        // Step 3: Move both 'slow' and 'fast' pointers simultaneously
+        // until 'fast' reaches the last node of the list.
+        // We stop when 'fast->next' is NULL, meaning 'fast' is at the last node.
+        // At this point, 'slow' will be pointing to the node *just before* the
+        // node we need to remove.
         while (fast->next != NULL) {
-            fast = fast->next;
-            slow = slow->next;
+            fast = fast->next; // Move fast pointer
+            slow = slow->next; // Move slow pointer
         }
         
-        // Step 4: 'slow' is now pointing to the node *before* the target node to be removed.
+        // Step 4: 'slow' is now at the node *before* the target node to be removed.
         // The target node is 'slow->next'.
-        // To remove 'slow->next', we update 'slow->next' to point to 'slow->next->next'.
-        // This effectively bypasses the target node, removing it from the list.
+        // To remove it, we bypass it by making 'slow->next' point to 'slow->next->next'.
+        // This effectively removes the node 'slow->next' from the list.
         slow->next = slow->next->next;
 
-        // Step 5: Return the original head of the list.
-        // If the head was removed, it was handled in Step 2. Otherwise, the head remains the same.
+        // Step 5: Return the original head of the list, which might have been modified
+        // if the head itself was removed (handled in Step 2) or if an intermediate node was removed.
         return head;
     }
 };
@@ -117,8 +112,8 @@ public:
 ## ⏱️ Complexity Analysis
 | | Complexity | Reason |
 |---|---|---|
-| **Time** | O(L) | The algorithm iterates through the linked list at most twice (once for the `fast` pointer to move `n` steps, then both pointers move until `fast` reaches the end). In the worst case, `fast` traverses the entire list, and `slow` traverses `(L-n)` nodes. This is equivalent to a single pass over the list, where `L` is the number of nodes. |
-| **Space** | O(1) | The algorithm uses a constant amount of extra space for the two pointers (`slow` and `fast`), regardless of the list's size. |
+| **Time** | O(L) | The algorithm involves a single pass through the linked list. The `fast` pointer moves `n` steps, and then both `fast` and `slow` pointers move together for `L-n` steps. In total, we traverse the list approximately `L` times. |
+| **Space** | O(1) | We only use a constant amount of extra space for the `slow` and `fast` pointers, regardless of the list's length. |
 
 ## 🔗 Related Problems
 - 141. Linked List Cycle
