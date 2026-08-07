@@ -450,4 +450,16 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 |  |
 | ------- |
 | [0070-climbing-stairs](https://github.com/Gulabjangid/DSA/tree/master/0070-climbing-stairs) |
+## Primality Test
+|  |
+| ------- |
+| [0204-count-primes](https://github.com/Gulabjangid/DSA/tree/master/0204-count-primes) |
+## Sieve Theory
+|  |
+| ------- |
+| [0204-count-primes](https://github.com/Gulabjangid/DSA/tree/master/0204-count-primes) |
+## Prime Number Sieve
+|  |
+| ------- |
+| [0204-count-primes](https://github.com/Gulabjangid/DSA/tree/master/0204-count-primes) |
 <!---LeetCode Topics End-->
