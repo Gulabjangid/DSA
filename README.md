@@ -138,6 +138,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0326-power-of-three](https://github.com/Gulabjangid/DSA/tree/master/0326-power-of-three) |
 | [0342-power-of-four](https://github.com/Gulabjangid/DSA/tree/master/0342-power-of-four) |
 | [0445-add-two-numbers-ii](https://github.com/Gulabjangid/DSA/tree/master/0445-add-two-numbers-ii) |
+| [2427-number-of-common-factors](https://github.com/Gulabjangid/DSA/tree/master/2427-number-of-common-factors) |
 ## Hash Table
 |  |
 | ------- |
@@ -411,10 +412,12 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 |  |
 | ------- |
 | [0204-count-primes](https://github.com/Gulabjangid/DSA/tree/master/0204-count-primes) |
+| [2427-number-of-common-factors](https://github.com/Gulabjangid/DSA/tree/master/2427-number-of-common-factors) |
 ## Number Theory
 |  |
 | ------- |
 | [0204-count-primes](https://github.com/Gulabjangid/DSA/tree/master/0204-count-primes) |
+| [2427-number-of-common-factors](https://github.com/Gulabjangid/DSA/tree/master/2427-number-of-common-factors) |
 ## Rolling Hash
 |  |
 | ------- |
@@ -462,4 +465,12 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 |  |
 | ------- |
 | [0204-count-primes](https://github.com/Gulabjangid/DSA/tree/master/0204-count-primes) |
+## Euclidean Algorithm
+|  |
+| ------- |
+| [2427-number-of-common-factors](https://github.com/Gulabjangid/DSA/tree/master/2427-number-of-common-factors) |
+## Greatest Common Divisor
+|  |
+| ------- |
+| [2427-number-of-common-factors](https://github.com/Gulabjangid/DSA/tree/master/2427-number-of-common-factors) |
 <!---LeetCode Topics End-->
