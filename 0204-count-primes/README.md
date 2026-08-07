@@ -1,91 +1,83 @@
 # 0204-count-primes
 
 ## 📋 Problem Description
-Given an integer `n`, the task is to determine and return the count of all prime numbers that are strictly less than `n`.
-
-A prime number is a natural number greater than 1 that has no positive divisors other than 1 and itself.
+Given a non-negative integer `n`, the task is to determine and return the total count of prime numbers that are strictly less than `n`. A prime number is a natural number greater than 1 that has no positive divisors other than 1 and itself.
 
 ## 🔍 Examples
 ```
 Input: n = 10
 Output: 4
-Explanation: The prime numbers strictly less than 10 are 2, 3, 5, and 7. There are 4 such numbers.
+Explanation: The prime numbers strictly less than 10 are 2, 3, 5, and 7.
 
 Input: n = 0
 Output: 0
-Explanation: There are no prime numbers less than 0.
 
 Input: n = 1
 Output: 0
-Explanation: There are no prime numbers less than 1.
 ```
 
 ## 📌 Constraints
 *   `0 <= n <= 5 * 10^6`
 
 ## 🤔 Understanding the Problem
-The problem asks us to count all prime numbers up to a given limit `n` (exclusive). A prime number is a positive integer greater than 1 that has no positive integer divisors other than 1 and itself. Numbers like 0, 1, and negative integers are not prime. The challenge lies in efficiently checking primality for a potentially large range of numbers, up to `5 * 10^6`. A naive approach of checking each number for primality using trial division would be too slow. We need a more optimized method to find all primes within the given range.
+The problem asks us to count all prime numbers within the range `[0, n-1]`. It's important to remember that 0 and 1 are not considered prime numbers. The number 2 is the first and only even prime number. Given the constraint `n` can be up to `5 * 10^6`, a naive approach of checking each number for primality individually (e.g., by trial division up to its square root) would be too slow, as it would involve `O(N * sqrt(N))` operations. We need a more efficient method to find all primes up to a given limit.
 
 ## 💡 Core Idea
-Instead of individually testing each number for primality, we can use an efficient method to *eliminate* composite numbers. The key insight is that every composite number has a prime factor less than or equal to its square root. By iteratively marking multiples of prime numbers as composite, we can quickly identify all primes up to `n`.
+The most efficient algorithm for finding all prime numbers up to a specified limit `n` is the **Sieve of Eratosthenes**. This algorithm works by iteratively marking the multiples of each prime number as composite (not prime), thereby leaving only the prime numbers unmarked.
 
 ## 🧠 Approach — Sieve of Eratosthenes
-This problem is a classic application of the **Sieve of Eratosthenes** algorithm. This pattern is specifically designed for finding all prime numbers up to a given limit `n`. It works by maintaining a boolean array (or similar data structure) where each index `i` corresponds to the number `i`. Initially, all numbers are assumed to be prime. The algorithm then iteratively finds the next unmarked number (which must be prime) and marks all its multiples as composite (not prime). This process avoids redundant checks and is significantly faster than checking each number for primality individually, making it highly efficient for finding all primes within a range.
+This problem is a classic application of the **Sieve of Eratosthenes** algorithm. This pattern is perfectly suited for scenarios where you need to find all prime numbers up to a certain limit `n`, rather than just checking the primality of a single number. The Sieve avoids redundant calculations by efficiently identifying and marking all composite numbers. It starts with the smallest prime (2), marks all its multiples as non-prime, then moves to the next unmarked number (which must be prime), and repeats the process. This systematic elimination ensures that by the end, only prime numbers remain marked as true.
 
 ## 📝 Step-by-Step Algorithm
-1.  **Initialize Primality Array:** Create a boolean array, let's call it `isprime`, of size `n+1`. Initialize all entries from index 0 to `n` as `true`, assuming all numbers are initially prime.
-2.  **Handle Base Cases:** Numbers 0 and 1 are not prime. While the algorithm's main loop starts from 2, it's good to remember these aren't counted. For `n <= 2`, the count of primes will be 0.
-3.  **Initialize Count:** Set a counter variable, `count`, to 0. This will store the total number of primes found.
-4.  **Iterate Through Numbers:** Start a loop from `i = 2` up to `n-1` (since we need primes *strictly less than* `n`).
-5.  **Check for Primality:** Inside the loop, if `isprime[i]` is `true`, it means `i` has not been marked as composite by any smaller prime. Therefore, `i` is a prime number.
-    *   Increment `count`.
-    *   **Mark Multiples:** Since `i` is prime, all its multiples (i.e., `2*i`, `3*i`, `4*i`, and so on) cannot be prime. Start another inner loop from `j = i*2` and increment `j` by `i` in each step (i.e., `j = j + i`). For each such `j` that is less than `n`, set `isprime[j]` to `false`. This efficiently marks all multiples of `i` as composite.
-6.  **Return Count:** After the outer loop finishes, `count` will hold the total number of prime numbers strictly less than `n`. Return `count`.
+1.  **Initialization**: Create a boolean array, let's call it `isPrime`, of size `n`. Initialize all elements from index 0 to `n-1` to `true`. This array will store whether each number is considered prime (`true`) or not (`false`).
+2.  **Handle Edge Cases**: If `n` is 0, 1, or 2, there are no prime numbers strictly less than `n`. In these cases, return 0 immediately.
+3.  **Prime Count**: Initialize an integer variable `count` to 0. This variable will keep track of the total number of primes found.
+4.  **Iterate and Sieve**: Loop through numbers `i` starting from 2 up to `n-1`.
+    a.  **Check Primality**: Inside the loop, if `isPrime[i]` is `true`, it means `i` has not been marked as a multiple of any smaller prime. Therefore, `i` itself must be a prime number.
+    b.  **Increment Count**: If `i` is prime, increment `count`.
+    c.  **Mark Multiples**: Now that `i` is confirmed as a prime, mark all its multiples (starting from `2*i`) as not prime. Iterate with `j` starting from `2*i` and incrementing by `i` (i.e., `2*i, 3*i, 4*i, ...`) as long as `j` is less than `n`. For each such `j`, set `isPrime[j] = false`.
+        *   *Note*: We start marking from `2*i` because `1*i` (which is `i` itself) is prime. An optimization often used is to start marking from `i*i`, because any multiple `k*i` where `k < i` would have already been marked by a smaller prime factor `k`. However, starting from `2*i` is also correct and simpler to implement if `i*i` might overflow or if the performance difference is negligible for the given constraints.
+5.  **Return Result**: After the loop completes, `count` will hold the total number of prime numbers strictly less than `n`. Return `count`.
 
 ## 💻 Solution
 ```cpp
 class Solution {
 public:
     int countPrimes(int n) {
-        // Handle edge cases where n is 0, 1, or 2.
-        // No primes are strictly less than or equal to 2.
+        // Create a boolean array `isPrime` of size `n`.
+        // Initialize all elements to `true`, assuming all numbers are prime initially.
+        // `isPrime[i]` will be `true` if `i` is prime, `false` otherwise.
+        // Indices 0 and 1 will remain true but are not considered in the counting loop.
+        vector<bool> isPrime(n, true);
+
+        // Base cases: Numbers less than or equal to 2 have no primes strictly less than them.
+        // (0 and 1 are not prime. 2 is prime, but we're looking for primes *less than* n).
         if (n <= 2) {
             return 0;
         }
 
-        // Create a boolean vector 'isprime' of size 'n'.
-        // Initialize all entries to 'true', assuming all numbers are prime initially.
-        // We only care about numbers up to n-1, so size n is sufficient.
-        // isprime[i] will be true if i is prime, false otherwise.
-        // Note: The problem asks for primes strictly less than n, so we check up to n-1.
-        // The vector size n means indices 0 to n-1 are valid.
-        std::vector<bool> isprime(n, true);
-
         // Initialize a counter for prime numbers.
         int count = 0;
 
-        // The Sieve of Eratosthenes algorithm starts checking from 2.
-        // Numbers 0 and 1 are not prime, so we don't need to process them.
-        for (int i = 2; i < n; ++i) {
-            // If isprime[i] is true, it means 'i' has not been marked as composite yet.
-            // Therefore, 'i' is a prime number.
-            if (isprime[i]) {
+        // Iterate from 2 up to n-1. We start from 2 because it's the first prime number.
+        // 0 and 1 are not prime and are implicitly handled by starting the loop at 2.
+        for (int i = 2; i < n; i++) {
+            // If `isPrime[i]` is true, it means `i` has not been marked as a multiple
+            // of any smaller prime. Therefore, `i` itself must be a prime number.
+            if (isPrime[i]) {
                 // Increment the prime count.
                 count++;
 
-                // Mark all multiples of 'i' as not prime.
-                // We start marking from i*2 because i*1 is 'i' itself (which is prime).
-                // Any multiple k*i where k < i would have already been marked by a smaller prime factor.
-                // For example, for i=2, we mark 4, 6, 8...
-                // For i=3, we mark 6, 9, 12... (6 is already marked by 2, which is fine)
-                // The loop continues as long as j is less than n.
-                for (long long j = (long long)i * i; j < n; j += i) {
-                    // Optimization: We can start marking multiples from i*i.
-                    // Any multiple k*i where k < i would have already been marked
-                    // by a prime factor smaller than i (or by k itself if k is prime).
-                    // For example, for i=5, we start marking from 25.
-                    // Multiples like 10, 15, 20 would have already been marked by 2 or 3.
-                    isprime[j] = false;
+                // Mark all multiples of `i` as not prime.
+                // We start marking from `i * 2` because `i * 1` (which is `i` itself) is prime.
+                // The loop condition `j < n` ensures we only mark numbers within our array bounds.
+                // `j += i` moves to the next multiple of `i`.
+                // For example, if i=2, it marks 4, 6, 8...
+                // If i=3, it marks 6, 9, 12... (6 might already be marked by 2, which is harmless).
+                // Note: `i * 2` will not overflow an `int` for `n` up to `5 * 10^6`
+                // as `2 * 5 * 10^6 = 10^7`, which fits within a 32-bit signed integer.
+                for (int j = i * 2; j < n; j += i) {
+                    isPrime[j] = false;
                 }
             }
         }
@@ -93,16 +85,15 @@ public:
         return count;
     }
 };
-
 ```
 
 ## ⏱️ Complexity Analysis
 | | Complexity | Reason |
 |---|---|---|
-| **Time** | O(N log log N) | The Sieve of Eratosthenes algorithm has a time complexity of approximately N multiplied by the natural logarithm of the natural logarithm of N. This is highly efficient for finding all primes up to N. |
-| **Space** | O(N) | We use a boolean vector of size `N` to store the primality status for each number up to `N-1`. |
+| **Time** | O(N log log N) | The Sieve of Eratosthenes has a time complexity dominated by the marking process. Each number `i` causes its multiples `i, 2i, 3i, ...` to be visited. The sum of `N/p` for all primes `p < N` is approximately `N log log N`. |
+| **Space** | O(N) | We use a boolean vector `isPrime` of size `N` to store the primality status for each number from 0 to `N-1`. |
 
 ## 🔗 Related Problems
+- 1175. Prime Arrangements
 - 263. Ugly Number
-- 264. Ugly Number II
-- 172. Factorial Trailing Zeroes
+- 762. Prime Number of Set Bits
