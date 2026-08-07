@@ -108,6 +108,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0918-maximum-sum-circular-subarray](https://github.com/Gulabjangid/DSA/tree/master/0918-maximum-sum-circular-subarray) |
 | [0977-squares-of-a-sorted-array](https://github.com/Gulabjangid/DSA/tree/master/0977-squares-of-a-sorted-array) |
 | [2596-check-knight-tour-configuration](https://github.com/Gulabjangid/DSA/tree/master/2596-check-knight-tour-configuration) |
+| [2761-prime-pairs-with-target-sum](https://github.com/Gulabjangid/DSA/tree/master/2761-prime-pairs-with-target-sum) |
 ## Binary Search
 |  |
 | ------- |
@@ -139,6 +140,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0342-power-of-four](https://github.com/Gulabjangid/DSA/tree/master/0342-power-of-four) |
 | [0445-add-two-numbers-ii](https://github.com/Gulabjangid/DSA/tree/master/0445-add-two-numbers-ii) |
 | [2427-number-of-common-factors](https://github.com/Gulabjangid/DSA/tree/master/2427-number-of-common-factors) |
+| [2761-prime-pairs-with-target-sum](https://github.com/Gulabjangid/DSA/tree/master/2761-prime-pairs-with-target-sum) |
 ## Hash Table
 |  |
 | ------- |
@@ -413,11 +415,13 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | ------- |
 | [0204-count-primes](https://github.com/Gulabjangid/DSA/tree/master/0204-count-primes) |
 | [2427-number-of-common-factors](https://github.com/Gulabjangid/DSA/tree/master/2427-number-of-common-factors) |
+| [2761-prime-pairs-with-target-sum](https://github.com/Gulabjangid/DSA/tree/master/2761-prime-pairs-with-target-sum) |
 ## Number Theory
 |  |
 | ------- |
 | [0204-count-primes](https://github.com/Gulabjangid/DSA/tree/master/0204-count-primes) |
 | [2427-number-of-common-factors](https://github.com/Gulabjangid/DSA/tree/master/2427-number-of-common-factors) |
+| [2761-prime-pairs-with-target-sum](https://github.com/Gulabjangid/DSA/tree/master/2761-prime-pairs-with-target-sum) |
 ## Rolling Hash
 |  |
 | ------- |
