@@ -139,6 +139,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0326-power-of-three](https://github.com/Gulabjangid/DSA/tree/master/0326-power-of-three) |
 | [0342-power-of-four](https://github.com/Gulabjangid/DSA/tree/master/0342-power-of-four) |
 | [0445-add-two-numbers-ii](https://github.com/Gulabjangid/DSA/tree/master/0445-add-two-numbers-ii) |
+| [2119-a-number-after-a-double-reversal](https://github.com/Gulabjangid/DSA/tree/master/2119-a-number-after-a-double-reversal) |
 | [2427-number-of-common-factors](https://github.com/Gulabjangid/DSA/tree/master/2427-number-of-common-factors) |
 | [2761-prime-pairs-with-target-sum](https://github.com/Gulabjangid/DSA/tree/master/2761-prime-pairs-with-target-sum) |
 ## Hash Table
