@@ -1,18 +1,22 @@
 # 0015-3sum
 
 ## 📋 Problem Description
-Given an integer array `nums`, the task is to find and return all unique triplets `[nums[i], nums[j], nums[k]]` such that `i`, `j`, and `k` are distinct indices, and their corresponding values sum up to zero (`nums[i] + nums[j] + nums[k] == 0`).
+Given an integer array `nums`, the task is to find all unique triplets `[nums[i], nums[j], nums[k]]` such that `i`, `j`, and `k` are distinct indices, and their corresponding values sum up to zero (`nums[i] + nums[j] + nums[k] == 0`).
 
-The solution set must not contain any duplicate triplets. The order of the triplets or the order of elements within a triplet does not matter.
+The solution set must not contain duplicate triplets. The order of the output triplets and the order of elements within a triplet does not matter.
+
+The function `threeSum` receives an integer array `nums` as input and must return a `vector<vector<int>>` containing all such unique triplets.
 
 ## 🔍 Examples
 ```
 Input: nums = [-1,0,1,2,-1,-4]
 Output: [[-1,-1,2],[-1,0,1]]
 Explanation: 
-The distinct triplets that sum to 0 are:
-(-1) + 0 + 1 = 0
-(-1) + (-1) + 2 = 0
+The triplets that sum to 0 are:
+(-1) + 0 + 1 = 0 (from indices 0, 1, 2)
+0 + 1 + (-1) = 0 (from indices 1, 2, 4)
+(-1) + 2 + (-1) = 0 (from indices 0, 3, 4)
+The distinct triplets are [-1,0,1] and [-1,-1,2].
 ```
 
 ```
@@ -32,39 +36,30 @@ Explanation: The only possible triplet sums up to 0.
 *   `-10^5 <= nums[i] <= 10^5`
 
 ## 🤔 Understanding the Problem
-The core of this problem is to find three numbers in an array that add up to zero. The main challenges are ensuring that the three numbers come from distinct indices, efficiently finding all such combinations, and critically, making sure that the final list of triplets contains no duplicates. A naive approach of checking all possible combinations (O(N^3)) would be too slow for the given constraints, and handling duplicates would still be complex.
+The problem asks us to find all combinations of three distinct numbers from a given array that add up to zero. The main challenge is twofold: first, to do this efficiently for arrays up to 3000 elements (a naive O(N^3) approach would be too slow); second, to ensure that the final list of triplets contains only unique combinations, even if the input array has duplicate numbers. For example, if `nums = [-1, -1, 2]`, `[-1, -1, 2]` is a valid triplet, but if the array was `[-1, -1, -1, 2, 2]`, we should still only output `[-1, -1, 2]` once.
 
 ## 💡 Core Idea
-The most effective way to solve this problem efficiently and handle duplicates is to first sort the input array. Once sorted, we can iterate through each number and use a Two Pointers technique on the remaining part of the array to find the other two numbers that sum to the required target.
+The most crucial insight is to first **sort the input array**. Sorting allows us to efficiently search for complementary numbers using a two-pointer technique and also simplifies the process of skipping duplicate elements to ensure unique triplets in the output.
 
 ## 🧠 Approach — Two Pointers
-This problem is a classic application of the **Two Pointers** pattern, combined with sorting.
-The Two Pointers technique is ideal here because once the array is sorted, we can fix one element and then efficiently search for the remaining two elements that complete the sum. By moving two pointers (one from the left, one from the right) inwards, we can adjust the sum based on whether it's too small or too large, quickly converging to the target. Sorting also simplifies the process of skipping duplicate elements, which is crucial for ensuring a unique set of triplets in the output.
+This problem is a classic application of the **Two Pointers** pattern, combined with an initial sorting step.
+The Two Pointers pattern is highly effective when dealing with sorted arrays where you need to find pairs of elements that satisfy a certain condition (like summing to a target). By sorting the array, we can fix one element and then use two pointers (one starting from the element after the fixed one, and one from the end of the array) to search for the remaining two elements. This approach allows us to adjust the sum by moving the pointers inward or outward, drastically reducing the search space compared to a brute-force approach. The sorted order also makes it straightforward to detect and skip duplicate elements, which is essential for satisfying the "no duplicate triplets" requirement.
 
 ## 📝 Step-by-Step Algorithm
-
-1.  **Sort the Array**: Begin by sorting the input array `nums` in non-decreasing order. This step is fundamental for both the Two Pointers approach and for effectively handling duplicate triplets.
-
-2.  **Initialize Result List**: Create an empty `vector<vector<int>>` called `ans` to store all the unique triplets that sum to zero.
-
-3.  **Iterate for the First Element**:
-    *   Loop through the sorted array using an index `i` from `0` up to `nums.size() - 3` (we need at least two elements after `nums[i]` to form a triplet).
-    *   **Skip Duplicates for `nums[i]`**: To avoid duplicate triplets, if `i > 0` and `nums[i]` is the same as `nums[i-1]`, `continue` to the next iteration. This ensures that we only consider unique values for the first element of our triplet.
-
-4.  **Two Pointers for Remaining Elements**:
-    *   Inside the loop for `i`, initialize two pointers: `j` starting at `i + 1` (the element immediately after `nums[i]`) and `k` starting at `nums.size() - 1` (the last element of the array).
-    *   Enter a `while` loop that continues as long as `j < k`. This loop searches for the second and third elements of the triplet.
-
-5.  **Calculate Sum and Adjust Pointers**:
-    *   Calculate the current sum: `current_sum = nums[i] + nums[j] + nums[k]`. It's good practice to cast to `long long` for `sum` to prevent potential integer overflow, especially if `nums[i]` could be large positive values, though for this problem's constraints, `int` would usually suffice.
-    *   **If `current_sum == 0`**:
-        *   A valid triplet `[nums[i], nums[j], nums[k]]` has been found. Add it to the `ans` list.
-        *   **Skip Duplicates for `nums[j]` and `nums[k]`**: To ensure uniqueness of triplets, increment `j` while `j < k` and `nums[j]` is equal to `nums[j+1]`. Similarly, decrement `k` while `j < k` and `nums[k]` is equal to `nums[k-1]`. This moves the pointers past any identical elements.
-        *   After skipping duplicates, move `j` one step forward (`j++`) and `k` one step backward (`k--`) to find the next potential unique pair.
-    *   **If `current_sum < 0`**: The sum is too small. To increase the sum, increment the left pointer `j` (`j++`).
-    *   **If `current_sum > 0`**: The sum is too large. To decrease the sum, decrement the right pointer `k` (`k--`).
-
-6.  **Return Result**: After the outer loop finishes, return the `ans` list containing all unique triplets that sum to zero.
+1.  **Sort the Array**: Begin by sorting the input array `nums` in non-decreasing order. This is crucial for both the two-pointer approach and for efficiently handling duplicates.
+2.  **Initialize Result**: Create an empty `vector<vector<int>>` called `ans` to store the unique triplets.
+3.  **Iterate with First Pointer (`i`)**: Loop through the sorted array using an index `i` from the beginning up to `nums.size() - 3`. This `nums[i]` will be the first element of our potential triplet.
+    *   **Skip Duplicates for `nums[i]`**: To avoid duplicate triplets, if `i` is not the first element (`i > 0`) and `nums[i]` is the same as the previous element `nums[i-1]`, then skip this iteration and continue to the next `i`. This ensures that we only consider unique values for the first element of a triplet.
+4.  **Initialize Two Pointers (`j` and `k`)**: For each `nums[i]`, set a second pointer `j` to `i + 1` (the element immediately after `nums[i]`) and a third pointer `k` to `nums.size() - 1` (the last element of the array).
+5.  **Two-Pointer Search**: While `j` is less than `k` (meaning there are at least two elements remaining to form a pair):
+    *   **Calculate Sum**: Compute the current sum: `current_sum = nums[i] + nums[j] + nums[k]`.
+    *   **Found Triplet**: If `current_sum == 0`:
+        *   A valid triplet `[nums[i], nums[j], nums[k]]` has been found. Add it to `ans`.
+        *   **Skip Duplicates for `nums[j]` and `nums[k]`**: To ensure unique triplets, increment `j` while `j < k` and `nums[j]` is equal to `nums[j+1]`. Similarly, decrement `k` while `j < k` and `nums[k]` is equal to `nums[k-1]`. This moves `j` and `k` past any duplicate values they might be pointing to.
+        *   **Move Pointers**: After handling duplicates, move `j` one step forward (`j++`) and `k` one step backward (`k--`) to search for the next distinct pair.
+    *   **Sum Too Small**: If `current_sum < 0`: The sum is too small. To increase the sum, increment `j` (`j++`) to consider a larger second number.
+    *   **Sum Too Large**: If `current_sum > 0`: The sum is too large. To decrease the sum, decrement `k` (`k--`) to consider a smaller third number.
+6.  **Return Result**: After the outer loop completes, return the `ans` vector containing all unique triplets that sum to zero.
 
 ## 💻 Solution
 
@@ -72,86 +67,89 @@ The Two Pointers technique is ideal here because once the array is sorted, we ca
 class Solution {
 public:
     vector<vector<int>> threeSum(vector<int>& nums) {
-        vector<vector<int>> ans; // This will store our unique triplets.
-
+        vector<vector<int>> ans; // This will store our resulting unique triplets.
+        
         // Step 1: Sort the input array.
         // Sorting is crucial for two reasons:
-        // 1. It allows us to use the Two Pointers technique efficiently.
-        // 2. It makes it easy to skip duplicate elements.
+        // 1. It allows us to use the two-pointer technique efficiently.
+        // 2. It makes it easy to skip duplicate elements to ensure unique triplets.
         sort(nums.begin(), nums.end());
-
-        // Step 2: Iterate through the array to fix the first element (nums[i]).
-        // We iterate up to nums.size() - 2 because we need at least two more elements
-        // (nums[j] and nums[k]) after nums[i] to form a triplet.
+        
+        // Iterate through the array with 'i' as the first element of the triplet.
+        // We go up to nums.size() - 2 because we need at least two more elements (j and k)
+        // after 'i' to form a triplet.
         for (int i = 0; i < nums.size(); i++) {
-            // Step 3: Skip duplicates for the first element.
-            // If the current element is the same as the previous one,
-            // it means we've already considered this value as the first element
-            // in a previous iteration, so we skip it to avoid duplicate triplets.
+            // Step 3a: Skip duplicates for the first element (nums[i]).
+            // If 'i' is not the first element and nums[i] is the same as the previous element,
+            // it means we've already processed this value as a first element in the previous iteration.
+            // Skipping it prevents duplicate triplets in the output.
             if (i > 0 && nums[i] == nums[i - 1]) {
-                continue;
+                continue; 
             }
-
-            // Step 4: Initialize two pointers for the remaining part of the array.
+            
+            // Step 4: Initialize two pointers, 'j' and 'k'.
             // 'j' starts right after 'i'.
             // 'k' starts at the end of the array.
             int j = i + 1;
             int k = nums.size() - 1;
-
-            // Step 5: Use the Two Pointers technique to find the other two elements.
-            // This loop continues as long as the left pointer 'j' is less than the right pointer 'k'.
+            
+            // Step 5: Two-pointer search.
+            // Continue as long as 'j' is less than 'k' (meaning there are at least two elements
+            // between or at 'j' and 'k' to form a pair).
             while (j < k) {
-                // Calculate the sum of the three elements.
-                // Using 'long long' for sum is a safer practice to prevent potential integer overflow,
-                // although for the given constraints (-10^5 to 10^5), the sum would fit in an int.
+                // Calculate the sum of the three current elements.
+                // Using long long for sum to prevent potential integer overflow,
+                // as nums[i] can be up to 10^5, and 3 * 10^5 might exceed int max.
                 long long sum = (long long)nums[i] + nums[j] + nums[k];
-
+                
                 if (sum == 0) {
-                    // If the sum is 0, we found a valid triplet.
+                    // Step 5.i: Triplet found!
                     ans.push_back({nums[i], nums[j], nums[k]});
-
-                    // Step 6: Skip duplicates for the second and third elements.
-                    // After finding a triplet, we need to move 'j' and 'k' to the next
-                    // unique elements to avoid adding duplicate triplets.
+                    
+                    // Step 5.ii: Skip duplicates for the second (nums[j]) and third (nums[k]) elements.
+                    // After finding a valid triplet, we need to move 'j' and 'k' to the next
+                    // *unique* elements to avoid adding duplicate triplets.
                     while (j < k && nums[j] == nums[j + 1]) {
-                        j++; // Increment 'j' as long as it points to a duplicate.
+                        j++; // Increment 'j' while it points to a duplicate.
                     }
                     while (j < k && nums[k] == nums[k - 1]) {
-                        k--; // Decrement 'k' as long as it points to a duplicate.
+                        k--; // Decrement 'k' while it points to a duplicate.
                     }
 
-                    // Move pointers to the next unique elements.
-                    // Even after skipping duplicates, we still need to move 'j' and 'k'
-                    // one step further to continue the search for other triplets.
+                    // Step 5.iii: Move pointers to the next distinct elements.
+                    // After skipping duplicates, move 'j' and 'k' one step further
+                    // to continue the search for other triplets.
                     j++;
                     k--;
                 } else if (sum < 0) {
-                    // If the sum is less than 0, it means we need a larger sum.
-                    // To increase the sum, we move the left pointer 'j' forward
-                    // to consider a larger number.
+                    // Step 5.iv: Sum is too small.
+                    // To increase the sum, we need a larger second element.
+                    // So, increment 'j' to move towards larger values.
                     j++;
                 } else { // sum > 0
-                    // If the sum is greater than 0, it means we need a smaller sum.
-                    // To decrease the sum, we move the right pointer 'k' backward
-                    // to consider a smaller number.
+                    // Step 5.v: Sum is too large.
+                    // To decrease the sum, we need a smaller third element.
+                    // So, decrement 'k' to move towards smaller values.
                     k--;
                 }
             }
         }
-        return ans; // Return the list of unique triplets.
+        
+        // Step 6: Return the list of unique triplets.
+        return ans;
     }
 };
 
 ```
 
 ## ⏱️ Complexity Analysis
-
 | | Complexity | Reason |
 |---|---|---|
-| **Time** | O(N^2) | Sorting takes O(N log N). The outer loop runs N times, and the inner Two Pointers loop runs at most N times for each outer iteration, resulting in O(N * N) = O(N^2). The dominant factor is O(N^2). |
-| **Space** | O(log N) or O(N) | O(log N) for the sorting algorithm's auxiliary space (e.g., `std::sort` uses IntroSort, which is typically O(log N) for recursion stack). If the output list is counted, it could be O(N) in the worst case (e.g., if all numbers are 0, or many combinations sum to 0). |
+| **Time** | O(N^2) | Sorting takes O(N log N). The outer loop runs N times. The inner two-pointer loop runs at most N times for each `i`. Thus, N * N = O(N^2). Since O(N log N) is dominated by O(N^2), the overall time complexity is O(N^2). |
+| **Space** | O(N) | O(N) space is used for storing the `ans` vector in the worst case (e.g., if all elements are 0, or many combinations exist). If we consider auxiliary space (excluding the output list), it's O(log N) or O(N) depending on the specific sorting algorithm's implementation (e.g., quicksort uses O(log N) stack space, merge sort uses O(N) auxiliary space). |
 
 ## 🔗 Related Problems
-- 1. Two Sum
-- 16. 3Sum Closest
-- 18. 4Sum
+*   1. Two Sum
+*   16. 3Sum Closest
+*   18. 4Sum
+*   259. 3Sum Smaller
