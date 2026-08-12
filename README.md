@@ -74,6 +74,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0073-set-matrix-zeroes](https://github.com/Gulabjangid/DSA/tree/master/0073-set-matrix-zeroes) |
 | [0074-search-a-2d-matrix](https://github.com/Gulabjangid/DSA/tree/master/0074-search-a-2d-matrix) |
 | [0075-sort-colors](https://github.com/Gulabjangid/DSA/tree/master/0075-sort-colors) |
+| [0078-subsets](https://github.com/Gulabjangid/DSA/tree/master/0078-subsets) |
 | [0088-merge-sorted-array](https://github.com/Gulabjangid/DSA/tree/master/0088-merge-sorted-array) |
 | [0118-pascals-triangle](https://github.com/Gulabjangid/DSA/tree/master/0118-pascals-triangle) |
 | [0119-pascals-triangle-ii](https://github.com/Gulabjangid/DSA/tree/master/0119-pascals-triangle-ii) |
@@ -326,6 +327,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 |  |
 | ------- |
 | [0022-generate-parentheses](https://github.com/Gulabjangid/DSA/tree/master/0022-generate-parentheses) |
+| [0078-subsets](https://github.com/Gulabjangid/DSA/tree/master/0078-subsets) |
 | [0113-path-sum-ii](https://github.com/Gulabjangid/DSA/tree/master/0113-path-sum-ii) |
 | [0131-palindrome-partitioning](https://github.com/Gulabjangid/DSA/tree/master/0131-palindrome-partitioning) |
 | [0257-binary-tree-paths](https://github.com/Gulabjangid/DSA/tree/master/0257-binary-tree-paths) |
@@ -392,6 +394,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 ## Bit Manipulation
 |  |
 | ------- |
+| [0078-subsets](https://github.com/Gulabjangid/DSA/tree/master/0078-subsets) |
 | [0136-single-number](https://github.com/Gulabjangid/DSA/tree/master/0136-single-number) |
 | [0187-repeated-dna-sequences](https://github.com/Gulabjangid/DSA/tree/master/0187-repeated-dna-sequences) |
 | [0231-power-of-two](https://github.com/Gulabjangid/DSA/tree/master/0231-power-of-two) |
