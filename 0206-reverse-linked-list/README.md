@@ -1,30 +1,28 @@
 # 0206-reverse-linked-list
 
 ## 📋 Problem Description
-Given the `head` of a singly linked list, the task is to reverse the order of its nodes. After reversing, the function should return the `head` of the newly reversed list.
+Given the `head` of a singly linked list, the task is to reverse the order of its nodes. This means that if the original list was `A -> B -> C`, the reversed list should be `C -> B -> A`. The function should return the `head` of the newly reversed list.
 
-A singly linked list is a linear data structure where each node contains a value and a pointer (or reference) to the next node in the sequence. The last node's pointer typically points to `nullptr` (or `NULL`).
-
-Input: The `head` of a singly linked list.
-Output: The `head` of the reversed singly linked list.
+**Input:** The `head` of a singly linked list.
+**Output:** The `head` of the reversed singly linked list.
 
 ## 🔍 Examples
-Example 1:
 ```
 Input: head = [1,2,3,4,5]
 Output: [5,4,3,2,1]
+Explanation: The original list 1->2->3->4->5 is reversed to 5->4->3->2->1.
 ```
 
-Example 2:
 ```
 Input: head = [1,2]
 Output: [2,1]
+Explanation: The original list 1->2 is reversed to 2->1.
 ```
 
-Example 3:
 ```
 Input: head = []
 Output: []
+Explanation: An empty list remains an empty list after reversal.
 ```
 
 ## 📌 Constraints
@@ -32,27 +30,29 @@ Output: []
 *   `-5000 <= Node.val <= 5000`
 
 ## 🤔 Understanding the Problem
-The problem asks us to change the direction of all `next` pointers in a singly linked list. For instance, if we have `A -> B -> C`, after reversal, we want `A <- B <- C`, which effectively means `C` becomes the new head and points to `B`, `B` points to `A`, and `A` points to `NULL`. This is non-trivial because in a singly linked list, we can only move forward. If we change a node's `next` pointer to point backward, we lose the reference to the rest of the original list unless we save it first. Edge cases to consider include an empty list or a list with a single node; in both scenarios, the list remains unchanged after reversal.
+The core of this problem is to change the direction of the `next` pointers for each node in a singly linked list. Instead of `A -> B`, we want `A <- B`. This is non-trivial because simply changing `curr->next` to point to the `previous` node would cause us to lose the reference to the *next* node in the original sequence. We need a strategy to keep track of the original "next" node before modifying the current node's `next` pointer. Edge cases include an empty list (where `head` is `NULL`) and a list with only one node.
 
 ## 💡 Core Idea
-The core idea is to iterate through the linked list, and for each node, change its `next` pointer to point to the *previous* node. To safely achieve this without losing access to the rest of the list, we must temporarily store the *next* node in the original sequence before modifying the current node's `next` pointer.
+The key insight is to traverse the list node by node, and for each node, redirect its `next` pointer to point to the *previous* node. To do this safely without losing track of the rest of the list, we need to maintain three pointers: one for the `previous` node, one for the `current` node being processed, and one to temporarily store the `next` node in the original list.
 
 ## 🧠 Approach — Iterative Pointer Manipulation
-This problem is a classic example of iterative pointer manipulation in linked lists. We use this pattern because we need to traverse the list sequentially and modify the `next` pointers of each node. By maintaining three pointers (`prev`, `curr`, and `next`), we can safely reverse the links one by one without losing track of the rest of the list (by saving `curr->next` in `next`) or the already reversed portion (by updating `prev`). This approach processes each node exactly once, making it efficient.
+This problem is best solved using an **Iterative Pointer Manipulation** approach. This pattern is fundamental for in-place modifications of linked lists. It fits this problem perfectly because we need to re-wire the `next` pointers of each node without using additional data structures (like an array to store all nodes) that would consume extra space proportional to the list's length. By carefully managing three pointers, we can reverse the links one by one as we traverse the list, achieving an O(1) space complexity.
 
 ## 📝 Step-by-Step Algorithm
-1.  Initialize three pointers:
-    *   `prev`: This pointer will keep track of the node that was just processed and whose `next` pointer has already been reversed. Initially, there's no previous node, so set `prev = NULL`.
-    *   `curr`: This pointer points to the current node being processed. Initialize `curr = head`.
-    *   `next`: This is a temporary pointer that will store the `next` node of `curr` *before* `curr->next` is modified. This is crucial to maintain access to the rest of the original list.
-2.  Start a loop that continues as long as `curr` is not `NULL`. This means we iterate until we have processed all nodes in the original list.
-3.  Inside the loop, for each `curr` node:
-    a.  **Save the next node:** Store the `next` node of `curr` in the `next` temporary pointer: `next = curr->next`. This preserves the link to the un-reversed part of the list.
-    b.  **Reverse the link:** Change the `next` pointer of the `curr` node to point to the `prev` node: `curr->next = prev`. This effectively reverses the direction of the link for the current node.
-    c.  **Move `prev` forward:** Update `prev` to `curr`. The current node (`curr`) now becomes the "previous" node for the next iteration, as it's now part of the reversed segment.
-    d.  **Move `curr` forward:** Update `curr` to `next`. Advance `curr` to the next node in the original list (which we saved in the `next` temporary pointer).
-4.  Once the loop finishes, `curr` will be `NULL` (indicating we've reached the end of the original list). At this point, `prev` will be pointing to the last node of the original list, which is now the new head of the completely reversed list.
-5.  Return `prev`.
+1.  **Initialize Pointers**:
+    *   `prev`: A pointer initialized to `NULL`. This pointer will eventually become the new head of the reversed list. It represents the portion of the list that has already been reversed.
+    *   `curr`: A pointer initialized to `head`. This pointer will iterate through the original list, pointing to the node currently being processed.
+    *   `next_node_temp`: A temporary pointer initialized to `NULL`. This will be used to store the reference to the next node in the *original* list before `curr->next` is modified.
+
+2.  **Traverse the List**: Start a loop that continues as long as `curr` is not `NULL` (meaning we haven't reached the end of the original list).
+
+3.  **Inside the Loop (for each `curr` node)**:
+    *   **Save Next Node**: Store the `curr->next` value into `next_node_temp`. This is crucial because `curr->next` is about to be changed, and we need to know where to move `curr` next.
+    *   **Reverse Link**: Change `curr->next` to point to `prev`. This is the actual reversal step for the current node.
+    *   **Advance `prev`**: Move `prev` forward to `curr`. The node that was just processed (`curr`) now becomes the "previous" node for the next iteration.
+    *   **Advance `curr`**: Move `curr` forward to `next_node_temp`. This moves `curr` to the next node in the original list that needs to be processed.
+
+4.  **Return New Head**: Once the loop finishes (when `curr` becomes `NULL`), `prev` will be pointing to the last node of the original list, which is now the first node (head) of the reversed list. Return `prev`.
 
 ## 💻 Solution
 ```cpp
@@ -63,64 +63,61 @@ This problem is a classic example of iterative pointer manipulation in linked li
  *     ListNode *next;
  *     ListNode() : val(0), next(nullptr) {}
  *     ListNode(int x) : val(x), next(nullptr) {}
- *     ListNode(int x, ListNode *next) : val(x, next) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
  * };
  */
 class Solution {
 public:
     ListNode* reverseList(ListNode* head) {
-        // 'prev' will point to the previously processed node.
-        // Initially, there is no previous node, so it's NULL.
-        // This pointer will eventually become the new head of the reversed list.
-        ListNode* prev = NULL;
-
-        // 'next' (used as a temporary variable) will store the next node in the original list
-        // before we change 'curr->next'. This is crucial to not lose the rest of the list.
-        ListNode* next = NULL;
-
-        // 'curr' points to the current node we are processing.
-        // We start from the head of the original list.
+        // Initialize three pointers:
+        // 'curr' will iterate through the original list.
+        // 'prev' will build up the reversed list, starting as NULL (new tail).
+        // 'next_node_temp' will temporarily store the next node in the original list
+        // before 'curr->next' is modified.
         ListNode* curr = head;
+        ListNode* prev = NULL;
+        ListNode* next_node_temp = NULL;
 
         // Iterate through the list until 'curr' becomes NULL,
-        // meaning we have processed all nodes.
+        // indicating we've processed all nodes.
         while (curr != NULL) {
             // 1. Store the next node in the original list.
-            // This is crucial to not lose the rest of the list after reversing curr->next.
-            next = curr->next;
+            // This is essential to not lose the rest of the list after
+            // we change curr->next.
+            next_node_temp = curr->next;
 
-            // 2. Reverse the current node's 'next' pointer.
-            // Make it point to the 'prev' node.
-            // Example: If list is 1->2->3, and curr is 2, prev is 1.
-            // curr->next (2->3) becomes curr->next (2->1).
+            // 2. Reverse the current node's pointer.
+            // Make 'curr->next' point to 'prev'.
+            // For the first node, prev is NULL, making it the new tail.
             curr->next = prev;
 
             // 3. Move 'prev' one step forward.
-            // The current node 'curr' now becomes the 'prev' node for the next iteration.
-            // Example: prev (1) becomes prev (2).
+            // 'prev' now points to the node that was just reversed.
+            // This node will become the 'previous' for the next iteration.
             prev = curr;
 
             // 4. Move 'curr' one step forward.
-            // Advance 'curr' to the node that was originally next in the list (saved in 'next').
-            // Example: curr (2) becomes curr (3).
-            curr = next;
+            // 'curr' now points to the next node in the original list
+            // that needs to be processed.
+            curr = next_node_temp;
         }
 
-        // When the loop finishes, 'curr' is NULL (we've gone past the end of the original list).
-        // 'prev' will be pointing to the last node of the original list,
+        // After the loop, 'curr' is NULL (end of original list).
+        // 'prev' is pointing to the last node that was processed,
         // which is now the new head of the reversed list.
         return prev;
     }
 };
+
 ```
 
 ## ⏱️ Complexity Analysis
 | | Complexity | Reason |
 |---|---|---|
-| **Time** | O(N) | We iterate through the linked list once, visiting each of the N nodes exactly one time to reverse its pointer. |
-| **Space** | O(1) | We only use a few constant extra pointers (`prev`, `next`, `curr`) regardless of the list's size. No additional data structures are allocated that scale with N. |
+| **Time** | O(N) | We iterate through the linked list once, visiting each of the N nodes exactly one time. |
+| **Space** | O(1) | We only use a constant number of extra pointers (`prev`, `curr`, `next_node_temp`), regardless of the list's size. |
 
 ## 🔗 Related Problems
-- 21. Merge Two Sorted Lists
-- 141. Linked List Cycle
-- 234. Palindrome Linked List
+*   21. Merge Two Sorted Lists
+*   141. Linked List Cycle
+*   83. Remove Duplicates from Sorted List
