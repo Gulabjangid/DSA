@@ -54,6 +54,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0383-ransom-note](https://github.com/Gulabjangid/DSA/tree/master/0383-ransom-note) |
 | [0443-string-compression](https://github.com/Gulabjangid/DSA/tree/master/0443-string-compression) |
 | [0692-top-k-frequent-words](https://github.com/Gulabjangid/DSA/tree/master/0692-top-k-frequent-words) |
+| [1796-second-largest-digit-in-a-string](https://github.com/Gulabjangid/DSA/tree/master/1796-second-largest-digit-in-a-string) |
 | [1910-remove-all-occurrences-of-a-substring](https://github.com/Gulabjangid/DSA/tree/master/1910-remove-all-occurrences-of-a-substring) |
 | [2496-maximum-value-of-a-string-in-an-array](https://github.com/Gulabjangid/DSA/tree/master/2496-maximum-value-of-a-string-in-an-array) |
 ## Array
@@ -167,6 +168,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0532-k-diff-pairs-in-an-array](https://github.com/Gulabjangid/DSA/tree/master/0532-k-diff-pairs-in-an-array) |
 | [0560-subarray-sum-equals-k](https://github.com/Gulabjangid/DSA/tree/master/0560-subarray-sum-equals-k) |
 | [0692-top-k-frequent-words](https://github.com/Gulabjangid/DSA/tree/master/0692-top-k-frequent-words) |
+| [1796-second-largest-digit-in-a-string](https://github.com/Gulabjangid/DSA/tree/master/1796-second-largest-digit-in-a-string) |
 ## Divide and Conquer
 |  |
 | ------- |
