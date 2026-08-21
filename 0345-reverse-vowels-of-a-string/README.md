@@ -1,19 +1,19 @@
 # 0345-reverse-vowels-of-a-string
 
 ## 📋 Problem Description
-Given a string `s`, the task is to reverse only the vowels present in the string. All other characters (consonants and non-alphabetic characters) must remain in their original positions. The vowels are defined as 'a', 'e', 'i', 'o', 'u', and they can appear in both lowercase and uppercase forms. The function should return the modified string.
+Given a string `s`, the task is to reverse only the vowel characters within the string and return the modified string. All other characters (consonants, special characters) must remain in their original positions. The vowels are defined as 'a', 'e', 'i', 'o', 'u', and they can appear in both lowercase and uppercase forms.
+
+The function receives a single string `s` as input and must return the string `s` with its vowels reversed.
 
 ## 🔍 Examples
 ```
-Input:  s = "IceCreAm"
+Input: s = "IceCreAm"
 Output: "AceCreIm"
-Explanation: The vowels in "IceCreAm" are ['I', 'e', 'e', 'A']. Reversing them gives ['A', 'e', 'e', 'I'].
-             So, 'I' at index 0 becomes 'A', 'e' at index 2 stays 'e', 'e' at index 4 stays 'e', and 'A' at index 6 becomes 'I'.
+Explanation: The vowels in "IceCreAm" are 'I', 'e', 'e', 'A'. When reversed, they become 'A', 'e', 'e', 'I'. So, 'I' (at index 0) swaps with 'A' (at index 7). The 'e's remain in their relative positions.
 
-Input:  s = "leetcode"
+Input: s = "leetcode"
 Output: "leotcede"
-Explanation: The vowels in "leetcode" are ['e', 'e', 'o', 'e']. Reversing them gives ['e', 'o', 'e', 'e'].
-             The first 'e' at index 1 swaps with the last 'e' at index 7. The 'e' at index 2 swaps with 'o' at index 4.
+Explanation: The vowels in "leetcode" are 'e', 'e', 'o', 'e'. When reversed, they become 'e', 'o', 'e', 'e'. The 'e' at index 1 swaps with the 'e' at index 7. The 'e' at index 2 swaps with the 'o' at index 4.
 ```
 
 ## 📌 Constraints
@@ -21,76 +21,75 @@ Explanation: The vowels in "leetcode" are ['e', 'e', 'o', 'e']. Reversing them g
 *   `s` consists of printable ASCII characters.
 
 ## 🤔 Understanding the Problem
-The core of this problem is to identify vowels within a string and then reverse their order while keeping all non-vowel characters fixed. This isn't a simple string reversal; it's a conditional reversal. We need an efficient way to find vowels from both ends of the string and swap them, moving inwards until all relevant vowels have been processed. The case-insensitivity of vowels ('a'/'A', 'e'/'E', etc.) is a crucial detail to handle.
+The problem asks us to perform a specific type of in-place modification on a string: reversing only a subset of its characters (vowels) while preserving the positions of all other characters. This means we need a way to identify vowels efficiently and then swap them from the ends towards the center of the string. The key challenge is to correctly handle cases where one or both characters at the current pointers are not vowels, ensuring only actual vowels are considered for swapping.
 
 ## 💡 Core Idea
-The key insight is that we only care about the relative order of vowels. We can use two pointers, one starting from the beginning and one from the end, to find vowels. Once two vowels are found, one from each end, they are swapped, and the pointers move inward. This ensures that vowels are reversed in place.
+The core idea is to use two pointers, one starting from the beginning and one from the end of the string. These pointers will move towards each other, searching for vowels. Once two vowels are found (one from the left, one from the right), they are swapped, effectively reversing their positions relative to other vowels.
 
 ## 🧠 Approach — Two Pointers
-This problem is a classic application of the **Two Pointers** pattern. This pattern is ideal when you need to process elements from both ends of a data structure (like an array or string) simultaneously, often moving towards the center. In this specific problem, we use two pointers because we want to reverse elements (vowels) by pairing them up from opposite ends of the string. The left pointer searches for the next vowel from the beginning, and the right pointer searches for the next vowel from the end. When both pointers land on vowels, we swap them, effectively reversing their positions relative to other vowels.
+This problem is a classic application of the **Two Pointers** pattern. This pattern is highly effective when you need to process elements from both ends of a data structure (like a string or array) simultaneously, often for tasks involving searching for pairs, reversing, or partitioning. In this specific problem, we use two pointers to efficiently locate the next vowel from the left and the next vowel from the right. This allows us to swap them in place and achieve the desired reversal of only the vowels in a single pass through the string.
 
 ## 📝 Step-by-Step Algorithm
-
-1.  **Helper Function `isVowel`**: Create a helper function, `isVowel(char ch)`, that takes a character `ch` as input. This function should return `true` if `ch` is any of 'a', 'e', 'i', 'o', 'u' (lowercase) or 'A', 'E', 'I', 'O', 'U' (uppercase), and `false` otherwise.
-
-2.  **Initialize Pointers**: In the main `reverseVowels` function, initialize two integer pointers:
-    *   `left` to `0` (pointing to the first character of the string).
-    *   `right` to `s.length() - 1` (pointing to the last character of the string).
-
-3.  **Iterate and Swap**: Enter a `while` loop that continues as long as `left` is less than `right`. Inside this loop:
-    *   **Check `s[left]`**: If `s[left]` is *not* a vowel (using the `isVowel` helper), increment `left` by 1. This moves the left pointer past the current non-vowel character, searching for the next vowel.
-    *   **Check `s[right]`**: Else if `s[right]` is *not* a vowel, decrement `right` by 1. This moves the right pointer past the current non-vowel character, searching for the next vowel.
-    *   **Both are Vowels**: If both `s[left]` and `s[right]` *are* vowels, it means we've found a pair of vowels to swap.
-        *   Swap the characters `s[left]` and `s[right]`.
-        *   Increment `left` by 1.
-        *   Decrement `right` by 1.
-        *   This moves both pointers inward, continuing the search for the next pair of vowels.
-
-4.  **Return Result**: Once the `while` loop terminates (when `left` becomes greater than or equal to `right`), all vowel pairs will have been swapped. Return the modified string `s`.
+1.  **Helper Function `isVowel`**: Define a helper function, `isVowel(char ch)`, that takes a character `ch` as input. This function should return `true` if `ch` is any of 'a', 'e', 'i', 'o', 'u' (case-insensitive), and `false` otherwise.
+2.  **Initialize Pointers**: Initialize two integer pointers: `l` (left pointer) to `0` (the beginning of the string) and `r` (right pointer) to `s.length() - 1` (the end of the string).
+3.  **Iterate and Swap**: Enter a `while` loop that continues as long as `l` is less than `r`.
+    a.  **Check Both Pointers**: Inside the loop, check the characters at `s[l]` and `s[r]` using the `isVowel` helper function.
+    b.  **Case 1: Both are Vowels**: If both `s[l]` and `s[r]` are vowels:
+        i.  Swap `s[l]` and `s[r]`.
+        ii. Increment `l` (move left pointer to the right).
+        iii. Decrement `r` (move right pointer to the left).
+    c.  **Case 2: Left is Not a Vowel**: If `s[l]` is not a vowel, but `s[r]` is a vowel:
+        i.  Increment `l` (move left pointer to the right) to find the next potential vowel. The right pointer `r` stays put, as `s[r]` is already a vowel candidate.
+    d.  **Case 3: Right is Not a Vowel**: If `s[l]` is a vowel, but `s[r]` is not a vowel:
+        i.  Decrement `r` (move right pointer to the left) to find the next potential vowel. The left pointer `l` stays put, as `s[l]` is already a vowel candidate.
+    e.  **Case 4: Neither is a Vowel**: If neither `s[l]` nor `s[r]` are vowels (both are consonants or other characters):
+        i.  Increment `l` and decrement `r` (move both pointers inwards) as these characters are not involved in the vowel reversal.
+4.  **Return Result**: Once the `while` loop terminates (when `l` is no longer less than `r`), all vowel pairs have been found and swapped. Return the modified string `s`.
 
 ## 💻 Solution
 ```cpp
 class Solution {
 public:
-    // Helper function to check if a character is a vowel (case-insensitive)
+    // Helper function to check if a character is a vowel (case-insensitive).
     bool isVowel(char ch) {
+        // Check for both lowercase and uppercase vowels.
         return (ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u' ||
                 ch == 'A' || ch == 'E' || ch == 'I' || ch == 'O' || ch == 'U');
     }
 
     string reverseVowels(string s) {
-        // Initialize two pointers: 'l' for left, 'r' for right
+        // Initialize two pointers: 'l' for the left end and 'r' for the right end.
         int l = 0;
         int r = s.length() - 1;
 
-        // Loop as long as the left pointer is before the right pointer
+        // Continue swapping as long as the left pointer is before the right pointer.
         while (l < r) {
-            // Case 1: Both characters at 'l' and 'r' are vowels
+            // Case 1: Both characters at 'l' and 'r' are vowels.
             if (isVowel(s[l]) && isVowel(s[r])) {
-                // Swap the vowels
+                // Swap the vowels.
                 swap(s[l], s[r]);
-                // Move both pointers inward
+                // Move both pointers inwards to find the next pair.
                 l++;
                 r--;
-            } 
-            // Case 2: Character at 'l' is NOT a vowel, but character at 'r' IS a vowel
+            }
+            // Case 2: The character at 'l' is NOT a vowel, but 'r' IS a vowel.
             else if (!isVowel(s[l]) && isVowel(s[r])) {
-                // Move 'l' pointer to the right to find the next vowel
+                // Only move the left pointer inwards, as 'r' is already a vowel candidate.
                 l++;
-            } 
-            // Case 3: Character at 'l' IS a vowel, but character at 'r' is NOT a vowel
+            }
+            // Case 3: The character at 'l' IS a vowel, but 'r' is NOT a vowel.
             else if (isVowel(s[l]) && !isVowel(s[r])) {
-                // Move 'r' pointer to the left to find the next vowel
+                // Only move the right pointer inwards, as 'l' is already a vowel candidate.
                 r--;
-            } 
-            // Case 4: Neither character at 'l' nor 'r' are vowels
-            else { // (!isVowel(s[l]) && !isVowel(s[r]))
-                // Move both pointers inward, skipping non-vowels
+            }
+            // Case 4: Neither character at 'l' nor 'r' is a vowel (both are consonants or non-vowels).
+            else { // This covers the case where (!isVowel(s[l]) && !isVowel(s[r]))
+                // Move both pointers inwards, as neither are vowels to be swapped.
                 l++;
                 r--;
             }
         }
-        // Return the modified string
+        // After the loop, all vowels have been reversed in place.
         return s;
     }
 };
@@ -99,10 +98,10 @@ public:
 ## ⏱️ Complexity Analysis
 | | Complexity | Reason |
 |---|---|---|
-| **Time** | O(N) | The two pointers `l` and `r` traverse the string from opposite ends, meeting in the middle. Each character is visited and checked for being a vowel at most a constant number of times. Swapping takes O(1). |
-| **Space** | O(N) | The input string `s` is passed by value in C++, meaning a copy of the string is created. This copy takes O(N) space. The auxiliary space used by the algorithm itself (pointers, temporary swap variable) is O(1). |
+| **Time** | O(N) | The two pointers `l` and `r` traverse the string from opposite ends. In the worst case, each character is visited and checked for being a vowel at most once. The `swap` operation is O(1). Therefore, the total time complexity is linear with respect to the length of the string `N`. |
+| **Space** | O(1) | The solution modifies the input string in-place. No additional data structures are used that scale with the input size. The `isVowel` helper function uses constant extra space. |
 
 ## 🔗 Related Problems
--   344. Reverse String
--   125. Valid Palindrome
--   11. Container With Most Water
+- 125. Valid Palindrome
+- 344. Reverse String
+- 11. Container With Most Water
