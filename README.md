@@ -29,6 +29,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0349-intersection-of-two-arrays](https://github.com/Gulabjangid/DSA/tree/master/0349-intersection-of-two-arrays) |
 | [0443-string-compression](https://github.com/Gulabjangid/DSA/tree/master/0443-string-compression) |
 | [0532-k-diff-pairs-in-an-array](https://github.com/Gulabjangid/DSA/tree/master/0532-k-diff-pairs-in-an-array) |
+| [0541-reverse-string-ii](https://github.com/Gulabjangid/DSA/tree/master/0541-reverse-string-ii) |
 | [0658-find-k-closest-elements](https://github.com/Gulabjangid/DSA/tree/master/0658-find-k-closest-elements) |
 | [0876-middle-of-the-linked-list](https://github.com/Gulabjangid/DSA/tree/master/0876-middle-of-the-linked-list) |
 | [0977-squares-of-a-sorted-array](https://github.com/Gulabjangid/DSA/tree/master/0977-squares-of-a-sorted-array) |
@@ -55,6 +56,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0345-reverse-vowels-of-a-string](https://github.com/Gulabjangid/DSA/tree/master/0345-reverse-vowels-of-a-string) |
 | [0383-ransom-note](https://github.com/Gulabjangid/DSA/tree/master/0383-ransom-note) |
 | [0443-string-compression](https://github.com/Gulabjangid/DSA/tree/master/0443-string-compression) |
+| [0541-reverse-string-ii](https://github.com/Gulabjangid/DSA/tree/master/0541-reverse-string-ii) |
 | [0692-top-k-frequent-words](https://github.com/Gulabjangid/DSA/tree/master/0692-top-k-frequent-words) |
 | [1796-second-largest-digit-in-a-string](https://github.com/Gulabjangid/DSA/tree/master/1796-second-largest-digit-in-a-string) |
 | [1910-remove-all-occurrences-of-a-substring](https://github.com/Gulabjangid/DSA/tree/master/1910-remove-all-occurrences-of-a-substring) |
