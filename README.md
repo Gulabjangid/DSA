@@ -116,6 +116,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0867-transpose-matrix](https://github.com/Gulabjangid/DSA/tree/master/0867-transpose-matrix) |
 | [0918-maximum-sum-circular-subarray](https://github.com/Gulabjangid/DSA/tree/master/0918-maximum-sum-circular-subarray) |
 | [0977-squares-of-a-sorted-array](https://github.com/Gulabjangid/DSA/tree/master/0977-squares-of-a-sorted-array) |
+| [2022-convert-1d-array-into-2d-array](https://github.com/Gulabjangid/DSA/tree/master/2022-convert-1d-array-into-2d-array) |
 | [2496-maximum-value-of-a-string-in-an-array](https://github.com/Gulabjangid/DSA/tree/master/2496-maximum-value-of-a-string-in-an-array) |
 | [2596-check-knight-tour-configuration](https://github.com/Gulabjangid/DSA/tree/master/2596-check-knight-tour-configuration) |
 | [2761-prime-pairs-with-target-sum](https://github.com/Gulabjangid/DSA/tree/master/2761-prime-pairs-with-target-sum) |
@@ -399,6 +400,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0240-search-a-2d-matrix-ii](https://github.com/Gulabjangid/DSA/tree/master/0240-search-a-2d-matrix-ii) |
 | [0378-kth-smallest-element-in-a-sorted-matrix](https://github.com/Gulabjangid/DSA/tree/master/0378-kth-smallest-element-in-a-sorted-matrix) |
 | [0867-transpose-matrix](https://github.com/Gulabjangid/DSA/tree/master/0867-transpose-matrix) |
+| [2022-convert-1d-array-into-2d-array](https://github.com/Gulabjangid/DSA/tree/master/2022-convert-1d-array-into-2d-array) |
 | [2596-check-knight-tour-configuration](https://github.com/Gulabjangid/DSA/tree/master/2596-check-knight-tour-configuration) |
 ## Simulation
 |  |
@@ -407,6 +409,7 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 | [0682-baseball-game](https://github.com/Gulabjangid/DSA/tree/master/0682-baseball-game) |
 | [0867-transpose-matrix](https://github.com/Gulabjangid/DSA/tree/master/0867-transpose-matrix) |
 | [1910-remove-all-occurrences-of-a-substring](https://github.com/Gulabjangid/DSA/tree/master/1910-remove-all-occurrences-of-a-substring) |
+| [2022-convert-1d-array-into-2d-array](https://github.com/Gulabjangid/DSA/tree/master/2022-convert-1d-array-into-2d-array) |
 | [2596-check-knight-tour-configuration](https://github.com/Gulabjangid/DSA/tree/master/2596-check-knight-tour-configuration) |
 ## Bit Manipulation
 |  |
