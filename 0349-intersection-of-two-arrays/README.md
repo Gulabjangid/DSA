@@ -1,21 +1,20 @@
 # 0349-intersection-of-two-arrays
 
 ## 📋 Problem Description
-Given two integer arrays, `nums1` and `nums2`, the task is to find their intersection. The intersection consists of all elements that are common to both arrays. Each element in the resulting array must be unique, and the order of elements in the result does not matter.
+Given two integer arrays, `nums1` and `nums2`, the task is to find their intersection. The intersection consists of all elements that are present in both arrays. Each element in the resulting array must be unique, and the order of elements in the output does not matter.
 
-The function `intersection` receives two integer arrays, `nums1` and `nums2`, as input. It must return a `std::vector<int>` containing the unique elements found in the intersection of the two input arrays.
+The function receives two `std::vector<int>` objects, `nums1` and `nums2`, as input. It must return a `std::vector<int>` containing the unique common elements.
 
 ## 🔍 Examples
 ```
 Input: nums1 = [1,2,2,1], nums2 = [2,2]
 Output: [2]
-Explanation: The number 2 is present in both arrays. Even though it appears multiple times in nums1 and nums2, it should only be listed once in the output because only unique elements are required.
 ```
 
 ```
 Input: nums1 = [4,9,5], nums2 = [9,4,9,8,4]
 Output: [9,4]
-Explanation: Both 9 and 4 are present in nums1 and nums2. The order [4,9] is also accepted.
+Explanation: [4,9] is also accepted, as the order does not matter.
 ```
 
 ## 📌 Constraints
@@ -23,70 +22,72 @@ Explanation: Both 9 and 4 are present in nums1 and nums2. The order [4,9] is als
 *   `0 <= nums1[i], nums2[i] <= 1000`
 
 ## 🤔 Understanding the Problem
-The problem asks us to identify all numbers that are present in *both* of the given input arrays. The key requirements are that the final result must contain only *unique* elements, and the order in which these elements appear in the output array does not matter. This means if a number `X` appears in both `nums1` and `nums2`, it should be included in our result exactly once, regardless of how many times it appears in the input arrays. This uniqueness requirement is a strong hint towards using data structures that inherently handle unique values.
+The core of this problem is to identify numbers that exist in *both* input arrays. The key requirements are that the final result must contain only *unique* numbers, and the order of these numbers in the output array is not important. This means if a number appears multiple times in `nums1` and `nums2`, it should only appear once in our intersection result. We need an efficient way to check for the presence of elements and automatically handle duplicates.
 
 ## 💡 Core Idea
-The most efficient way to find common unique elements and handle uniqueness automatically is to use a hash set (or `unordered_set` in C++). Hash sets provide average O(1) time complexity for insertion and lookup operations, making them ideal for quickly checking if an element exists in a collection and for storing only distinct values.
+The most efficient way to handle uniqueness and perform fast lookups (checking if an element exists) is to use a hash set (like `std::unordered_set` in C++). Hash sets provide average O(1) time complexity for insertion and lookup operations, which is crucial for performance when dealing with potentially large arrays.
 
-## 🧠 Approach — Hash Set / Hashing
-This problem is a classic application of the **Hash Set** (or Hashing) pattern. Hash sets are perfect for this scenario because they offer two critical advantages:
-1.  **Efficient Lookups**: We can check if an element exists in a hash set in average O(1) time. This is crucial for quickly determining if an element from one array is present in the other.
-2.  **Automatic Uniqueness**: Hash sets, by definition, only store unique elements. Any attempt to insert a duplicate element will be ignored, which perfectly aligns with the problem's requirement for a unique intersection.
-By leveraging these properties, we can efficiently build a set of unique elements from one array and then iterate through the second array, adding any common elements to a result set.
+## 🧠 Approach — Hashing / Hash Set
+This problem is an excellent candidate for a Hashing approach, specifically utilizing hash sets. Hash sets are data structures that store unique elements and allow for very fast (average O(1) time) operations such as adding an element or checking if an element already exists. This fits the problem perfectly because we need to:
+1.  Efficiently store all unique elements from one array.
+2.  Efficiently check if elements from the second array are present in the first array's unique set.
+3.  Ensure that the final collection of common elements also contains only unique values, which a hash set naturally provides.
 
 ## 📝 Step-by-Step Algorithm
-1.  **Initialize `set1`**: Create an empty hash set (e.g., `std::unordered_set<int>`) named `set1`.
-2.  **Populate `set1`**: Iterate through each number in `nums1`. For every number encountered, insert it into `set1`. After this step, `set1` will contain all unique elements from `nums1`.
-3.  **Initialize `resultSet`**: Create another empty hash set (e.g., `std::unordered_set<int>`) named `resultSet`. This set will store the unique elements that are found in the intersection.
-4.  **Find Intersection**: Iterate through each number in `nums2`.
-    a.  For each number `num` from `nums2`, check if `num` exists in `set1` (using `set1.count(num)` or `set1.find(num)`).
-    b.  If `num` is found in `set1`, it means `num` is present in both `nums1` and `nums2`. Insert `num` into `resultSet`. Since `resultSet` is a hash set, it will automatically ensure that only unique common elements are stored.
-5.  **Convert to Vector**: Finally, convert the `resultSet` into a `std::vector<int>` (as the problem requires a vector return type) and return this vector.
+1.  **Populate First Set**: Create an empty hash set (let's call it `set1`). Iterate through `nums1` and insert each element into `set1`. This will store all unique elements from `nums1` and allow for quick lookups.
+2.  **Initialize Result Set**: Create another empty hash set (let's call it `resultSet`). This set will store the unique elements that are found in the intersection.
+3.  **Find Intersection**: Iterate through each element in `nums2`.
+    *   For each element from `nums2`, check if it exists in `set1`.
+    *   If the element *does* exist in `set1`, it means this element is present in both `nums1` and `nums2`. Add this element to `resultSet`. Since `resultSet` is also a hash set, it will automatically ensure that only unique intersection elements are stored.
+4.  **Convert to Vector**: Finally, convert the `resultSet` into a `std::vector<int>` (as required by the function's return type) and return it.
 
 ## 💻 Solution
 ```cpp
 class Solution {
 public:
     vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
-        // Step 1 & 2: Create an unordered_set (hash set) from nums1.
-        // This efficiently stores all unique elements of nums1.
-        // The constructor `unordered_set<int>(nums1.begin(), nums1.end())`
-        // populates the set with unique elements from nums1 in O(N1) average time.
+        // Step 1: Create a hash set 's1' and populate it with all unique elements from nums1.
+        // Using a constructor that takes iterators (nums1.begin(), nums1.end()) efficiently
+        // inserts all elements from nums1 into s1, automatically handling uniqueness.
+        // This allows for O(1) average-time lookups later.
         unordered_set<int> s1(nums1.begin(), nums1.end());
 
-        // Step 3: Create another unordered_set to store the unique
-        // elements found in the intersection. This set will automatically
-        // handle the uniqueness requirement for the final result.
+        // Step 2: Create another hash set 'ans' to store the unique elements of the intersection.
+        // Using a set here automatically handles the uniqueness requirement for the final result.
         unordered_set<int> ans;
 
-        // Step 4: Iterate through each number in nums2.
+        // Step 3: Iterate through each number in nums2.
         for (int num : nums2) {
-            // Step 4a: Check if the current number from nums2 exists in s1.
-            // `s1.count(num)` returns 1 if num is present, 0 otherwise.
-            // This is an O(1) average-time operation.
+            // For each number from nums2, check if it exists in s1.
+            // 's1.count(num)' returns 1 if 'num' is found in s1, and 0 otherwise.
+            // This lookup operation takes O(1) time on average.
             if (s1.count(num)) {
-                // Step 4b: If the number is found in s1, it means it's common to both arrays.
-                // Insert it into our 'ans' set. If 'num' is already in 'ans',
-                // the set won't add a duplicate, maintaining uniqueness.
+                // If 'num' is found in s1, it means this number is present in both nums1 and nums2.
+                // Add it to our 'ans' set. If 'num' is already in 'ans', the set won't add it again,
+                // thus maintaining the uniqueness of the intersection elements.
+                // This insertion also takes O(1) time on average.
                 ans.insert(num);
             }
         }
         
-        // Step 5: The problem requires returning a vector<int>.
-        // Convert the 'ans' unordered_set into a vector using its range constructor
-        // and return it. This conversion takes O(K) time, where K is the size of 'ans'.
+        // Step 4: Convert the 'ans' hash set into a vector<int> as required by the function signature.
+        // This creates a new vector by copying elements from the 'ans' set.
+        // The order of elements in the resulting vector is not guaranteed, but that's acceptable
+        // per the problem statement.
         return vector<int>(ans.begin(), ans.end());
     }
 };
 ```
 
 ## ⏱️ Complexity Analysis
+Let M be the length of `nums1` and N be the length of `nums2`.
+
 | | Complexity | Reason |
 |---|---|---|
-| **Time** | O(N1 + N2) | Creating `s1` from `nums1` takes O(N1) on average. Iterating through `nums2` (N2 elements) and performing `s1.count()` and `ans.insert()` operations each take O(1) on average, totaling O(N2). Converting the final set to a vector takes O(K) where K is the size of the intersection. Thus, the total average time complexity is O(N1 + N2). |
-| **Space** | O(N1 + N2) | `s1` stores up to N1 unique elements from `nums1`. `ans` stores up to min(N1, N2) unique elements (the intersection). In the worst case, if all elements in `nums1` are unique and all elements in `nums2` are unique and distinct from `nums1`, the space would be proportional to N1 + N2. Given the constraint that `nums1[i], nums2[i] <= 1000`, the maximum number of unique elements is 1001, so space is also bounded by O(MaxVal) where MaxVal is the range of values. |
+| **Time** | O(M + N) | Populating `s1` with elements from `nums1` takes O(M) on average. Iterating through `nums2` (N elements) and performing O(1) average-time lookups in `s1` and O(1) average-time insertions into `ans` takes O(N) on average. The final conversion from `ans` to `vector` takes O(k) where k is the size of the intersection (k <= min(M, N)). Thus, total time is O(M + N). |
+| **Space** | O(M + N) | `s1` stores up to M unique elements from `nums1`. `ans` stores up to min(M, N) unique elements from the intersection. In the worst case (e.g., all elements are distinct and different), `s1` could store M elements and `ans` could store N elements (if `nums2` has elements not in `nums1` but also distinct), leading to O(M + N) space. |
 
 ## 🔗 Related Problems
 - 350. Intersection of Two Arrays II
 - 217. Contains Duplicate
-- 771. Jewels and Stones
+- 128. Longest Consecutive Sequence
